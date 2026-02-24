@@ -18,12 +18,12 @@
   .now-playing { text-align: center; max-width: 500px; }
   .np-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.05rem;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--text);
   }
   .np-meta {
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     margin-top: 0.2rem;
   }

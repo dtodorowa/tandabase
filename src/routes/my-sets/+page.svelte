@@ -109,7 +109,7 @@
   }
   .page-header h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+    font-size: var(--fs-heading);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
@@ -118,7 +118,7 @@
     color: var(--bg);
     padding: 0.5rem 1rem;
     border-radius: var(--radius-sm);
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
     text-decoration: none;
     transition: all 0.15s;
@@ -128,14 +128,14 @@
     text-align: center;
     padding: 3rem;
     color: var(--text-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
   }
   .start-btn {
     display: inline-block;
     margin-top: 0.75rem;
     color: var(--accent);
     font-weight: 500;
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
   }
   .sets-list {
     display: flex;
@@ -171,7 +171,7 @@
   }
   .set-info h3 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
   }
   .set-meta {
@@ -179,14 +179,14 @@
     align-items: center;
     gap: 0.4rem;
     margin-top: 0.2rem;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     flex-wrap: wrap;
   }
   .vis-badge {
     padding: 0.1rem 0.35rem;
     border-radius: 3px;
-    font-size: 0.55rem;
+    font-size: var(--fs-micro);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -209,7 +209,7 @@
     border: 1px solid var(--border);
     color: var(--text-mid);
     padding: 0.3rem 0.6rem;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;

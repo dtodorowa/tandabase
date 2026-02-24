@@ -35,11 +35,11 @@
     border-radius: 4px;
   }
   .genre-badge.sm {
-    font-size: 0.55rem;
+    font-size: var(--fs-micro);
     padding: 0.1rem 0.4rem;
   }
   .genre-badge.md {
-    font-size: 0.58rem;
+    font-size: var(--fs-micro);
     padding: 0.2rem 0.55rem;
   }
   .genre-dot {

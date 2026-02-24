@@ -62,12 +62,12 @@
   }
   .browse-header h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+    font-size: var(--fs-heading);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
   .browse-header p {
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
     margin-top: 0.2rem;
   }
@@ -75,6 +75,6 @@
     text-align: center;
     padding: 3rem;
     color: var(--text-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
   }
 </style>

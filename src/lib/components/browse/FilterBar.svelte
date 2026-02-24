@@ -29,7 +29,7 @@
     border: 1px solid var(--border);
     color: var(--text-mid);
     padding: 0.35rem 0.75rem;
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     font-weight: 500;
     border-radius: 99px;
     transition: all 0.15s;

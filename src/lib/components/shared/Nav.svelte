@@ -103,14 +103,14 @@
   }
   .logo-text {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.1rem;
+    font-size: var(--fs-lead);
     font-weight: 600;
     color: var(--text);
     letter-spacing: -0.02em;
   }
   .logo-accent { color: var(--accent); }
   .logo-sub {
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     letter-spacing: 0.06em;
     font-weight: 400;
@@ -120,7 +120,7 @@
     gap: 1.5rem;
   }
   .nav-links a {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     font-weight: 500;
     color: var(--text-mid);
     transition: color 0.15s;
@@ -142,7 +142,7 @@
   .notif-badge {
     background: var(--tango);
     color: #fff;
-    font-size: 0.52rem;
+    font-size: var(--fs-micro);
     font-weight: 700;
     min-width: 15px;
     height: 15px;
@@ -196,7 +196,7 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0.65rem 1.2rem;
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     font-weight: 500;
     color: var(--text-mid);
     text-decoration: none;

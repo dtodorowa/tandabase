@@ -73,7 +73,7 @@
     color: var(--text);
     border-radius: 3px;
     padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     outline: none;
     font-family: 'Outfit', sans-serif;
   }
@@ -86,7 +86,7 @@
     background: none;
     border: none;
     color: var(--text-dim);
-    font-size: 1.1rem;
+    font-size: var(--fs-lead);
     cursor: pointer;
     padding: 0.1rem 0.3rem;
     transition: color 0.15s;

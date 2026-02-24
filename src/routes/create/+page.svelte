@@ -55,6 +55,6 @@
     justify-content: center;
     height: calc(100vh - 56px);
     color: var(--text-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
   }
 </style>

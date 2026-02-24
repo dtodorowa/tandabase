@@ -17,7 +17,34 @@
   --vals: #4ade80;
   --radius: 10px;
   --radius-sm: 6px;
+
+  /* Type scale */
+  --fs-hero: 5rem;
+  --fs-display: 3rem;
+  --fs-title: 2.5rem;
+  --fs-heading: 2rem;
+  --fs-subheading: 1.75rem;
+  --fs-lead: 1.35rem;
+  --fs-body: 1.15rem;
+  --fs-sm: 1.05rem;
+  --fs-xs: 0.95rem;
+  --fs-2xs: 0.85rem;
+  --fs-label: 0.75rem;
+  --fs-micro: 0.65rem;
 }
+
+.text-hero { font-size: var(--fs-hero); }
+.text-display { font-size: var(--fs-display); }
+.text-title { font-size: var(--fs-title); }
+.text-heading { font-size: var(--fs-heading); }
+.text-subheading { font-size: var(--fs-subheading); }
+.text-lead { font-size: var(--fs-lead); }
+.text-body { font-size: var(--fs-body); }
+.text-sm { font-size: var(--fs-sm); }
+.text-xs { font-size: var(--fs-xs); }
+.text-2xs { font-size: var(--fs-2xs); }
+.text-label { font-size: var(--fs-label); }
+.text-micro { font-size: var(--fs-micro); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -41,7 +68,7 @@ input, textarea, select {
   color: var(--text);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  font-size: var(--fs-body);
   outline: none;
   transition: border-color 0.15s;
 }

@@ -27,6 +27,6 @@
     text-align: center;
     padding: 3rem;
     color: var(--text-dim);
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
   }
 </style>

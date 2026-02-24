@@ -145,7 +145,7 @@
     color: var(--text);
     border-radius: var(--radius-sm);
     padding: 0.5rem 0.75rem;
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
   }
   .song-search input:focus { border-color: var(--accent); }
   .mode-tabs {
@@ -158,7 +158,7 @@
     border: 1px solid var(--border);
     color: var(--text-dim);
     padding: 0.3rem 0.7rem;
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -181,7 +181,7 @@
     color: var(--bg);
     border: none;
     padding: 0.5rem 0.9rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -192,7 +192,7 @@
   .url-add-btn:hover:not(:disabled) { background: var(--accent-bright); }
   .url-add-btn:disabled { opacity: 0.5; cursor: default; }
   .url-hint {
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     padding: 0.35rem 0;
     line-height: 1.4;
@@ -201,10 +201,10 @@
     background: var(--surface2);
     padding: 0.1rem 0.3rem;
     border-radius: 3px;
-    font-size: 0.62rem;
+    font-size: var(--fs-label);
   }
   .search-status {
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     padding: 0.5rem 0;
   }
@@ -247,18 +247,18 @@
   }
   .result-info { flex: 1; min-width: 0; }
   .result-title {
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .result-channel {
-    font-size: 0.62rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
   }
   .add-btn {
-    font-size: 1.1rem;
+    font-size: var(--fs-lead);
     color: var(--accent);
     font-weight: 600;
     flex-shrink: 0;

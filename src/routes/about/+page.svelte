@@ -106,14 +106,14 @@
   }
   h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.8rem;
+    font-size: var(--fs-title);
     font-weight: 700;
     letter-spacing: -0.03em;
     color: var(--text);
     margin-bottom: 0;
   }
   .intro {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: var(--text-mid);
     margin-top: 0.2rem;
     margin-bottom: 1.5rem;
@@ -123,14 +123,14 @@
   }
   h2 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2rem;
+    font-size: var(--fs-display);
     font-weight: 600;
     color: var(--accent);
     letter-spacing: -0.01em;
     margin-bottom: 0.5rem;
   }
   p {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     line-height: 1.7;
     color: var(--text-mid);
     margin: 0 0 0.6rem;
@@ -144,7 +144,7 @@
     gap: 0.5rem;
   }
   li {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     line-height: 1.65;
     color: var(--text-mid);
     padding-left: 1rem;
@@ -171,7 +171,7 @@
   }
   .sign-off {
     margin-top: 0.8rem;
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: var(--accent);
     font-weight: 500;
     font-style: italic;
@@ -179,6 +179,6 @@
 
   @media (max-width: 600px) {
     .about-page { padding: 1.5rem 1rem 3rem; }
-    h1 { font-size: 1.4rem; }
+    h1 { font-size: var(--fs-subheading); }
   }
 </style>

@@ -38,7 +38,7 @@
 
 <style>
   .sidebar-label {
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -67,7 +67,7 @@
   }
   .tanda-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
     min-width: 18px;
     font-weight: 500;
@@ -75,7 +75,7 @@
   .tanda-item.active .tanda-num { color: var(--accent); }
   .tanda-info { flex: 1; min-width: 0; }
   .tanda-name {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     font-weight: 500;
     color: var(--text);
     white-space: nowrap;
@@ -84,7 +84,7 @@
   }
   .tanda-item.active .tanda-name { color: var(--accent-bright); }
   .tanda-meta {
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     margin-top: 0.1rem;
     display: flex;
@@ -94,7 +94,7 @@
   .genre-tag {
     display: inline-flex;
     align-items: center;
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;

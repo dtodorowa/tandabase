@@ -66,12 +66,12 @@
   }
   .card-header h3 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1rem;
+    font-size: var(--fs-body);
     font-weight: 600;
     letter-spacing: -0.01em;
   }
   .card-desc {
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     margin-top: 0.15rem;
     display: -webkit-box;
@@ -85,12 +85,12 @@
     align-items: center;
   }
   .author {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     color: var(--text-mid);
     font-weight: 500;
   }
   .stats {
-    font-size: 0.62rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
   }

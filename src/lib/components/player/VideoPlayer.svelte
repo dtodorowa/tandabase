@@ -299,7 +299,7 @@
     justify-content: center;
     height: 100%;
     color: var(--text-dim);
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     gap: 0.5rem;
   }
   .video-placeholder svg { opacity: 0.2; }
@@ -310,7 +310,7 @@
     justify-content: center;
     height: 100%;
     color: var(--text-dim);
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     text-align: center;
     gap: 0.8rem;
   }
@@ -321,19 +321,19 @@
     padding: 0.35rem 0.9rem;
     border: 1px solid var(--accent);
     border-radius: 99px;
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     transition: all 0.15s;
   }
   .no-video a:hover { background: var(--accent); color: var(--bg); }
   .now-playing { text-align: center; max-width: 500px; }
   .now-playing .np-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.8rem;
+    font-size: var(--fs-title);
     font-weight: 600;
     color: var(--text);
   }
   .now-playing .np-meta {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: var(--text-dim);
     margin-top: 0.2rem;
   }
@@ -350,7 +350,7 @@
     border: 1px solid var(--border);
     color: var(--text-dim);
     padding: 0.25rem 0.7rem;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     font-weight: 500;
     border-radius: 99px;
     cursor: pointer;
@@ -377,7 +377,7 @@
     border: 1px solid var(--border);
     color: var(--text-dim);
     padding: 0.25rem 0.6rem;
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -393,12 +393,12 @@
     color: var(--text);
     border-radius: var(--radius-sm);
     padding: 0.4rem 0.6rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     font-family: 'Outfit', sans-serif;
   }
   .replace-input:focus { border-color: var(--accent); outline: none; }
   .replace-status {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     padding: 0.2rem 0;
   }
@@ -436,15 +436,15 @@
   }
   .rr-info { flex: 1; min-width: 0; }
   .rr-title {
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .rr-channel { font-size: 0.58rem; color: var(--text-dim); }
+  .rr-channel { font-size: var(--fs-micro); color: var(--text-dim); }
   .rr-use {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     color: var(--accent);
     font-weight: 600;
     flex-shrink: 0;
@@ -460,7 +460,7 @@
     color: var(--bg);
     border: none;
     padding: 0.4rem 0.7rem;
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -481,7 +481,7 @@
     align-items: center;
   }
   .flag-label {
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
   }
   .flag-submit {
@@ -489,7 +489,7 @@
     color: var(--bg);
     border: none;
     padding: 0.35rem 1rem;
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -499,7 +499,7 @@
   .flag-submit:hover:not(:disabled) { opacity: 0.85; }
   .flag-submit:disabled { opacity: 0.5; cursor: default; }
   .flag-thanks {
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     color: var(--vals);
     padding: 0.5rem;
   }

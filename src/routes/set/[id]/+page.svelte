@@ -161,7 +161,7 @@
     align-items: center;
     justify-content: center;
     height: calc(100vh - 56px);
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     color: var(--text-dim);
   }
   .center-msg.error { color: var(--tango); }
@@ -184,7 +184,7 @@
     height: 32px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: var(--fs-body);
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
@@ -193,7 +193,7 @@
   .header-info { flex: 1; min-width: 0; }
   .set-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+    font-size: var(--fs-heading);
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
@@ -202,7 +202,7 @@
   .header-stats {
     display: flex;
     gap: 0.5rem;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
     font-weight: 500;
   }
@@ -218,7 +218,7 @@
     border: 1px solid var(--border);
     color: var(--text-mid);
     padding: 0.3rem 0.7rem;
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;

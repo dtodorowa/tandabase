@@ -113,12 +113,12 @@
   }
   .page-header h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+    font-size: var(--fs-heading);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
   .subtitle {
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
     margin-top: 0.15rem;
   }
@@ -129,12 +129,12 @@
     justify-content: center;
     padding: 3rem 1rem;
     color: var(--text-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     gap: 0.5rem;
   }
   .empty-state.error { color: var(--tango); }
   .empty-icon {
-    font-size: 2rem;
+    font-size: var(--fs-display);
     color: var(--vals);
     opacity: 0.6;
   }
@@ -166,7 +166,7 @@
     align-items: center;
     gap: 0.3rem;
     flex-wrap: wrap;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
   }
   .flag-set {
     font-weight: 600;
@@ -178,20 +178,20 @@
   }
   .flag-tanda {
     color: var(--text-dim);
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
   }
   .flag-dot {
     color: var(--text-dim);
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
   }
   .flag-date {
-    font-size: 0.62rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     white-space: nowrap;
     flex-shrink: 0;
   }
   .flag-reason {
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     color: var(--text-mid);
     line-height: 1.4;
   }
@@ -209,7 +209,7 @@
     border: 1px solid var(--accent);
     color: var(--accent);
     padding: 0.25rem 0.7rem;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -222,7 +222,7 @@
     border: 1px solid var(--border);
     color: var(--text-dim);
     padding: 0.25rem 0.7rem;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -233,6 +233,6 @@
 
   @media (max-width: 600px) {
     .notif-page { padding: 1rem; }
-    .flag-info { font-size: 0.7rem; }
+    .flag-info { font-size: var(--fs-2xs); }
   }
 </style>

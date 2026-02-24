@@ -477,12 +477,12 @@
   }
   .page-header h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+    font-size: var(--fs-heading);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
   .subtitle {
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
     margin-top: 0.2rem;
   }
@@ -501,17 +501,17 @@
     background: var(--accent-dim);
   }
   .drop-icon {
-    font-size: 2.5rem;
+    font-size: var(--fs-display);
     color: var(--text-dim);
     margin-bottom: 0.5rem;
   }
   .drop-text {
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     color: var(--text);
     font-weight: 500;
   }
   .drop-or {
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     margin: 0.5rem 0;
   }
@@ -521,7 +521,7 @@
     color: var(--bg);
     padding: 0.5rem 1.2rem;
     border-radius: var(--radius-sm);
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
@@ -529,7 +529,7 @@
   }
   .file-btn:hover { background: var(--accent-bright); }
   .drop-hint {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     margin-top: 1rem;
     line-height: 1.4;
@@ -540,7 +540,7 @@
     color: var(--tango);
     padding: 0.6rem 1rem;
     border-radius: var(--radius-sm);
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
   }
 
   /* Step sections */
@@ -551,11 +551,11 @@
   }
   .step-section h2 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.2rem;
+    font-size: var(--fs-subheading);
     font-weight: 600;
   }
   .step-hint {
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
   }
 
@@ -580,8 +580,8 @@
     font-family: 'Outfit', sans-serif;
   }
   .playlist-card:hover { border-color: var(--accent); }
-  .pl-name { font-size: 0.88rem; font-weight: 500; }
-  .pl-meta { font-size: 0.72rem; color: var(--text-dim); }
+  .pl-name { font-size: var(--fs-sm); font-weight: 500; }
+  .pl-meta { font-size: var(--fs-2xs); color: var(--text-dim); }
 
   /* Preview header */
   .preview-header {
@@ -594,7 +594,7 @@
     border: 1px solid var(--border);
     color: var(--text-dim);
     padding: 0.3rem 0.7rem;
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.12s;
@@ -618,7 +618,7 @@
     gap: 0.2rem;
   }
   .setting-row label {
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     font-weight: 500;
     text-transform: uppercase;
@@ -630,12 +630,12 @@
     color: var(--text);
     border-radius: var(--radius-sm);
     padding: 0.4rem 0.6rem;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     font-family: 'Outfit', sans-serif;
   }
   .setting-row input:focus, .setting-row select:focus { border-color: var(--accent); outline: none; }
   .setting-hint {
-    font-size: 0.62rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     line-height: 1.3;
   }
@@ -658,11 +658,11 @@
     gap: 0.6rem;
     padding: 0.6rem 0.8rem;
     border-bottom: 1px solid var(--border);
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
   }
   .tanda-num {
     font-family: monospace;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     min-width: 20px;
   }
@@ -672,7 +672,7 @@
   }
   .tanda-song-count {
     margin-left: auto;
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
   }
   .tanda-songs {
@@ -684,7 +684,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.35rem 0.8rem;
-    font-size: 0.76rem;
+    font-size: var(--fs-xs);
     transition: background 0.12s;
   }
   .song-preview:hover { background: var(--surface2); }
@@ -692,7 +692,7 @@
   .song-preview.not-found { background: rgba(212, 80, 74, 0.04); }
   .sp-index {
     font-family: monospace;
-    font-size: 0.62rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     min-width: 16px;
     text-align: center;
@@ -712,24 +712,24 @@
     text-overflow: ellipsis;
   }
   .sp-yt-title {
-    font-size: 0.62rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .sp-singer {
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     font-style: italic;
   }
   .sp-year {
     font-family: monospace;
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     flex-shrink: 0;
   }
-  .sp-status { flex-shrink: 0; font-size: 0.8rem; }
+  .sp-status { flex-shrink: 0; font-size: var(--fs-xs); }
   .found-icon { color: var(--vals); }
   .notfound-icon { color: var(--tango); }
 
@@ -748,7 +748,7 @@
     border-radius: 3px;
   }
   .progress-text {
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
     text-align: center;
   }
@@ -760,7 +760,7 @@
     max-height: 300px;
     overflow-y: auto;
     font-family: monospace;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
   }
   .log-line {
     padding: 0.15rem 0;
@@ -782,12 +782,12 @@
   }
   .stat-num {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.8rem;
+    font-size: var(--fs-title);
     font-weight: 700;
     color: var(--accent);
   }
   .stat-label {
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -804,7 +804,7 @@
     color: var(--bg);
     border: none;
     padding: 0.6rem 1.4rem;
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -818,7 +818,7 @@
     border: 1px solid var(--border);
     color: var(--text-mid);
     padding: 0.6rem 1.2rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;

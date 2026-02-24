@@ -36,14 +36,14 @@
   }
   .tanda-number-big {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 2rem;
+    font-size: var(--fs-display);
     color: var(--border-light);
     line-height: 1;
     font-weight: 500;
   }
   .tanda-title-block h2 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.3rem;
+    font-size: var(--fs-subheading);
     font-weight: 600;
     color: var(--text);
     letter-spacing: -0.02em;
@@ -61,7 +61,7 @@
     height: 36px;
     padding: 0 0.9rem;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     font-family: 'Outfit', sans-serif;
     font-weight: 500;
     border-radius: var(--radius-sm);
@@ -80,7 +80,7 @@
   .nav-btn:disabled { opacity: 0.2; cursor: default; }
   .song-counter {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     padding: 0 0.5rem;
     white-space: nowrap;
@@ -92,8 +92,8 @@
   }
   @media (max-width: 700px) {
     .tanda-header { padding: 0.8rem 1rem; gap: 0.6rem; }
-    .tanda-number-big { font-size: 1.5rem; }
-    .tanda-title-block h2 { font-size: 1rem; }
+    .tanda-number-big { font-size: var(--fs-heading); }
+    .tanda-title-block h2 { font-size: var(--fs-body); }
   }
   @media (max-width: 400px) {
     .tanda-header { flex-wrap: wrap; }

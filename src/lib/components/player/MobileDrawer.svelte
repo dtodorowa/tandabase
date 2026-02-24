@@ -74,7 +74,7 @@
     height: 28px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     z-index: 10;
     align-items: center;
     justify-content: center;

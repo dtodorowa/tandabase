@@ -117,20 +117,20 @@
     background: none;
     border: none;
     color: var(--text-dim);
-    font-size: 1rem;
+    font-size: var(--fs-body);
     font-family: 'Outfit', sans-serif;
     cursor: pointer;
     padding: 0.3rem 0;
     transition: color 0.12s;
   }
   .comments-toggle:hover { color: var(--accent); }
-  .comments-icon { font-size: 1.25rem; }
+  .comments-icon { font-size: var(--fs-subheading); }
   .comments-count {
     background: var(--accent-dim);
     color: var(--accent);
     padding: 0.05rem 0.35rem;
     border-radius: 99px;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
   }
   .comments-label {
@@ -144,7 +144,7 @@
     gap: 0.4rem;
   }
   .no-comments {
-    font-size: 1rem;
+    font-size: var(--fs-body);
     color: var(--text-dim);
     padding: 0.3rem 0;
     font-style: italic;
@@ -185,17 +185,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.55rem;
+    font-size: var(--fs-micro);
     font-weight: 600;
     flex-shrink: 0;
   }
   .comment-author {
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     font-weight: 500;
     color: var(--text);
   }
   .comment-date {
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     margin-left: auto;
   }
@@ -203,7 +203,7 @@
     background: none;
     border: none;
     color: var(--text-dim);
-    font-size: 0.6rem;
+    font-size: var(--fs-micro);
     cursor: pointer;
     padding: 0 0.2rem;
     opacity: 0.5;
@@ -211,7 +211,7 @@
   }
   .comment-delete:hover { color: var(--tango); opacity: 1; }
   .comment-text {
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     color: var(--text-mid);
     line-height: 1.45;
   }
@@ -227,7 +227,7 @@
     color: var(--text);
     border-radius: var(--radius-sm);
     padding: 0.35rem 0.55rem;
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     font-family: 'Outfit', sans-serif;
   }
   .comment-input:focus { border-color: var(--accent); outline: none; }
@@ -236,7 +236,7 @@
     color: var(--bg);
     border: none;
     padding: 0.35rem 0.7rem;
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -248,7 +248,7 @@
   .comment-send:disabled { opacity: 0.5; cursor: default; }
 
   .comment-login-hint {
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     color: var(--text-dim);
     font-style: italic;
     padding: 0.2rem 0;

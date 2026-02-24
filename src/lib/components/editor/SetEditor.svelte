@@ -83,7 +83,7 @@
     gap: 0.5rem;
   }
   .title-input {
-    font-size: 1.3rem;
+    font-size: var(--fs-subheading);
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     background: var(--surface);
@@ -94,7 +94,7 @@
   }
   .title-input:focus { border-color: var(--accent); outline: none; }
   .desc-input {
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text);
@@ -111,7 +111,7 @@
   }
   .cover-input {
     flex: 1;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text);
@@ -137,12 +137,12 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     color: var(--text-mid);
     cursor: pointer;
   }
   .meta-stats {
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
   }
@@ -162,7 +162,7 @@
     border: 1px dashed var(--border);
     color: var(--text-mid);
     padding: 0.6rem 1.2rem;
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     font-weight: 500;
     border-radius: var(--radius);
     transition: all 0.15s;
@@ -174,7 +174,7 @@
     border: none;
     color: var(--bg);
     padding: 0.6rem 1.5rem;
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     border-radius: var(--radius);
     transition: all 0.15s;

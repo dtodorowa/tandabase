@@ -42,19 +42,19 @@
   }
   .hero h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 3.5rem;
+    font-size: var(--fs-hero);
     font-weight: 700;
     letter-spacing: -0.03em;
     margin-bottom: 0.5rem;
   }
   .accent { color: var(--accent); }
   .tagline {
-    font-size: 1.2rem;
+    font-size: var(--fs-subheading);
     color: var(--text-mid);
     margin-bottom: 0.5rem;
   }
   .subtitle {
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     color: var(--text-dim);
     margin-bottom: 2rem;
     line-height: 1.5;
@@ -70,7 +70,7 @@
     align-items: center;
     padding: 0.65rem 1.5rem;
     border-radius: var(--radius);
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     text-decoration: none;
     transition: all 0.15s;
@@ -92,7 +92,7 @@
   }
   .btn.small {
     padding: 0.4rem 1rem;
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
   }
   .welcome {
     margin-top: 2.5rem;
@@ -105,7 +105,7 @@
     gap: 1rem;
   }
   .welcome p {
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     color: var(--text-mid);
   }
 </style>

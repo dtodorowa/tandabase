@@ -83,7 +83,7 @@
   }
   .tanda-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
     font-weight: 600;
     min-width: 24px;
@@ -95,7 +95,7 @@
     color: var(--text);
     border-radius: var(--radius-sm);
     padding: 0.4rem 0.6rem;
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     font-weight: 500;
     font-family: 'Outfit', sans-serif;
   }
@@ -106,7 +106,7 @@
     color: var(--text);
     border-radius: var(--radius-sm);
     padding: 0.4rem 0.5rem;
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     font-family: 'Outfit', sans-serif;
   }
   select:focus { border-color: var(--accent); outline: none; }
@@ -116,7 +116,7 @@
     color: var(--text-dim);
     border-radius: var(--radius-sm);
     padding: 0.35rem 0.6rem;
-    font-size: 0.68rem;
+    font-size: var(--fs-label);
     font-weight: 500;
     transition: all 0.15s;
     font-family: 'Outfit', sans-serif;
