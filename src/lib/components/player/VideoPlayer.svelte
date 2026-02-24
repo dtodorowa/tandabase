@@ -328,12 +328,12 @@
   .now-playing { text-align: center; max-width: 500px; }
   .now-playing .np-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.05rem;
+    font-size: 1.8rem;
     font-weight: 600;
     color: var(--text);
   }
   .now-playing .np-meta {
-    font-size: 0.72rem;
+    font-size: 1rem;
     color: var(--text-dim);
     margin-top: 0.2rem;
   }
@@ -350,7 +350,7 @@
     border: 1px solid var(--border);
     color: var(--text-dim);
     padding: 0.25rem 0.7rem;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     font-weight: 500;
     border-radius: 99px;
     cursor: pointer;

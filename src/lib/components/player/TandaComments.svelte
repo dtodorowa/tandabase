@@ -117,20 +117,20 @@
     background: none;
     border: none;
     color: var(--text-dim);
-    font-size: 0.68rem;
+    font-size: 1rem;
     font-family: 'Outfit', sans-serif;
     cursor: pointer;
     padding: 0.3rem 0;
     transition: color 0.12s;
   }
   .comments-toggle:hover { color: var(--accent); }
-  .comments-icon { font-size: 0.8rem; }
+  .comments-icon { font-size: 1.25rem; }
   .comments-count {
     background: var(--accent-dim);
     color: var(--accent);
     padding: 0.05rem 0.35rem;
     border-radius: 99px;
-    font-size: 0.58rem;
+    font-size: 0.8rem;
     font-weight: 600;
   }
   .comments-label {
@@ -144,7 +144,7 @@
     gap: 0.4rem;
   }
   .no-comments {
-    font-size: 0.7rem;
+    font-size: 1rem;
     color: var(--text-dim);
     padding: 0.3rem 0;
     font-style: italic;
@@ -190,12 +190,12 @@
     flex-shrink: 0;
   }
   .comment-author {
-    font-size: 0.68rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: var(--text);
   }
   .comment-date {
-    font-size: 0.58rem;
+    font-size: 0.7rem;
     color: var(--text-dim);
     margin-left: auto;
   }
@@ -211,7 +211,7 @@
   }
   .comment-delete:hover { color: var(--tango); opacity: 1; }
   .comment-text {
-    font-size: 0.76rem;
+    font-size: 0.85rem;
     color: var(--text-mid);
     line-height: 1.45;
   }
@@ -227,7 +227,7 @@
     color: var(--text);
     border-radius: var(--radius-sm);
     padding: 0.35rem 0.55rem;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     font-family: 'Outfit', sans-serif;
   }
   .comment-input:focus { border-color: var(--accent); outline: none; }
@@ -236,7 +236,7 @@
     color: var(--bg);
     border: none;
     padding: 0.35rem 0.7rem;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;

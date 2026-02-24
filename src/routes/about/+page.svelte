@@ -4,15 +4,11 @@
 
 <div class="about-page">
   <div class="about-content">
-    <h1>hey, i'm daniela</h1>
-    <p class="intro">
-      and i built this thing because i got into a random rabbit hole
-    </p>
 
     <section>
       <h2>what is this?</h2>
       <p>
-        tandabase (yes, like database, i'm not sorry) is a <strong>listening tool</strong>
+        tandabase is a <strong>listening tool</strong>
       </p> 
         
       <p>
@@ -127,14 +123,14 @@
   }
   h2 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.05rem;
+    font-size: 2rem;
     font-weight: 600;
     color: var(--accent);
     letter-spacing: -0.01em;
     margin-bottom: 0.5rem;
   }
   p {
-    font-size: 0.88rem;
+    font-size: 1rem;
     line-height: 1.7;
     color: var(--text-mid);
     margin: 0 0 0.6rem;
@@ -148,7 +144,7 @@
     gap: 0.5rem;
   }
   li {
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1.65;
     color: var(--text-mid);
     padding-left: 1rem;
@@ -175,7 +171,7 @@
   }
   .sign-off {
     margin-top: 0.8rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--accent);
     font-weight: 500;
     font-style: italic;

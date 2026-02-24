@@ -9,7 +9,7 @@
 <div class="home">
   <div class="hero">
     <h1>tanda<span class="accent">base</span></h1>
-    <p class="tagline">Browse, listen, and start to hear why those four songs go together</p>
+    <p class="tagline">Browse and share tango setlists</p>
     <p class="subtitle">
        (Because YouTube playlists weren't cutting it)
     </p>

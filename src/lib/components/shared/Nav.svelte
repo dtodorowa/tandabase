@@ -120,7 +120,7 @@
     gap: 1.5rem;
   }
   .nav-links a {
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--text-mid);
     transition: color 0.15s;

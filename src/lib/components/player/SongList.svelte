@@ -42,7 +42,7 @@
   .song-list::-webkit-scrollbar-track { background: transparent; }
   .song-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
   .song-list-label {
-    font-size: 0.58rem;
+    font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -71,7 +71,7 @@
   }
   .song-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     min-width: 16px;
     text-align: center;
@@ -98,7 +98,7 @@
   .song-item.playing .eq-icon { display: flex; }
   .song-details { flex: 1; min-width: 0; }
   .song-title {
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--text);
     white-space: nowrap;
@@ -107,14 +107,14 @@
   }
   .song-item.playing .song-title { color: var(--accent-bright); }
   .song-singer {
-    font-size: 0.68rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     font-style: italic;
     margin-top: 0.05rem;
   }
   .song-year {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     font-weight: 500;
     flex-shrink: 0;
