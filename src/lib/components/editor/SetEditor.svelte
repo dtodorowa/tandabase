@@ -40,14 +40,26 @@
       {/if}
     </div>
     <div class="meta-row">
-      <label class="visibility-toggle">
-        <input
-          type="checkbox"
-          checked={editor.visibility === 'public'}
-          onchange={() => editor.visibility = editor.visibility === 'public' ? 'private' : 'public'}
-        />
-        <span>{editor.visibility === 'public' ? 'Public' : 'Private'}</span>
-      </label>
+      <div class="visibility-toggle">
+        <button
+          class="toggle-btn"
+          class:is-public={editor.visibility === 'public'}
+          onclick={() => editor.visibility = editor.visibility === 'public' ? 'private' : 'public'}
+          type="button"
+        >
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+          <span class="toggle-label">
+            {editor.visibility === 'public' ? '🌐 Public' : '🔒 Private'}
+          </span>
+        </button>
+        <span class="toggle-desc">
+          {editor.visibility === 'public'
+            ? 'Anyone can find and view this set'
+            : 'Only you can see this set'}
+        </span>
+      </div>
       <span class="meta-stats">
         {editor.tandaCount} tandas &middot; {editor.songCount} songs
       </span>
@@ -129,22 +141,68 @@
     flex-shrink: 0;
   }
   .meta-row {
+    padding-top: 0.5rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
   }
   .visibility-toggle {
     display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .toggle-btn {
+    display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: var(--fs-xs);
-    color: var(--text-mid);
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+  }
+  .toggle-track {
+    width: 36px;
+    height: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    position: relative;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .is-public .toggle-track {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .is-public .toggle-thumb {
+    transform: translateX(16px);
+    background: var(--bg);
+  }
+  .toggle-label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--text);
+  }
+  .toggle-desc {
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+    padding-left: 2.7rem;
   }
   .meta-stats {
     font-size: var(--fs-2xs);
     color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
+    padding-top: 0.2rem;
   }
   .tandas-list {
     display: flex;
