@@ -4,6 +4,10 @@
   import { goto } from '$app/navigation';
   import TandaEditor from './TandaEditor.svelte';
 
+  let expandedTandaId = $state<string | null>(null);
+  let dragTandaIdx = $state<number | null>(null);
+  let dragOverTandaIdx = $state<number | null>(null);
+
   async function handleSave() {
     if (!authState.user) return;
     const id = await editor.save(
@@ -12,9 +16,47 @@
     );
     goto(`/set/${id}`);
   }
+
+  function toggleTanda(id: string) {
+    expandedTandaId = expandedTandaId === id ? null : id;
+  }
+
+  function handleTandaDragStart(idx: number) {
+    dragTandaIdx = idx;
+  }
+  function handleTandaDragOver(e: DragEvent, idx: number) {
+    e.preventDefault();
+    dragOverTandaIdx = idx;
+  }
+  function handleTandaDrop(idx: number) {
+    if (dragTandaIdx !== null && dragTandaIdx !== idx) {
+      editor.reorderTandas(dragTandaIdx, idx);
+      if (expandedTandaId) {
+        expandedTandaId = expandedTandaId;
+      }
+    }
+    dragTandaIdx = null;
+    dragOverTandaIdx = null;
+  }
+  function handleTandaDragEnd() {
+    dragTandaIdx = null;
+    dragOverTandaIdx = null;
+  }
 </script>
 
-<div class="set-editor">
+<!-- Sticky save bar -->
+<div class="sticky-bar">
+  <div class="sticky-left">
+    <h2 class="sticky-title">{editor.title || 'Untitled Set'}</h2>
+    <span class="sticky-meta">{editor.tandaCount} tandas &middot; {editor.songCount} songs</span>
+  </div>
+  <button class="btn-save" onclick={handleSave} disabled={editor.saving || !editor.title}>
+    {editor.saving ? 'Saving...' : 'Save Set'}
+  </button>
+</div>
+
+<div class="editor-container">
+  <!-- Set metadata -->
   <div class="editor-meta">
     <input
       type="text"
@@ -60,62 +102,119 @@
             : 'Only you can see this set'}
         </span>
       </div>
-      <span class="meta-stats">
-        {editor.tandaCount} tandas &middot; {editor.songCount} songs
-      </span>
     </div>
   </div>
 
+  <!-- Tanda list -->
   <div class="tandas-list">
-    {#each editor.tandas as tanda (tanda.id)}
-      <TandaEditor {tanda} />
+    {#each editor.tandas as tanda, i (tanda.id)}
+      <div
+        class="tanda-drop-zone"
+        class:drag-over={dragOverTandaIdx === i && dragTandaIdx !== i}
+        ondragover={(e) => handleTandaDragOver(e, i)}
+        ondrop={() => handleTandaDrop(i)}
+      >
+        <TandaEditor
+          {tanda}
+          expanded={expandedTandaId === tanda.id}
+          ontoggle={() => toggleTanda(tanda.id)}
+          ondragstart={() => handleTandaDragStart(i)}
+          ondragend={handleTandaDragEnd}
+        />
+      </div>
     {/each}
   </div>
 
-  <div class="editor-actions">
-    <button class="add-tanda-btn" onclick={() => editor.addTanda()}>+ Add Tanda</button>
-    <button class="save-btn" onclick={handleSave} disabled={editor.saving || !editor.title}>
-      {editor.saving ? 'Saving...' : 'Save Set'}
-    </button>
-  </div>
+  <button class="add-tanda-btn" onclick={() => editor.addTanda()}>+ Add Tanda</button>
 </div>
 
 <style>
-  .set-editor {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1.5rem;
+  /* Sticky save bar */
+  .sticky-bar {
+    position: sticky;
+    top: 0;
+    background: rgba(9, 9, 11, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+  }
+  .sticky-left {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 0.1rem;
   }
+  .sticky-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+  .sticky-meta {
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+  }
+  .btn-save {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-save:hover:not(:disabled) { background: var(--accent-bright); }
+  .btn-save:disabled { opacity: 0.5; cursor: default; }
+
+  /* Editor container */
+  .editor-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Set metadata */
   .editor-meta {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
   }
   .title-input {
-    font-size: var(--fs-subheading);
-    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--fs-lead);
     font-weight: 600;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: transparent;
+    border: 1px solid transparent;
     color: var(--text);
     border-radius: var(--radius-sm);
-    padding: 0.6rem 0.8rem;
+    padding: 0.5rem 0.6rem;
+    font-family: 'Space Grotesk', sans-serif;
   }
-  .title-input:focus { border-color: var(--accent); outline: none; }
+  .title-input:focus { background: var(--bg); border-color: var(--accent); outline: none; }
   .desc-input {
     font-size: var(--fs-sm);
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: transparent;
+    border: 1px solid transparent;
     color: var(--text);
     border-radius: var(--radius-sm);
-    padding: 0.5rem 0.75rem;
+    padding: 0.4rem 0.6rem;
     resize: vertical;
     font-family: 'Outfit', sans-serif;
   }
-  .desc-input:focus { border-color: var(--accent); outline: none; }
+  .desc-input:focus { background: var(--bg); border-color: var(--accent); outline: none; }
   .cover-row {
     display: flex;
     gap: 0.6rem;
@@ -124,14 +223,14 @@
   .cover-input {
     flex: 1;
     font-size: var(--fs-xs);
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: transparent;
+    border: 1px solid transparent;
     color: var(--text);
     border-radius: var(--radius-sm);
-    padding: 0.45rem 0.7rem;
+    padding: 0.4rem 0.6rem;
     font-family: 'Outfit', sans-serif;
   }
-  .cover-input:focus { border-color: var(--accent); outline: none; }
+  .cover-input:focus { background: var(--bg); border-color: var(--accent); outline: none; }
   .cover-preview {
     width: 80px;
     height: 50px;
@@ -141,10 +240,7 @@
     flex-shrink: 0;
   }
   .meta-row {
-    padding-top: 0.5rem;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    padding-top: 0.3rem;
   }
   .visibility-toggle {
     display: flex;
@@ -198,46 +294,35 @@
     color: var(--text-dim);
     padding-left: 2.7rem;
   }
-  .meta-stats {
-    font-size: var(--fs-2xs);
-    color: var(--text-dim);
-    font-family: 'JetBrains Mono', monospace;
-    padding-top: 0.2rem;
-  }
+
+  /* Tanda list */
   .tandas-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
   }
-  .editor-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    padding-top: 0.5rem;
-  }
-  .add-tanda-btn {
-    background: var(--surface2);
-    border: 1px dashed var(--border);
-    color: var(--text-mid);
-    padding: 0.6rem 1.2rem;
-    font-size: var(--fs-xs);
-    font-weight: 500;
+  .tanda-drop-zone {
     border-radius: var(--radius);
-    transition: all 0.15s;
+    transition: outline 0.15s;
+  }
+  .tanda-drop-zone.drag-over {
+    outline: 2px dashed var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Add tanda button */
+  .add-tanda-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--fs-sm);
     font-family: 'Outfit', sans-serif;
+    transition: all 0.15s;
   }
   .add-tanda-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .save-btn {
-    background: var(--accent);
-    border: none;
-    color: var(--bg);
-    padding: 0.6rem 1.5rem;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    border-radius: var(--radius);
-    transition: all 0.15s;
-    font-family: 'Outfit', sans-serif;
-  }
-  .save-btn:hover:not(:disabled) { background: var(--accent-bright); }
-  .save-btn:disabled { opacity: 0.5; cursor: default; }
 </style>

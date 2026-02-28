@@ -1,96 +1,96 @@
 <script lang="ts">
   import type { Song } from '$lib/types';
 
-  let { song, onupdate, onremove }: {
+  let { song, onupdate, onremove, ondragstart, ondragend }: {
     song: Song;
     onupdate: (updates: Partial<Song>) => void;
     onremove: () => void;
+    ondragstart?: () => void;
+    ondragend?: () => void;
   } = $props();
 </script>
 
-<div class="song-card">
+<div class="song-row" draggable="true" ondragstart={ondragstart} ondragend={ondragend}>
+  <span class="drag-handle" title="Drag to reorder">&#8942;&#8942;</span>
   <img
     src={song.thumbnail || `https://img.youtube.com/vi/${song.video_id}/mqdefault.jpg`}
     alt=""
     class="song-thumb"
   />
-  <div class="song-fields">
-    <input
-      type="text"
-      value={song.title}
-      oninput={(e) => onupdate({ title: e.currentTarget.value })}
-      placeholder="Title"
-      class="field-title"
-    />
-    <div class="field-row">
-      <input
-        type="text"
-        value={song.singer ?? ''}
-        oninput={(e) => onupdate({ singer: e.currentTarget.value || null })}
-        placeholder="Singer"
-        class="field-singer"
-      />
-      <input
-        type="number"
-        value={song.year ?? ''}
-        oninput={(e) => onupdate({ year: e.currentTarget.value ? Number(e.currentTarget.value) : null })}
-        placeholder="Year"
-        class="field-year"
-      />
-    </div>
-  </div>
+  <input
+    type="text"
+    value={song.title}
+    oninput={(e) => onupdate({ title: e.currentTarget.value })}
+    placeholder="Title"
+    class="field-title"
+  />
+  <input
+    type="text"
+    value={song.singer ?? ''}
+    oninput={(e) => onupdate({ singer: e.currentTarget.value || null })}
+    placeholder="Singer"
+    class="field-singer"
+  />
+  <input
+    type="number"
+    value={song.year ?? ''}
+    oninput={(e) => onupdate({ year: e.currentTarget.value ? Number(e.currentTarget.value) : null })}
+    placeholder="Year"
+    class="field-year"
+  />
   <button class="remove-btn" onclick={onremove} aria-label="Remove song">&times;</button>
 </div>
 
 <style>
-  .song-card {
+  .song-row {
     display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    padding: 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
     background: var(--surface);
+    padding: 0.4rem 0.5rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
   }
-  .song-thumb {
-    width: 60px;
-    height: 34px;
-    object-fit: cover;
-    border-radius: 3px;
+  .drag-handle {
+    color: var(--text-dim);
+    cursor: grab;
+    font-size: 0.85rem;
+    letter-spacing: -3px;
+    user-select: none;
     flex-shrink: 0;
-    margin-top: 0.15rem;
+    padding: 0 0.2rem;
   }
-  .song-fields {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+  .song-thumb {
+    width: 44px;
+    height: 26px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
   }
-  .song-fields input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
+  .song-row input {
+    background: transparent;
+    border: 1px solid transparent;
     color: var(--text);
     border-radius: 3px;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.4rem;
     font-size: var(--fs-xs);
     outline: none;
     font-family: 'Outfit', sans-serif;
   }
-  .song-fields input:focus { border-color: var(--accent); }
-  .field-title { font-weight: 500; }
-  .field-row { display: flex; gap: 0.25rem; }
-  .field-singer { flex: 1; }
-  .field-year { width: 60px; }
+  .song-row input:focus { background: var(--bg); border-color: var(--accent); }
+  .field-title { flex: 1; min-width: 0; font-weight: 500; }
+  .field-singer { width: 200px; flex-shrink: 0; }
+  .field-year { width: 70px; flex-shrink: 0; }
   .remove-btn {
     background: none;
     border: none;
     color: var(--text-dim);
     font-size: var(--fs-lead);
     cursor: pointer;
-    padding: 0.1rem 0.3rem;
+    padding: 0 0.3rem;
     transition: color 0.15s;
     flex-shrink: 0;
+    line-height: 1;
   }
   .remove-btn:hover { color: var(--tango); }
 </style>
