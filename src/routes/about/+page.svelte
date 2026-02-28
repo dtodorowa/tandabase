@@ -1,9 +1,63 @@
+<script lang="ts">
+  import { submitFeedback } from '$lib/firebase/db';
+  import { authState } from '$lib/stores/auth.svelte';
+
+  let feedbackMsg = $state('');
+  let feedbackName = $state('');
+  let sending = $state(false);
+  let sent = $state(false);
+  let sendError = $state('');
+
+  async function handleSubmit() {
+    if (!feedbackMsg.trim()) return;
+    sending = true;
+    sendError = '';
+    try {
+      await submitFeedback({
+        message: feedbackMsg.trim(),
+        name: feedbackName.trim() || 'Anonymous',
+        userId: authState.user?.uid,
+      });
+      sent = true;
+      feedbackMsg = '';
+      feedbackName = '';
+      setTimeout(() => sent = false, 5000);
+    } catch (e) {
+      sendError = 'Failed to send. Try again?';
+    } finally {
+      sending = false;
+    }
+  }
+</script>
+
 <svelte:head>
-  <title>About - Practica Set</title>
+  <title>About - Tandabase</title>
 </svelte:head>
 
 <div class="about-page">
   <div class="about-content">
+
+    <!-- ── Status / Announcements ── -->
+    <div class="status-card">
+      <div class="status-header">
+        <span class="status-dot"></span>
+        <span class="status-label">actively building</span>
+      </div>
+      <h2 class="status-title">what i'm working on</h2>
+      <ul class="roadmap">
+        <li class="done">set editor redesign (desktop)</li>
+        <li class="done">desktop navigation overhaul</li>
+        <li class="in-progress">mobile screens review &amp; polish</li>
+        <li class="in-progress">mobile editor layout</li>
+        <li class="planned">drag-and-drop improvements</li>
+        <li class="planned">better search &amp; filtering on browse</li>
+      </ul>
+      <p class="status-note">
+        this is very much a work in progress. if something looks weird or broken,
+        it's probably because i haven't gotten to it yet.
+        <strong>any feedback or feature requests are super appreciated!</strong>
+      </p>
+    </div>
 
     <section>
       <h2>what is this?</h2>
@@ -90,6 +144,42 @@
       </p>
       <p class="sign-off">&mdash; daniela</p>
     </section>
+
+    <!-- ── Feedback / Feature Request ── -->
+    <div class="feedback-card">
+      <h2>got ideas? found a bug?</h2>
+      <p>drop me a message. feature requests, feedback, complaints, whatever. it all helps.</p>
+      <form class="feedback-form" onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+        <input
+          type="text"
+          bind:value={feedbackName}
+          placeholder="your name (optional)"
+          class="feedback-input feedback-name"
+        />
+        <textarea
+          bind:value={feedbackMsg}
+          placeholder="what's on your mind?"
+          class="feedback-input feedback-msg"
+          rows="3"
+        ></textarea>
+        <div class="feedback-footer">
+          {#if sent}
+            <span class="feedback-success">sent! thank you</span>
+          {/if}
+          {#if sendError}
+            <span class="feedback-error">{sendError}</span>
+          {/if}
+          <button
+            type="submit"
+            class="feedback-btn"
+            disabled={sending || !feedbackMsg.trim()}
+          >
+            {sending ? 'sending...' : 'send'}
+          </button>
+        </div>
+      </form>
+    </div>
+
   </div>
 </div>
 
@@ -177,8 +267,150 @@
     font-style: italic;
   }
 
+  /* ── Status / Announcements card ── */
+  .status-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .status-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vals);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .status-label {
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    color: var(--vals);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .status-card .status-title {
+    font-size: var(--fs-subheading);
+    color: var(--text);
+    margin-bottom: 0.8rem;
+  }
+  .roadmap {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .roadmap li {
+    font-size: var(--fs-sm);
+    padding-left: 1.6rem;
+    position: relative;
+    color: var(--text-mid);
+  }
+  .roadmap li::before {
+    position: absolute;
+    left: 0;
+    top: 0.2em;
+    font-size: 0.85rem;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+  }
+  .roadmap li.done { color: var(--text-dim); text-decoration: line-through; }
+  .roadmap li.done::before { content: '\2713'; color: var(--vals); }
+  .roadmap li.in-progress { color: var(--text); font-weight: 500; }
+  .roadmap li.in-progress::before { content: '\25B6'; color: var(--accent); font-size: 0.7rem; top: 0.35em; }
+  .roadmap li.planned::before { content: '\25CB'; color: var(--text-dim); }
+  .status-note {
+    font-size: var(--fs-sm);
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .status-note strong { color: var(--accent); }
+
+  /* ── Feedback card ── */
+  .feedback-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .feedback-card h2 {
+    font-size: var(--fs-subheading);
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+  .feedback-card p {
+    font-size: var(--fs-sm);
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+  .feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .feedback-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.8rem;
+    font-size: var(--fs-sm);
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    resize: vertical;
+  }
+  .feedback-input:focus { border-color: var(--accent); }
+  .feedback-input::placeholder { color: var(--text-dim); }
+  .feedback-name { max-width: 280px; }
+  .feedback-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+  .feedback-success {
+    font-size: var(--fs-xs);
+    color: var(--vals);
+    font-weight: 500;
+  }
+  .feedback-error {
+    font-size: var(--fs-xs);
+    color: var(--tango);
+  }
+  .feedback-btn {
+    background: var(--accent);
+    border: none;
+    color: var(--bg);
+    padding: 0.5rem 1.2rem;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .feedback-btn:hover:not(:disabled) { background: var(--accent-bright); }
+  .feedback-btn:disabled { opacity: 0.5; cursor: default; }
+
   @media (max-width: 600px) {
     .about-page { padding: 1.5rem 1rem 3rem; }
     h1 { font-size: var(--fs-subheading); }
+    .feedback-name { max-width: 100%; }
   }
 </style>

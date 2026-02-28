@@ -156,6 +156,24 @@ export async function deleteComment(commentId: string): Promise<void> {
   await deleteDoc(doc(db, 'comments', commentId));
 }
 
+// ── Feedback ──
+function feedbackRef() {
+  if (!db) throw new Error('Firebase not configured');
+  return collection(db, 'feedback');
+}
+
+export async function submitFeedback(feedback: {
+  message: string;
+  name: string;
+  userId?: string;
+}): Promise<string> {
+  const docRef = await addDoc(feedbackRef(), {
+    ...feedback,
+    created_at: serverTimestamp(),
+  });
+  return docRef.id;
+}
+
 export async function getPublicSets(maxCount = 50): Promise<PracticaSet[]> {
   try {
     const q = query(
