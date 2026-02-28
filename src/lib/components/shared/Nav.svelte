@@ -30,7 +30,9 @@
   <div class="nav-left">
     <!-- Mobile: profile pic -->
     <div class="mobile-avatar">
-      {#if authState.isLoggedIn && authState.user?.photoURL}
+      {#if !authState.isLoggedIn}
+     
+      {:else if authState.isLoggedIn && authState.user?.photoURL}
         <a href="/my-sets"><img src={authState.user.photoURL} alt="" class="mobile-avatar-img" /></a>
       {:else if authState.isLoggedIn}
         <a href="/my-sets" class="mobile-avatar-placeholder">{authState.user?.displayName?.charAt(0).toUpperCase() ?? 'U'}</a>
@@ -54,9 +56,10 @@
   </div>
 
   <!-- Mobile: centered logo -->
-  <a href="/" class="logo mobile-logo">
-    <span class="logo-text">tanda<span class="logo-accent">base</span></span>
-  </a>
+    <a href="/" class="logo mobile-logo">
+      <span class="logo-text">tanda<span class="logo-accent">base</span></span>
+    </a>
+
 
   <div class="nav-right">
     <!-- Desktop: notification bell + profile dropdown -->
