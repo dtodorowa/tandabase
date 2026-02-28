@@ -1,15 +1,14 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { replaceState } from '$app/navigation';
   import { player } from '$lib/stores/player.svelte';
   import { authState } from '$lib/stores/auth.svelte';
   import { getSet, getCommentsForSet } from '$lib/firebase/db';
-  import type { PracticaSet, Comment } from '$lib/types';
+  import type { PracticaSet, Comment, Tanda } from '$lib/types';
   import TandaComments from '$lib/components/player/TandaComments.svelte';
-  import Sidebar from '$lib/components/player/Sidebar.svelte';
-  import TandaHeader from '$lib/components/player/TandaHeader.svelte';
   import SongList from '$lib/components/player/SongList.svelte';
   import VideoPlayer from '$lib/components/player/VideoPlayer.svelte';
-  import MobileDrawer from '$lib/components/player/MobileDrawer.svelte';
+  import MobilePlayerView from '$lib/components/player/MobilePlayerView.svelte';
 
   import seedData from '$lib/data/seed.json';
 
@@ -19,7 +18,6 @@
 
   let loading = $state(true);
   let error = $state('');
-  let drawerOpen = $state(false);
   let comments = $state<Comment[]>([]);
 
   const setId = $derived(page.params.id);
@@ -55,6 +53,7 @@
           })),
         };
         player.loadSet(demoSet);
+        applyTandaParam();
       } else {
         const set = await getSet(id);
         if (!set) {
@@ -62,6 +61,7 @@
           return;
         }
         player.loadSet(set);
+        applyTandaParam();
         loadComments(id);
       }
     } catch (e) {
@@ -70,6 +70,64 @@
     } finally {
       loading = false;
     }
+  }
+
+  function applyTandaParam() {
+    const t = page.url.searchParams.get('tanda');
+    if (t !== null) {
+      const idx = parseInt(t, 10);
+      if (!isNaN(idx) && idx >= 0 && idx < player.tandas.length) {
+        player.selectTanda(idx);
+      }
+    }
+  }
+
+  // Keep URL in sync with current tanda
+  $effect(() => {
+    const idx = player.currentTandaIndex;
+    if (!player.set) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set('tanda', String(idx));
+    replaceState(url, {});
+  });
+
+  function getTandaShareUrl(): string {
+    const url = new URL(window.location.href);
+    url.searchParams.set('tanda', String(player.currentTandaIndex));
+    return url.toString();
+  }
+
+  // ── Share popup ──
+  let shareOpen = $state(false);
+  let linkCopied = $state(false);
+
+  function copyShareLink() {
+    navigator.clipboard.writeText(getTandaShareUrl());
+    linkCopied = true;
+    setTimeout(() => { linkCopied = false; }, 2000);
+  }
+
+  function shareToFacebook() {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getTandaShareUrl())}`, '_blank', 'width=600,height=400');
+    shareOpen = false;
+  }
+
+  function shareToTwitter() {
+    const text = player.set ? `Check out "${player.set.title}" on Tandabase` : 'Check out this tanda set';
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(getTandaShareUrl())}&text=${encodeURIComponent(text)}`, '_blank', 'width=600,height=400');
+    shareOpen = false;
+  }
+
+  function shareToWhatsApp() {
+    const text = player.set ? `Check out "${player.set.title}" on Tandabase: ${getTandaShareUrl()}` : getTandaShareUrl();
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    shareOpen = false;
+  }
+
+  function getYearRange(tanda: Tanda): string {
+    const years = tanda.songs.map(s => s.year).filter((y): y is number => y !== null).sort();
+    if (!years.length) return '';
+    return years[0] === years[years.length - 1] ? String(years[0]) : `${years[0]}\u2013${years[years.length - 1]}`;
   }
 
   async function loadComments(id: string) {
@@ -110,47 +168,93 @@
 {:else if error}
   <div class="center-msg error">{error}</div>
 {:else if player.set}
-  <!-- Mobile drawer -->
+  <!-- Mobile: dedicated mobile player view -->
   <div class="mobile-only">
-    <MobileDrawer tandas={player.tandas} open={drawerOpen} onclose={() => drawerOpen = false} />
+    <MobilePlayerView {comments} {isOwner} setId={player.set.id} oncommentadded={() => loadComments(player.set?.id ?? '')} />
   </div>
 
-  <div class="player-header">
-    <button class="menu-toggle" onclick={() => drawerOpen = true} aria-label="Open tanda list">&#9776;</button>
-    <div class="header-info">
-      <span class="set-title">{player.set.title}</span>
-    </div>
-    <div class="header-stats">
-      <span>{player.tandas.length} tandas</span>
-      <span>{player.set.song_count} songs</span>
-    </div>
-    <button class="share-btn" onclick={() => navigator.clipboard.writeText(window.location.href)} aria-label="Share">
-      Share
-    </button>
-  </div>
-
-  <div class="layout">
-    <nav class="sidebar desktop-only">
-      <Sidebar tandas={player.tandas} />
-    </nav>
-    <div class="main">
-      <TandaHeader />
-      <div class="content-area">
-        {#if player.currentTanda}
-          <SongList songs={player.currentTanda.songs} />
-        {/if}
-        <VideoPlayer song={player.currentSong} tanda={player.currentTanda} {isOwner} />
-      </div>
-      {#if player.currentTanda && player.set?.id}
-        <div class="comments-strip">
-          <TandaComments
-            {comments}
-            setId={player.set.id}
-            tandaIndex={player.currentTandaIndex}
-            oncommentadded={() => loadComments(player.set?.id ?? '')}
-          />
+  <!-- Desktop: 2-panel layout -->
+  <div class="desktop-only">
+    <div class="layout">
+      <!-- Left: set info + tanda list with inline song expand -->
+      <aside class="panel-left">
+        <div class="set-header">
+          <div class="set-header-top">
+            <h1 class="set-title">{player.set.title}</h1>
+            <div class="share-wrap">
+              <button class="share-btn" onclick={() => shareOpen = !shareOpen}>Share</button>
+              {#if shareOpen}
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                <div class="share-backdrop" onclick={() => shareOpen = false}></div>
+                <div class="share-popup">
+                  <button class="share-option" onclick={copyShareLink}>
+                    <span>{linkCopied ? '✓ Copied!' : '🔗 Copy link'}</span>
+                  </button>
+                  <button class="share-option" onclick={shareToWhatsApp}>
+                    <span>💬 WhatsApp</span>
+                  </button>
+                  <button class="share-option" onclick={shareToFacebook}>
+                    <span>📘 Facebook</span>
+                  </button>
+                  <button class="share-option" onclick={shareToTwitter}>
+                    <span>🐦 X / Twitter</span>
+                  </button>
+                </div>
+              {/if}
+            </div>
+          </div>
+          <span class="meta-text">{player.tandas.length} tandas &middot; {player.set.song_count} songs</span>
         </div>
-      {/if}
+
+        <div class="tanda-list">
+          {#each player.tandas as tanda, i}
+            {@const yr = getYearRange(tanda)}
+            {@const isActive = i === player.currentTandaIndex}
+            <div class="tanda-item" class:active={isActive}>
+              <button class="tanda-row" onclick={() => player.selectTanda(i)}>
+                <span class="tanda-num">{String(tanda.num).padStart(2, '0')}</span>
+                <span class="tanda-orch">{tanda.orchestra}</span>
+                <span class="genre-tag {tanda.genre}">{tanda.genre}</span>
+                {#if yr}<span class="tanda-years">{yr}</span>{/if}
+                <span class="tanda-chevron" class:open={isActive}>&#9662;</span>
+              </button>
+
+              {#if isActive}
+                <div class="song-expand">
+                  {#each tanda.songs as song, si}
+                    <button
+                      class="song-row"
+                      class:playing={si === player.currentSongIndex}
+                      onclick={() => player.selectSong(si)}
+                    >
+                      <span class="song-idx">{si + 1}</span>
+                      <span class="song-name">{song.title}</span>
+                      {#if song.singer}
+                        <span class="song-singer">{song.singer}</span>
+                      {/if}
+                    </button>
+                  {/each}
+                </div>
+              {/if}
+            </div>
+          {/each}
+        </div>
+      </aside>
+
+      <!-- Right: video player + comments (always visible) -->
+      <main class="panel-right">
+        <VideoPlayer song={player.currentSong} tanda={player.currentTanda} {isOwner} />
+        {#if player.currentTanda && player.set?.id}
+          <div class="comments-bar">
+            <TandaComments
+              {comments}
+              setId={player.set.id}
+              tandaIndex={player.currentTandaIndex}
+              oncommentadded={() => loadComments(player.set?.id ?? '')}
+            />
+          </div>
+        {/if}
+      </main>
     </div>
   </div>
 {/if}
@@ -166,99 +270,236 @@
   }
   .center-msg.error { color: var(--tango); }
 
-  .player-header {
+  /* ── 2-Panel Desktop Layout ── */
+  .layout {
     display: flex;
-    align-items: center;
-    padding: 0.6rem 1.5rem;
-    border-bottom: 1px solid var(--border);
+    height: calc(100vh - 56px);
+    height: calc(100dvh - 56px);
+  }
+
+  /* Left panel: set info + tanda list */
+  .panel-left {
+    width: 380px;
+    min-width: 320px;
     background: var(--surface);
-    gap: 0.8rem;
-    height: 44px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
-  .menu-toggle {
-    display: none;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-mid);
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: var(--fs-body);
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
+
+  .set-header {
+    padding: 1rem 1rem 0.7rem;
+    border-bottom: 1px solid var(--border);
   }
-  .menu-toggle:hover { border-color: var(--accent); color: var(--accent); }
-  .header-info { flex: 1; min-width: 0; }
+  .set-header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+  }
   .set-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: var(--fs-heading);
+    font-size: var(--fs-lead);
     font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: var(--text);
+    line-height: 1.15;
+    margin: 0;
   }
-  .header-stats {
-    display: flex;
-    gap: 0.5rem;
+  .meta-text {
     font-size: var(--fs-xs);
     color: var(--text-dim);
-    font-weight: 500;
   }
-  .header-stats span {
-    white-space: nowrap;
-    background: var(--surface2);
-    padding: 0.2rem 0.5rem;
-    border-radius: 99px;
-    border: 1px solid var(--border);
-  }
+
+  /* Share popup */
   .share-btn {
     background: var(--surface2);
     border: 1px solid var(--border);
     color: var(--text-mid);
-    padding: 0.3rem 0.7rem;
-    font-size: var(--fs-sm);
+    padding: 0.25rem 0.6rem;
+    font-size: var(--fs-xs);
     font-weight: 500;
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.15s;
     font-family: 'Outfit', sans-serif;
+    flex-shrink: 0;
   }
   .share-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  .layout {
-    display: flex;
-    height: calc(100vh - 56px - 44px);
-    height: calc(100dvh - 56px - 44px);
-  }
-  .sidebar {
-    width: 280px;
-    min-width: 280px;
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
+  .share-wrap { position: relative; }
+  .share-backdrop { position: fixed; inset: 0; z-index: 50; }
+  .share-popup {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
     background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    min-width: 180px;
+    z-index: 51;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .share-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: var(--fs-xs);
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: background 0.12s;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .share-option:hover { background: var(--surface2); }
+
+  /* Tanda list */
+  .tanda-list {
+    flex: 1;
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
-  .sidebar::-webkit-scrollbar { width: 3px; }
-  .sidebar::-webkit-scrollbar-track { background: transparent; }
-  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  .main {
+  .tanda-list::-webkit-scrollbar { width: 3px; }
+  .tanda-list::-webkit-scrollbar-track { background: transparent; }
+  .tanda-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .tanda-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .tanda-item.active {
+    background: var(--accent-dim);
+  }
+
+  .tanda-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: var(--fs-sm);
+    text-align: left;
+    transition: background 0.12s;
+  }
+  .tanda-row:hover { background: var(--surface2); }
+  .tanda-item.active .tanda-row:hover { background: rgba(255,255,255,0.04); }
+
+  .tanda-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--fs-xs);
+    color: var(--text-dim);
+    min-width: 20px;
+    font-weight: 500;
+  }
+  .tanda-item.active .tanda-num { color: var(--accent); }
+
+  .tanda-orch {
+    font-weight: 500;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tanda-item.active .tanda-orch { color: var(--accent-bright); font-weight: 600; }
+
+  .genre-tag {
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .genre-tag.Tango   { background: rgba(248,113,113,0.1); color: var(--tango); }
+  .genre-tag.Milonga { background: rgba(96,165,250,0.1); color: var(--milonga); }
+  .genre-tag.Vals    { background: rgba(74,222,128,0.1); color: var(--vals); }
+
+  .tanda-years {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .tanda-chevron {
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .tanda-chevron.open { transform: rotate(180deg); }
+
+  /* Inline song expansion */
+  .song-expand {
+    padding: 0 0 0.3rem;
+  }
+  .song-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 1rem 0.3rem 2.6rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-mid);
+    font-family: 'Outfit', sans-serif;
+    font-size: var(--fs-xs);
+    text-align: left;
+    transition: all 0.1s;
+  }
+  .song-row:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+  .song-row.playing {
+    color: var(--accent-bright);
+    font-weight: 600;
+  }
+  .song-idx {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+    min-width: 14px;
+  }
+  .song-row.playing .song-idx { color: var(--accent); }
+  .song-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .song-singer {
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+    font-style: italic;
+    flex-shrink: 0;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Right panel: video + comments */
+  .panel-right {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
     min-width: 0;
+    overflow-y: auto;
   }
-  .content-area {
-    flex: 1;
-    display: flex;
-    min-height: 0;
-  }
-
-  .comments-strip {
+  .comments-bar {
     flex-shrink: 0;
     border-top: 1px solid var(--border);
     padding: 0.4rem 1.2rem;
@@ -268,14 +509,8 @@
   .mobile-only { display: none; }
   .desktop-only { display: block; }
 
-  @media (max-width: 900px) {
-    .content-area { flex-direction: column; }
-  }
   @media (max-width: 700px) {
-    .menu-toggle { display: flex; }
-    .header-stats { display: none; }
     .desktop-only { display: none; }
     .mobile-only { display: block; }
-    .layout { height: calc(100vh - 56px - 44px); height: calc(100dvh - 56px - 44px); }
   }
 </style>

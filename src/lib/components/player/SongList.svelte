@@ -31,10 +31,8 @@
 
 <style>
   .song-list {
-    width: 320px;
-    min-width: 320px;
+    flex: 1;
     overflow-y: auto;
-    border-right: 1px solid var(--border);
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
@@ -120,21 +118,7 @@
     flex-shrink: 0;
   }
 
-  @media (max-width: 1100px) {
-    .song-list { width: 260px; min-width: 260px; }
-  }
-  @media (max-width: 900px) {
-    .song-list {
-      width: 100%;
-      min-width: unset;
-      border-right: none;
-      border-bottom: 1px solid var(--border);
-      max-height: 200px;
-      flex-shrink: 0;
-    }
-  }
   @media (max-width: 700px) {
-    .song-list { max-height: 180px; }
     .song-item { padding: 0.65rem 1rem; }
   }
 </style>

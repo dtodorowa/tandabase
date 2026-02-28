@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { parsePlistXml, type PlistLibrary, type PlistPlaylist } from '$lib/utils/plist-parser';
   import { importPlaylist, type ImportedTanda, type ImportedSong, type ImportResult } from '$lib/utils/playlist-import';
+  import { parseCsvToTandas, CSV_EXAMPLE } from '$lib/utils/csv-import';
   import {
     batchSearchYouTube,
     DEFAULT_PREFERRED_CHANNELS,
@@ -17,9 +18,16 @@
   type Step = 'upload' | 'select' | 'preview' | 'searching' | 'done';
   let step = $state<Step>('upload');
 
-  // Upload
+  // Import mode toggle
+  let importMode = $state<'xml' | 'csv'>('xml');
+
+  // Upload (XML)
   let dragOver = $state(false);
   let parseError = $state('');
+
+  // CSV
+  let csvText = $state('');
+  let csvError = $state('');
 
   // Parsed data
   let library = $state<PlistLibrary | null>(null);
@@ -87,6 +95,37 @@
       }
     } catch (e: any) {
       parseError = e.message || 'Failed to parse XML file.';
+    }
+  }
+
+  // ── CSV handling ──
+  function handleCsvFile(e: Event) {
+    const input = e.target as HTMLInputElement;
+    if (input.files?.[0]) {
+      input.files[0].text().then(text => {
+        csvText = text;
+        processCsv();
+      });
+    }
+  }
+
+  function loadExample() {
+    csvText = CSV_EXAMPLE;
+  }
+
+  function processCsv() {
+    csvError = '';
+    if (!csvText.trim()) {
+      csvError = 'Please paste or upload CSV data.';
+      return;
+    }
+    try {
+      const result = parseCsvToTandas(csvText);
+      importResult = result;
+      setTitle = 'Imported Set';
+      step = 'preview';
+    } catch (e: any) {
+      csvError = e.message || 'Failed to parse CSV.';
     }
   }
 
@@ -230,34 +269,72 @@
 <div class="import-page">
   <div class="page-header">
     <h1>Import Playlist</h1>
-    <p class="subtitle">Upload an Apple Music / iTunes XML export to create a practica set</p>
+    <p class="subtitle">Create a practica set from a CSV file or Apple Music XML export</p>
   </div>
 
   <!-- STEP 1: Upload -->
   {#if step === 'upload'}
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div
-      role="button"
-      tabindex="0"
-      class="drop-zone"
-      class:drag-over={dragOver}
-      ondrop={handleDrop}
-      ondragover={handleDragOver}
-      ondragleave={() => dragOver = false}
-    >
-      <div class="drop-icon">&#9835;</div>
-      <p class="drop-text">Drag & drop your XML playlist file here</p>
-      <p class="drop-or">or</p>
-      <label class="file-btn">
-        Choose File
-        <input type="file" accept=".xml,.plist" onchange={handleFileSelect} hidden />
-      </label>
-      <p class="drop-hint">
-        Export from Apple Music: File → Library → Export Playlist… → XML
-      </p>
+    <div class="import-tabs">
+      <button class="import-tab" class:active={importMode === 'csv'} onclick={() => importMode = 'csv'}>CSV</button>
+      <button class="import-tab" class:active={importMode === 'xml'} onclick={() => importMode = 'xml'}>Apple Music XML</button>
     </div>
-    {#if parseError}
-      <div class="error-msg">{parseError}</div>
+
+    {#if importMode === 'csv'}
+      <div class="csv-section">
+        <div class="csv-header">
+          <p class="csv-hint">Paste your CSV below, or upload a <code>.csv</code> file. Separate tandas with a blank row.</p>
+          <div class="csv-actions">
+            <button class="secondary-btn small" onclick={loadExample}>Load example</button>
+            <label class="secondary-btn small">
+              Upload .csv
+              <input type="file" accept=".csv,.txt" onchange={handleCsvFile} hidden />
+            </label>
+          </div>
+        </div>
+        <textarea
+          class="csv-textarea"
+          rows="14"
+          placeholder="orchestra,title,year,singer,genre&#10;Di Sarli,Bahía Blanca,1957,,Tango&#10;Di Sarli,A la gran muñeca,1951,,Tango&#10;&#10;D'Arienzo,El flete,1937,,Tango&#10;..."
+          bind:value={csvText}
+        ></textarea>
+        {#if csvError}
+          <div class="error-msg">{csvError}</div>
+        {/if}
+        <div class="csv-format-info">
+          <strong>Columns:</strong> orchestra, title, year, singer, genre<br/>
+          <strong>Singer:</strong> leave empty or write <code>instrumental</code> for instrumental tracks<br/>
+          <strong>Genre:</strong> Tango, Vals, or Milonga (defaults to Tango)<br/>
+          <strong>Tandas:</strong> separate with a blank row, or consecutive songs with the same orchestra are auto-grouped
+        </div>
+        <button class="primary-btn" onclick={processCsv} disabled={!csvText.trim()}>
+          Parse CSV
+        </button>
+      </div>
+    {:else}
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <div
+        role="button"
+        tabindex="0"
+        class="drop-zone"
+        class:drag-over={dragOver}
+        ondrop={handleDrop}
+        ondragover={handleDragOver}
+        ondragleave={() => dragOver = false}
+      >
+        <div class="drop-icon">&#9835;</div>
+        <p class="drop-text">Drag & drop your XML playlist file here</p>
+        <p class="drop-or">or</p>
+        <label class="file-btn">
+          Choose File
+          <input type="file" accept=".xml,.plist" onchange={handleFileSelect} hidden />
+        </label>
+        <p class="drop-hint">
+          Export from Apple Music: File → Library → Export Playlist… → XML
+        </p>
+      </div>
+      {#if parseError}
+        <div class="error-msg">{parseError}</div>
+      {/if}
     {/if}
 
   <!-- STEP 2: Select playlist (if multiple) -->
@@ -828,10 +905,105 @@
   .secondary-btn:hover { border-color: var(--accent); color: var(--accent); }
   .secondary-btn:disabled { opacity: 0.5; cursor: default; }
 
+  /* Import mode tabs */
+  .import-tabs {
+    display: flex;
+    gap: 0.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.2rem;
+    width: fit-content;
+  }
+  .import-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    padding: 0.4rem 1rem;
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .import-tab:hover { color: var(--text); }
+  .import-tab.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* CSV section */
+  .csv-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .csv-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .csv-hint {
+    font-size: var(--fs-xs);
+    color: var(--text-mid);
+    line-height: 1.4;
+  }
+  .csv-hint code {
+    background: var(--surface2);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-size: var(--fs-label);
+  }
+  .csv-actions {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  .secondary-btn.small {
+    padding: 0.3rem 0.7rem;
+    font-size: var(--fs-2xs);
+    cursor: pointer;
+  }
+  .csv-textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem;
+    font-size: var(--fs-xs);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 160px;
+  }
+  .csv-textarea:focus { border-color: var(--accent); outline: none; }
+  .csv-textarea::placeholder { color: var(--text-dim); }
+  .csv-format-info {
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+    line-height: 1.6;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.8rem;
+  }
+  .csv-format-info code {
+    background: var(--surface2);
+    padding: 0.05rem 0.25rem;
+    border-radius: 3px;
+    font-size: var(--fs-label);
+  }
+
   @media (max-width: 600px) {
     .import-page { padding: 1rem; }
     .drop-zone { padding: 2rem 1rem; }
     .done-stats { gap: 1rem; }
     .action-bar { flex-direction: column; }
+    .csv-header { flex-direction: column; }
   }
 </style>
