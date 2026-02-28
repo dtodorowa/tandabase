@@ -263,7 +263,7 @@
 </script>
 
 <svelte:head>
-  <title>Import Playlist - Practica Set</title>
+  <title>Import Playlist - Tandabase</title>
 </svelte:head>
 
 <div class="import-page">
@@ -533,7 +533,7 @@
 
       <div class="action-bar">
         <button class="primary-btn" onclick={saveSet} disabled={saving}>
-          {saving ? 'Saving...' : 'Save Practica Set'}
+          {saving ? 'Saving...' : 'Save Set'}
         </button>
         <button class="secondary-btn" onclick={() => step = 'preview'}>
           ← Back to preview

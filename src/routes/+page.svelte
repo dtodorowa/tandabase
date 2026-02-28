@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <title>Practica Set</title>
+  <title>Tandabase</title>
 </svelte:head>
 
 <div class="home">

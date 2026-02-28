@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-  <title>Browse Sets - Practica Set</title>
+  <title>Browse Sets - Tandabase</title>
 </svelte:head>
 
 <div class="browse-page">

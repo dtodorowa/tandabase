@@ -44,7 +44,7 @@
 </script>
 
 <svelte:head>
-  <title>My Sets - Practica Set</title>
+  <title>My Sets - Tandabase</title>
 </svelte:head>
 
 <div class="my-sets-page">

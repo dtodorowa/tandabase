@@ -157,7 +157,7 @@
 </script>
 
 <svelte:head>
-  <title>{player.set?.title ?? 'Practica Set'}</title>
+  <title>{player.set?.title ?? 'Tandabase'}</title>
 </svelte:head>
 
 <svelte:window onkeydown={handleKeydown} />

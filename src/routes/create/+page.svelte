@@ -39,7 +39,7 @@
 </script>
 
 <svelte:head>
-  <title>{editor.setId ? 'Edit Set' : 'Create Set'} - Practica Set</title>
+  <title>{editor.setId ? 'Edit Set' : 'Create Set'} - Tandabase</title>
 </svelte:head>
 
 {#if authState.loading || loading}

@@ -53,7 +53,7 @@
 </script>
 
 <svelte:head>
-  <title>Notifications - Practica Set</title>
+  <title>Notifications - Tandabase</title>
 </svelte:head>
 
 <div class="notif-page">
