@@ -59,6 +59,7 @@
     <div class="loading" style="color: var(--tango);">{error}</div>
   {:else if sets.length === 0}
     <div class="empty">
+      <img src="https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="empty-img" />
       <p>You haven't created any sets yet.</p>
       <a href="/create" class="start-btn">Create your first set &rarr;</a>
     </div>
@@ -66,11 +67,13 @@
     <div class="sets-list">
       {#each sets as set (set.id)}
         <div class="set-row">
-          {#if set.cover_image}
-            <a href="/set/{set.id}" class="set-thumb-link">
-              <img src={set.cover_image} alt="" class="set-thumb" />
-            </a>
-          {/if}
+          <a href="/set/{set.id}" class="set-thumb-link">
+            <img
+              src={set.cover_image || 'https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+              alt=""
+              class="set-thumb"
+            />
+          </a>
           <a href="/set/{set.id}" class="set-info">
             <h3>{set.title}</h3>
             <div class="set-meta">
@@ -129,6 +132,14 @@
     padding: 3rem;
     color: var(--text-dim);
     font-size: var(--fs-sm);
+  }
+  .empty-img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    opacity: 0.7;
   }
   .start-btn {
     display: inline-block;

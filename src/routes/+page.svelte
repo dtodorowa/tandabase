@@ -15,7 +15,11 @@
     </p>
     <div class="cta-row">
       <a href="/browse" class="btn primary">Browse Sets</a>
-      <a href="/create" class="btn secondary">Create a Set</a>
+      {#if authState.isLoggedIn}
+        <a href="/create" class="btn secondary">Create a Set</a>
+      {:else}
+        <button class="btn secondary" onclick={() => authState.signInWithGoogle()}>Create a Set</button>
+      {/if}
     </div>
   </div>
 

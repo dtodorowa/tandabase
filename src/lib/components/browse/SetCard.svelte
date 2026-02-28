@@ -10,6 +10,10 @@
     <div class="card-cover">
       <img src={set.cover_image} alt="" />
     </div>
+  {:else}
+    <div class="card-cover">
+      <img src="https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
+    </div>
   {/if}
   <div class="card-body">
     <div class="card-header">

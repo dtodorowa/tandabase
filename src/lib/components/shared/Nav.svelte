@@ -48,9 +48,11 @@
 
     <div class="primary-links desktop-only">
       <a href="/browse" class:active={page.url.pathname === '/browse'}>Browse</a>
-      <a href="/create" class:active={page.url.pathname === '/create'}>Create</a>
-      <a href="/import" class:active={page.url.pathname === '/import'}>Import</a>
-      <a href="/my-sets" class:active={page.url.pathname === '/my-sets'}>My Sets</a>
+      {#if authState.isLoggedIn}
+        <a href="/create" class:active={page.url.pathname === '/create'}>Create</a>
+        <a href="/import" class:active={page.url.pathname === '/import'}>Import</a>
+        <a href="/my-sets" class:active={page.url.pathname === '/my-sets'}>My Sets</a>
+      {/if}
       <a href="/about" class:active={page.url.pathname === '/about'}>About</a>
     </div>
   </div>
@@ -119,10 +121,10 @@
   <div class="mobile-backdrop" onclick={() => mobileOpen = false} role="presentation"></div>
   <div class="mobile-drawer">
     <a href="/browse" class:active={page.url.pathname === '/browse'}>Browse</a>
-    <a href="/create" class:active={page.url.pathname === '/create'}>Create</a>
-    <a href="/import" class:active={page.url.pathname === '/import'}>Import</a>
-    <a href="/my-sets" class:active={page.url.pathname === '/my-sets'}>My Sets</a>
     {#if authState.isLoggedIn}
+      <a href="/create" class:active={page.url.pathname === '/create'}>Create</a>
+      <a href="/import" class:active={page.url.pathname === '/import'}>Import</a>
+      <a href="/my-sets" class:active={page.url.pathname === '/my-sets'}>My Sets</a>
       <a href="/notifications" class="notif-link" class:active={page.url.pathname === '/notifications'}>
         Notifications
         {#if flagCount > 0}
