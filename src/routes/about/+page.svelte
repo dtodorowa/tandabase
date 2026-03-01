@@ -37,29 +37,6 @@
 <div class="about-page">
   <div class="about-content">
 
-    <!-- ── Status / Announcements ── -->
-    <div class="status-card">
-      <div class="status-header">
-        <span class="status-dot"></span>
-        <span class="status-label">actively building</span>
-      </div>
-      <h2 class="status-title">what i'm working on</h2>
-      <ul class="roadmap">
-        <li class="done">set editor redesign (desktop)</li>
-        <li class="done">desktop navigation overhaul</li>
-        <li class="in-progress">mobile screens review &amp; polish</li>
-        <li class="in-progress">mobile editor layout</li>
-        <li class="planned">drag-and-drop improvements</li>
-        <li class="planned">better search &amp; filtering on browse</li>
-      </ul>
-      <p class="status-note">
-        this is very much a work in progress. if something looks weird or broken,
-        it's probably because i haven't gotten to it yet.
-        <strong>any feedback or feature requests are super appreciated!</strong>
-      </p>
-    </div>
-
-
     <section>
       <h2>what is this?</h2>
       <p>
@@ -164,6 +141,28 @@
       </p>
       <p class="sign-off">daniela</p>
     </section>
+
+    <!-- ── Status / Announcements ── -->
+    <div class="status-card">
+      <div class="status-header">
+        <span class="status-dot"></span>
+        <span class="status-label">actively building</span>
+      </div>
+      <h2 class="status-title">what i'm working on</h2>
+      <ul class="roadmap">
+        <li class="done">set editor redesign (desktop)</li>
+        <li class="done">desktop navigation overhaul</li>
+        <li class="in-progress">mobile screens review &amp; polish</li>
+        <li class="in-progress">mobile editor layout</li>
+        <li class="planned">drag-and-drop improvements</li>
+        <li class="planned">better search &amp; filtering on browse</li>
+      </ul>
+      <p class="status-note">
+        this is very much a work in progress. if something looks weird or broken,
+        it's probably because i haven't gotten to it yet.
+        <strong>any feedback or feature requests are super appreciated!</strong>
+      </p>
+    </div>
 
 
     <!-- ── Feedback / Feature Request ── -->
