@@ -59,43 +59,62 @@
       </p>
     </div>
 
+
     <section>
       <h2>what is this?</h2>
       <p>
-        tandabase is a <strong>listening tool</strong>
-      </p> 
-        
+        a listening tool? an ad-less tango youtube player? idk?
+      </p>
       <p>
-        you build a setlist of tandas and then you listen to them, one at a time,
-        learning the music as you go.
+        you build a setlist of tandas and then you listen to them, share them, and
+        maybe you learn something along the way?
       </p>
       <p>
         it pulls videos from youtube so you can hear the actual recordings. the point is you get to <em>listen</em>.
       </p>
     </section>
 
-  <section>
-        <h2>why does it exist?</h2>
-        <p class="aside">(apart from the fact that i got into a rabbit hole when i should've been working)</p>
-  
-        <p>
-          if you're new to tango, you don't know what to listen to. you don't know the 
-          orchestras. you don't know that a di sarli tanda from 1930 and a di sarli 
-          tanda from 1955 are basically two different genres. nobody sits you down 
-          and explains this. you just absorb it over years of dancing and random 
-          conversations with people who know.
-        </p>
-        <p>
-          and if you've been dancing for a while? the knowledge is all there, in 
-          your head, in your itunes library, in some spreadsheet.
-        </p>
-        <p>
-          experienced DJs have all this knowledge. newer dancers 
-          are curious but they don't know where to start. and there's nothing connecting the two.
-        </p>
-        <p>you see where this is going? </p>
-     
-      </section>
+    <section>
+      <h2>how this started</h2>
+      <p class="aside">(apart from the fact that i got into a rabbit hole when i should've been working)</p>
+
+      <p>
+        i had an apple music playlist of tango music (files on my computer) and i wanted a way to share it with my students.
+        easiest formats to share are usually spotify or youtube playlists, but i didn't want to manually search up every single song.
+      </p>
+      <p>
+        so i wrote a script that goes through my playlist and searches youtube for each song automatically. that part worked.
+        but then i wanted to add the results to an actual youtube playlist, and youtube's api has strict limits
+        that you can't get around without paying. i didn't want to deal with that.
+      </p>
+      <p>
+        so i just kept the links and built a simple player around them. and since i had control over the whole thing,
+        i could structure everything as tandas instead of just a flat list of songs.
+      </p>
+      <p>
+        what started as a little script to automate youtube searches turned into this.
+      </p>
+    </section>
+
+    <section>
+      <h2>what problem could it potentially solve?</h2>
+      <p>
+        if you're new to tango, you don't know what to listen to. you don't know the
+        orchestras. you don't know that a di sarli tanda from 1930 and a di sarli
+        tanda from 1955 are basically two different genres. nobody sits you down
+        and explains this. you just absorb it over years of dancing and random
+        conversations with people who know.
+      </p>
+      <p>
+        and if you've been dancing for a while? the knowledge is all there, in
+        your head, in your itunes library, in some spreadsheet.
+      </p>
+      <p>
+        experienced DJs have all this knowledge. newer dancers
+        are curious but they don't know where to start. and there's nothing connecting the two.
+      </p>
+      <p>you see where this is going?</p>
+    </section>
 
     <section>
       <h2>this is not for djing</h2>
@@ -123,6 +142,7 @@
         <li><strong>browse</strong> public sets that others have shared, or create your own.</li>
         <li><strong>create</strong> sets by searching youtube for songs and organizing them into tandas.</li>
         <li><strong>import</strong> a playlist from apple music (export as xml) and it'll auto-detect your tandas and find youtube videos.</li>
+        <li><strong>upload</strong> a csv if you prefer to build a set that way.</li>
         <li><strong>listen.</strong> one song at a time. pay attention to the orchestra, the singer, the year. that's the whole point.</li>
       </ul>
     </section>
@@ -142,8 +162,9 @@
         i hope this makes it a little
         less confusing to get started.
       </p>
-      <p class="sign-off">&mdash; daniela</p>
+      <p class="sign-off">daniela</p>
     </section>
+
 
     <!-- ── Feedback / Feature Request ── -->
     <div class="feedback-card">
