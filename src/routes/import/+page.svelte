@@ -1,9 +1,11 @@
 <script lang="ts">
   import { authState } from '$lib/stores/auth.svelte';
   import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
   import { parsePlistXml, type PlistLibrary, type PlistPlaylist } from '$lib/utils/plist-parser';
   import { importPlaylist, type ImportedTanda, type ImportedSong, type ImportResult } from '$lib/utils/playlist-import';
   import { parseCsvToTandas, CSV_EXAMPLE } from '$lib/utils/csv-import';
+  import { spotifyToImportResult, isValidSpotifyUrl, extractPlaylistId } from '$lib/utils/spotify-import';
   import {
     batchSearchYouTube,
     DEFAULT_PREFERRED_CHANNELS,
@@ -19,7 +21,7 @@
   let step = $state<Step>('upload');
 
   // Import mode toggle
-  let importMode = $state<'xml' | 'csv'>('xml');
+  let importMode = $state<'xml' | 'csv' | 'spotify'>('csv');
 
   // Upload (XML)
   let dragOver = $state(false);
@@ -28,6 +30,13 @@
   // CSV
   let csvText = $state('');
   let csvError = $state('');
+
+  // Spotify
+  let spotifyUrl = $state('');
+  let spotifyError = $state('');
+  let spotifyLoading = $state(false);
+  let spotifyToken = $state<string | null>(null);
+  let spotifyConnecting = $state(false);
 
   // Parsed data
   let library = $state<PlistLibrary | null>(null);
@@ -126,6 +135,205 @@
       step = 'preview';
     } catch (e: any) {
       csvError = e.message || 'Failed to parse CSV.';
+    }
+  }
+
+  // ── Spotify PKCE OAuth (fully client-side, matching Exportify) ──
+  const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID ?? '';
+
+  function getSpotifyRedirectUri(): string {
+    // Spotify requires 127.0.0.1 instead of localhost for loopback
+    const origin = window.location.origin.replace('//localhost', '//127.0.0.1');
+    return `${origin}/import`;
+  }
+
+  async function connectToSpotify() {
+    // Spotify disallows "localhost" — must use 127.0.0.1 for loopback.
+    // localStorage is per-origin, so redirect first to keep verifier on the same origin.
+    if (window.location.hostname === 'localhost') {
+      const url = new URL(window.location.href);
+      url.hostname = '127.0.0.1';
+      url.searchParams.set('spotify_connect', '1');
+      window.location.href = url.toString();
+      return;
+    }
+
+    spotifyError = '';
+    spotifyConnecting = true;
+    try {
+      // Generate PKCE verifier + challenge client-side (like Exportify)
+      const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const codeVerifier = crypto.getRandomValues(new Uint8Array(64))
+        .reduce((acc: string, x: number) => acc + alphanumeric[x % alphanumeric.length], '');
+      const hashed = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
+      const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(hashed)))
+        .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+      localStorage.setItem('spotify_code_verifier', codeVerifier);
+
+      const params = new URLSearchParams({
+        client_id: SPOTIFY_CLIENT_ID,
+        redirect_uri: getSpotifyRedirectUri(),
+        scope: 'playlist-read-private playlist-read-collaborative',
+        response_type: 'code',
+        code_challenge_method: 'S256',
+        code_challenge: codeChallenge,
+      });
+
+      window.location.href = `https://accounts.spotify.com/authorize?${params}`;
+    } catch (e: any) {
+      spotifyError = e.message || 'Failed to connect to Spotify.';
+      spotifyConnecting = false;
+    }
+  }
+
+  async function handleSpotifyCallback(code: string) {
+    spotifyConnecting = true;
+    spotifyError = '';
+    try {
+      const codeVerifier = localStorage.getItem('spotify_code_verifier');
+      if (!codeVerifier) throw new Error('Missing code verifier. Please try connecting again.');
+
+      // Exchange code for token directly with Spotify (no server proxy)
+      const res = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id: SPOTIFY_CLIENT_ID,
+          grant_type: 'authorization_code',
+          code,
+          redirect_uri: getSpotifyRedirectUri(),
+          code_verifier: codeVerifier,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Token exchange failed');
+
+      const data = await res.json();
+      localStorage.setItem('spotify_access_token', data.access_token);
+      localStorage.setItem('spotify_token_timestamp', Date.now().toString());
+      spotifyToken = data.access_token;
+      importMode = 'spotify';
+
+      // Clean URL
+      window.history.replaceState({}, '', `${window.location.origin}/import?tab=spotify`);
+    } catch (e: any) {
+      spotifyError = e.message || 'Failed to complete Spotify login.';
+    } finally {
+      spotifyConnecting = false;
+    }
+  }
+
+  function disconnectSpotify() {
+    spotifyToken = null;
+    localStorage.removeItem('spotify_access_token');
+    localStorage.removeItem('spotify_token_timestamp');
+    localStorage.removeItem('spotify_code_verifier');
+  }
+
+  onMount(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Handle ?tab=spotify|csv|xml
+    const tab = urlParams.get('tab');
+    if (tab === 'spotify' || tab === 'csv' || tab === 'xml') {
+      importMode = tab;
+    }
+
+    // Handle Spotify OAuth callback (?code=...)
+    const code = urlParams.get('code');
+    if (code) {
+      handleSpotifyCallback(code);
+    } else if (urlParams.get('spotify_connect')) {
+      // Auto-trigger after localhost → 127.0.0.1 redirect
+      window.history.replaceState({}, '', `${window.location.origin}/import?tab=spotify`);
+      connectToSpotify();
+    } else {
+      // Check for existing valid token (1 hour TTL)
+      const savedToken = localStorage.getItem('spotify_access_token');
+      const timestamp = parseInt(localStorage.getItem('spotify_token_timestamp') ?? '0', 10);
+      if (savedToken && Date.now() - timestamp < 3600000) {
+        spotifyToken = savedToken;
+      }
+    }
+  });
+
+  // ── Spotify playlist fetch (directly from Spotify API) ──
+  async function fetchSpotifyPlaylist() {
+    spotifyError = '';
+    if (!spotifyUrl.trim()) {
+      spotifyError = 'Please enter a Spotify playlist URL.';
+      return;
+    }
+    if (!isValidSpotifyUrl(spotifyUrl)) {
+      spotifyError = 'Invalid Spotify playlist URL. Paste a link like https://open.spotify.com/playlist/...';
+      return;
+    }
+    if (!spotifyToken) {
+      spotifyError = 'Please connect to Spotify first.';
+      return;
+    }
+
+    const playlistId = extractPlaylistId(spotifyUrl);
+    if (!playlistId) {
+      spotifyError = 'Could not extract playlist ID from URL.';
+      return;
+    }
+
+    spotifyLoading = true;
+    try {
+      const headers = { Authorization: `Bearer ${spotifyToken}` };
+
+      // Fetch metadata
+      const metaRes = await fetch(
+        `https://api.spotify.com/v1/playlists/${playlistId}?fields=name,description`,
+        { headers },
+      );
+      if (!metaRes.ok) {
+        if (metaRes.status === 401) {
+          disconnectSpotify();
+          throw new Error('Spotify session expired. Please reconnect.');
+        }
+        throw new Error(`Failed to fetch playlist (${metaRes.status})`);
+      }
+      const meta = await metaRes.json();
+
+      // Fetch tracks (paginated, 100 per page)
+      let allItems: any[] = [];
+      let tracksUrl: string | null =
+        `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=100`;
+      while (tracksUrl) {
+        const pageRes = await fetch(tracksUrl, { headers });
+        if (!pageRes.ok) break;
+        const page = await pageRes.json();
+        allItems = [...allItems, ...(page.items ?? [])];
+        tracksUrl = page.next ?? null;
+      }
+
+      // Transform to our format
+      const tracks = allItems
+        .filter((entry: any) => entry?.track && !entry.is_local)
+        .map((entry: any) => {
+          const t = entry.track;
+          return {
+            name: t.name,
+            artists: (t.artists ?? []).map((a: any) => a.name),
+            album: t.album?.name ?? '',
+            year: t.album?.release_date
+              ? parseInt(t.album.release_date.slice(0, 4), 10)
+              : null,
+            duration_ms: t.duration_ms ?? 0,
+          };
+        });
+
+      const data = { name: meta.name ?? '', description: meta.description ?? '', tracks };
+      importResult = spotifyToImportResult(data);
+      setTitle = data.name || 'Spotify Import';
+      step = 'preview';
+    } catch (e: any) {
+      spotifyError = e.message || 'Failed to fetch Spotify playlist.';
+    } finally {
+      spotifyLoading = false;
     }
   }
 
@@ -269,14 +477,15 @@
 <div class="import-page">
   <div class="page-header">
     <h1>Import Playlist</h1>
-    <p class="subtitle">Create a practica set from a CSV file or Apple Music XML export</p>
+    <p class="subtitle">Create a practica set from a CSV file, Apple Music XML, or Spotify playlist</p>
   </div>
 
   <!-- STEP 1: Upload -->
   {#if step === 'upload'}
     <div class="import-tabs">
       <button class="import-tab" class:active={importMode === 'csv'} onclick={() => importMode = 'csv'}>CSV</button>
-      <button class="import-tab" class:active={importMode === 'xml'} onclick={() => importMode = 'xml'}>Apple Music XML</button>
+      <button class="import-tab" class:active={importMode === 'xml'} onclick={() => importMode = 'xml'}>Apple Music</button>
+      <button class="import-tab" class:active={importMode === 'spotify'} onclick={() => importMode = 'spotify'}>Spotify</button>
     </div>
 
     {#if importMode === 'csv'}
@@ -310,7 +519,7 @@
           Parse CSV
         </button>
       </div>
-    {:else}
+    {:else if importMode === 'xml'}
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
         role="button"
@@ -335,6 +544,49 @@
       {#if parseError}
         <div class="error-msg">{parseError}</div>
       {/if}
+    {:else if importMode === 'spotify'}
+      <div class="spotify-section">
+        {#if spotifyConnecting}
+          <div class="spotify-connecting">
+            <p>Connecting to Spotify...</p>
+          </div>
+        {:else if !spotifyToken}
+          <p class="csv-hint">Connect your Spotify account to import playlists.</p>
+          <button class="primary-btn spotify-connect-btn" onclick={connectToSpotify}>
+            Connect to Spotify
+          </button>
+          {#if spotifyError}
+            <div class="error-msg">{spotifyError}</div>
+          {/if}
+        {:else}
+          <p class="csv-hint">Connected to Spotify. Paste a playlist URL below to import tracks.</p>
+          <div class="spotify-input-row">
+            <input
+              type="text"
+              class="spotify-input"
+              placeholder="https://open.spotify.com/playlist/..."
+              bind:value={spotifyUrl}
+              onkeydown={(e) => { if (e.key === 'Enter') fetchSpotifyPlaylist(); }}
+            />
+            <button class="primary-btn" onclick={fetchSpotifyPlaylist} disabled={spotifyLoading || !spotifyUrl.trim()}>
+              {#if spotifyLoading}
+                Fetching...
+              {:else}
+                Import
+              {/if}
+            </button>
+          </div>
+          {#if spotifyError}
+            <div class="error-msg">{spotifyError}</div>
+          {/if}
+          <div class="csv-format-info">
+            <strong>Supported formats:</strong><br/>
+            <code>https://open.spotify.com/playlist/...</code><br/>
+            <code>spotify:playlist:...</code><br/>
+            Tracks are auto-grouped into tandas by artist. Cortina tracks (if named with "cortina") act as separators.
+          </div>
+        {/if}
+      </div>
     {/if}
 
   <!-- STEP 2: Select playlist (if multiple) -->
@@ -997,6 +1249,40 @@
     padding: 0.05rem 0.25rem;
     border-radius: 3px;
     font-size: var(--fs-label);
+  }
+
+  /* Spotify section */
+  .spotify-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .spotify-input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  .spotify-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.8rem;
+    font-size: var(--fs-xs);
+    font-family: 'Outfit', sans-serif;
+  }
+  .spotify-input:focus { border-color: var(--accent); outline: none; }
+  .spotify-input::placeholder { color: var(--text-dim); }
+  .spotify-connect-btn {
+    align-self: flex-start;
+    padding: 0.6rem 1.5rem;
+    font-size: var(--fs-sm);
+  }
+  .spotify-connecting {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-dim);
   }
 
   @media (max-width: 600px) {
