@@ -485,7 +485,7 @@
     <div class="import-tabs">
       <button class="import-tab" class:active={importMode === 'csv'} onclick={() => importMode = 'csv'}>CSV</button>
       <button class="import-tab" class:active={importMode === 'xml'} onclick={() => importMode = 'xml'}>Apple Music</button>
-      <button class="import-tab" class:active={importMode === 'spotify'} onclick={() => importMode = 'spotify'}>Spotify</button>
+      <button class="import-tab" class:active={importMode === 'spotify'} onclick={() => importMode = 'spotify'}>Spotify (beta)</button>
     </div>
 
     {#if importMode === 'csv'}
