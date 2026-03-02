@@ -9,10 +9,11 @@
   import {
     batchSearchYouTube,
     DEFAULT_PREFERRED_CHANNELS,
+    YouTubeQuotaError,
     type BatchSearchItem,
     type BatchSearchResult,
   } from '$lib/utils/youtube';
-  import { createSet } from '$lib/firebase/db';
+  import { createSet, updateSet } from '$lib/firebase/db';
   import type { Genre, Song, Tanda } from '$lib/types';
   import GenreBadge from '$lib/components/shared/GenreBadge.svelte';
 
@@ -59,6 +60,9 @@
   let setTitle = $state('');
   let setDescription = $state('');
   let setVisibility = $state<'private' | 'public'>('private');
+  let autoSavedId = $state<string | null>(null);
+  let autoSaveError = $state('');
+  let quotaHit = $state(false);
 
   $effect(() => {
     if (!authState.loading && !authState.isLoggedIn) {
@@ -377,33 +381,51 @@
       }
     }
 
-    await batchSearchYouTube(
-      items,
-      handles,
-      (completed, total, result) => {
-        searchProgress = completed;
-        const tanda = importResult!.tandas[result.index];
-        const song = tanda.songs[result.songIndex];
+    try {
+      await batchSearchYouTube(
+        items,
+        handles,
+        (completed, total, result) => {
+          searchProgress = completed;
+          const tanda = importResult!.tandas[result.index];
+          const song = tanda.songs[result.songIndex];
 
-        if (result.result) {
-          song.video_id = result.result.video_id;
-          song.video_title = result.result.title;
-          song.thumbnail = result.result.thumbnail;
-          song.searchStatus = 'found';
-          const src = result.source === 'channel' ? '♫' : '~';
-          searchLog = [...searchLog, `${src} ${song.title} — ${tanda.orchestra}`];
-        } else {
-          song.searchStatus = 'not_found';
-          searchLog = [...searchLog, `✗ ${song.title} — ${tanda.orchestra}`];
+          if (result.result) {
+            song.video_id = result.result.video_id;
+            song.video_title = result.result.title;
+            song.thumbnail = result.result.thumbnail;
+            song.searchStatus = 'found';
+            const src = result.source === 'channel' ? '♫' : '~';
+            searchLog = [...searchLog, `${src} ${song.title} — ${tanda.orchestra}`];
+          } else {
+            song.searchStatus = 'not_found';
+            searchLog = [...searchLog, `✗ ${song.title} — ${tanda.orchestra}`];
+          }
+
+          // Force reactivity
+          importResult = importResult;
+        },
+        abortController.signal,
+      );
+    } catch (e) {
+      if (e instanceof YouTubeQuotaError) {
+        quotaHit = true;
+        // Mark remaining songs back to pending
+        for (const tanda of importResult.tandas) {
+          for (const song of tanda.songs) {
+            if (song.searchStatus === 'searching') song.searchStatus = 'pending';
+          }
         }
-
-        // Force reactivity
         importResult = importResult;
-      },
-      abortController.signal,
-    );
+      } else {
+        throw e;
+      }
+    }
 
     step = 'done';
+
+    // Auto-save immediately — YouTube crawling is expensive
+    await autoSave();
   }
 
   function cancelSearch() {
@@ -411,44 +433,85 @@
     step = 'preview';
   }
 
-  // ── Save to Firestore ──
+  // ── Build tanda payload from import result ──
+  function buildTandaPayload() {
+    if (!importResult) return null;
+    const tandas: Tanda[] = importResult.tandas.map((t, i) => ({
+      id: crypto.randomUUID(),
+      num: i + 1,
+      orchestra: t.orchestra,
+      genre: t.genre,
+      songs: t.songs.map(s => ({
+        id: crypto.randomUUID(),
+        title: s.title,
+        singer: s.singer,
+        year: s.year,
+        video_id: s.video_id,
+        video_title: s.video_title || s.title,
+        thumbnail: s.thumbnail || '',
+      })),
+    }));
+    const genres: Genre[] = [...new Set(tandas.map(t => t.genre))];
+    const songCount = tandas.reduce((sum, t) => sum + t.songs.length, 0);
+    return { tandas, genres, songCount };
+  }
+
+  // ── Auto-save after YouTube search (runs silently) ──
+  async function autoSave() {
+    if (!importResult || !authState.user) return;
+    autoSaveError = '';
+    const payload = buildTandaPayload();
+    if (!payload) return;
+
+    try {
+      const setId = await createSet({
+        title: setTitle || 'Imported Set',
+        description: setDescription,
+        authorId: authState.user.uid,
+        authorName: authState.user.displayName || 'Anonymous',
+        visibility: setVisibility,
+        genre_summary: payload.genres,
+        tanda_count: payload.tandas.length,
+        song_count: payload.songCount,
+        tandas: payload.tandas,
+      });
+      autoSavedId = setId;
+      console.log('[AutoSave] Set saved as', setId);
+    } catch (e: any) {
+      console.error('[AutoSave] Failed:', e);
+      autoSaveError = e.message || 'Auto-save failed';
+    }
+  }
+
+  // ── Save / Update to Firestore ──
   async function saveSet() {
     if (!importResult || !authState.user) return;
     saving = true;
 
     try {
-      const tandas: Tanda[] = importResult.tandas.map((t, i) => ({
-        id: crypto.randomUUID(),
-        num: i + 1,
-        orchestra: t.orchestra,
-        genre: t.genre,
-        songs: t.songs.map(s => ({
-          id: crypto.randomUUID(),
-          title: s.title,
-          singer: s.singer,
-          year: s.year,
-          video_id: s.video_id,
-          video_title: s.video_title || s.title,
-          thumbnail: s.thumbnail || '',
-        })),
-      }));
+      const payload = buildTandaPayload();
+      if (!payload) return;
 
-      const genres: Genre[] = [...new Set(tandas.map(t => t.genre))];
-      const songCount = tandas.reduce((sum, t) => sum + t.songs.length, 0);
-
-      const setId = await createSet({
+      const data = {
         title: setTitle,
         description: setDescription,
         authorId: authState.user.uid,
         authorName: authState.user.displayName || 'Anonymous',
         visibility: setVisibility,
-        genre_summary: genres,
-        tanda_count: tandas.length,
-        song_count: songCount,
-        tandas,
-      });
+        genre_summary: payload.genres,
+        tanda_count: payload.tandas.length,
+        song_count: payload.songCount,
+        tandas: payload.tandas,
+      };
 
-      goto(`/set/${setId}`);
+      if (autoSavedId) {
+        // Update the auto-saved set with any title/description/visibility changes
+        await updateSet(autoSavedId, data);
+        goto(`/set/${autoSavedId}`);
+      } else {
+        const setId = await createSet(data);
+        goto(`/set/${setId}`);
+      }
     } catch (e: any) {
       console.error('Failed to save set:', e);
       alert('Failed to save: ' + (e.message || 'Unknown error'));
@@ -710,7 +773,21 @@
   <!-- STEP 5: Done -->
   {:else if step === 'done'}
     <div class="step-section">
-      <h2>Search Complete</h2>
+      <h2>Search {quotaHit ? 'Interrupted' : 'Complete'}</h2>
+
+      {#if quotaHit}
+        <div class="quota-banner">
+          <strong>YouTube API quota reached</strong>
+          <p>
+            This app is still in development, so we're limited to ~10,000 YouTube API calls per day.
+            The quota resets at midnight Pacific Time. Any songs found so far have been saved.
+          </p>
+          <p class="quota-hint">
+            A higher quota has been requested from Google — hang tight!
+          </p>
+        </div>
+      {/if}
+
       <div class="done-stats">
         <div class="stat">
           <span class="stat-num">{stats.found}</span>
@@ -783,10 +860,29 @@
         {/each}
       </div>
 
+      {#if autoSavedId}
+        <div class="autosave-notice">
+          Auto-saved as draft. Update title or settings below, then view your set.
+        </div>
+      {:else if autoSaveError}
+        <div class="error-msg">{autoSaveError}</div>
+      {/if}
+
       <div class="action-bar">
         <button class="primary-btn" onclick={saveSet} disabled={saving}>
-          {saving ? 'Saving...' : 'Save Set'}
+          {#if saving}
+            Saving...
+          {:else if autoSavedId}
+            Update & View Set
+          {:else}
+            Save Set
+          {/if}
         </button>
+        {#if autoSavedId}
+          <button class="secondary-btn" onclick={() => goto(`/set/${autoSavedId}`)}>
+            View without changes
+          </button>
+        {/if}
         <button class="secondary-btn" onclick={() => step = 'preview'}>
           ← Back to preview
         </button>
@@ -862,6 +958,34 @@
     color: var(--text-dim);
     margin-top: 1rem;
     line-height: 1.4;
+  }
+  .quota-banner {
+    background: rgba(255, 183, 77, 0.1);
+    border: 1px solid rgba(255, 183, 77, 0.5);
+    color: var(--text);
+    padding: 1rem 1.2rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+  }
+  .quota-banner strong {
+    color: #ffb74d;
+    font-size: var(--fs-sm);
+  }
+  .quota-banner p {
+    margin-top: 0.4rem;
+  }
+  .quota-hint {
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .autosave-notice {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.5);
+    color: #66bb6a;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-xs);
   }
   .error-msg {
     background: rgba(212, 80, 74, 0.1);

@@ -1,6 +1,13 @@
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 const BASE = 'https://www.googleapis.com/youtube/v3/search';
 
+export class YouTubeQuotaError extends Error {
+  constructor() {
+    super('YouTube API quota exceeded');
+    this.name = 'YouTubeQuotaError';
+  }
+}
+
 /** Default preferred channels for tango music (channel handles) */
 export const DEFAULT_PREFERRED_CHANNELS = [
   'radiotangohires9388',
@@ -36,6 +43,9 @@ export async function searchYouTube(query: string, maxResults = 8): Promise<YTRe
   if (!res.ok) {
     const body = await res.text();
     console.error(`[YouTube] Search failed (${res.status}):`, body);
+    if (res.status === 403 && body.includes('quotaExceeded')) {
+      throw new YouTubeQuotaError();
+    }
     throw new Error(`YouTube search failed: ${res.status}`);
   }
 
@@ -103,7 +113,13 @@ export async function searchYouTubeInChannel(
 
   try {
     const res = await fetch(`${BASE}?${params}`);
-    if (!res.ok) return [];
+    if (!res.ok) {
+      if (res.status === 403) {
+        const body = await res.text();
+        if (body.includes('quotaExceeded')) throw new YouTubeQuotaError();
+      }
+      return [];
+    }
     const data = await res.json();
     if (!data.items?.length) return [];
     return data.items.map((item: any) => ({
@@ -112,7 +128,8 @@ export async function searchYouTubeInChannel(
       channel: item.snippet.channelTitle,
       thumbnail: item.snippet.thumbnails?.medium?.url ?? `https://img.youtube.com/vi/${item.id.videoId}/mqdefault.jpg`,
     }));
-  } catch {
+  } catch (e) {
+    if (e instanceof YouTubeQuotaError) throw e;
     return [];
   }
 }
@@ -197,14 +214,18 @@ export async function batchSearchYouTube(
     let source: 'channel' | 'general' | 'not_found' = 'not_found';
 
     // Try each preferred channel first
-    for (const channelId of channelIds) {
-      const channelResults = await searchYouTubeInChannel(item.query, channelId, 1);
-      if (channelResults.length > 0) {
-        found = channelResults[0];
-        source = 'channel';
-        break;
+    try {
+      for (const channelId of channelIds) {
+        const channelResults = await searchYouTubeInChannel(item.query, channelId, 1);
+        if (channelResults.length > 0) {
+          found = channelResults[0];
+          source = 'channel';
+          break;
+        }
+        await sleep(THROTTLE_MS);
       }
-      await sleep(THROTTLE_MS);
+    } catch (e) {
+      if (e instanceof YouTubeQuotaError) throw e;
     }
 
     // Fall back to general search
@@ -215,8 +236,9 @@ export async function batchSearchYouTube(
           found = generalResults[0];
           source = 'general';
         }
-      } catch {
-        // quota or error — leave as not_found
+      } catch (e) {
+        if (e instanceof YouTubeQuotaError) throw e;
+        // other error — leave as not_found
       }
     }
 
