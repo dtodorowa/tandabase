@@ -10,6 +10,7 @@
 
 import type { Genre } from '$lib/types';
 import type { ImportedTanda, ImportedSong, ImportResult } from './playlist-import';
+import { spotifyToImportResult, type SpotifyTrack, type SpotifyPlaylistData } from './spotify-import';
 
 export const CSV_EXAMPLE = `orchestra,title,year,singer,genre
 Di Sarli,Bahía Blanca,1957,,Tango
@@ -95,17 +96,111 @@ function parseRows(text: string): string[][] {
 
 export interface CsvImportResult extends ImportResult {}
 
-export function parseCsvToTandas(csvText: string): CsvImportResult {
-  const rows = parseRows(csvText);
-  if (rows.length === 0) throw new Error('CSV is empty');
+/**
+ * Detect which CSV format we're dealing with based on the header row.
+ * Returns 'exportify' | 'tandabase' | 'unknown'.
+ */
+type CsvFormat = 'exportify' | 'tandabase' | 'unknown';
 
-  // Detect header row
-  let startIndex = 0;
-  const firstRow = rows[0].map(c => c.toLowerCase());
-  if (firstRow.includes('orchestra') || firstRow.includes('title') || firstRow.includes('song')) {
-    startIndex = 1;
+function detectFormat(headerCols: string[]): CsvFormat {
+  const lower = headerCols.map(c => c.toLowerCase().trim());
+
+  // Exportify: "Track URI", "Track Name", "Album Name", "Artist Name(s)", ...
+  if (lower.includes('track name') || lower.includes('track uri') || lower.includes('artist name(s)')) {
+    return 'exportify';
   }
 
+  // Tandabase native: orchestra, title, year, singer, genre
+  if (lower.includes('orchestra') || lower.includes('title') || lower.includes('song')) {
+    return 'tandabase';
+  }
+
+  return 'unknown';
+}
+
+/**
+ * Build a column-index map from the header row for flexible column access.
+ */
+function buildColumnMap(headerCols: string[]): Map<string, number> {
+  const map = new Map<string, number>();
+  headerCols.forEach((col, i) => map.set(col.toLowerCase().trim(), i));
+  return map;
+}
+
+/**
+ * Parse an Exportify-format CSV into an ImportResult.
+ * Maps: Track Name → title, Artist Name(s) → artists (;-separated),
+ * Album Name → album, Release Date → year, Genres → genre hint.
+ */
+function parseExportifyCsv(rows: string[][], headerCols: string[]): CsvImportResult {
+  const col = buildColumnMap(headerCols);
+
+  const nameIdx = col.get('track name') ?? -1;
+  const artistIdx = col.get('artist name(s)') ?? -1;
+  const albumIdx = col.get('album name') ?? -1;
+  const dateIdx = col.get('release date') ?? -1;
+  const durationIdx = col.get('duration (ms)') ?? -1;
+  const genreIdx = col.get('genres') ?? -1;
+
+  if (nameIdx === -1 || artistIdx === -1) {
+    throw new Error(
+      'This looks like an Exportify CSV but is missing required columns.\n' +
+      'Expected at least "Track Name" and "Artist Name(s)" columns.',
+    );
+  }
+
+  const tracks: SpotifyTrack[] = [];
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (r.every(c => c === '')) continue;
+
+    const name = (r[nameIdx] ?? '').trim();
+    if (!name) continue;
+
+    // Artists are semicolon-separated in Exportify CSVs
+    const artistsRaw = (r[artistIdx] ?? '').trim();
+    const artists = artistsRaw ? artistsRaw.split(';').map(a => a.trim()).filter(Boolean) : [];
+
+    const album = albumIdx >= 0 ? (r[albumIdx] ?? '').trim() : '';
+
+    // Deliberately skip year — Spotify/Exportify "Release Date" is the album/reissue
+    // date, not the original recording year. For tango this is wildly inaccurate
+    // (e.g. a 1938 recording showing as 2011) and pollutes YouTube searches.
+    const year: number | null = null;
+
+    const duration_ms = durationIdx >= 0 ? parseInt(r[durationIdx] ?? '0', 10) || 0 : 0;
+
+    // Use the Genres column to help with genre detection if available
+    let albumWithGenreHint = album;
+    if (genreIdx >= 0) {
+      const genres = (r[genreIdx] ?? '').trim().toLowerCase();
+      if (genres.includes('vals') || genres.includes('waltz')) {
+        albumWithGenreHint += ' vals';
+      } else if (genres.includes('milonga')) {
+        albumWithGenreHint += ' milonga';
+      }
+    }
+
+    tracks.push({ name, artists, album: albumWithGenreHint, year, duration_ms });
+  }
+
+  if (tracks.length === 0) {
+    throw new Error('No tracks found in the Exportify CSV. The file appears to be empty.');
+  }
+
+  const playlistData: SpotifyPlaylistData = {
+    name: '',
+    description: '',
+    tracks,
+  };
+
+  return spotifyToImportResult(playlistData);
+}
+
+/**
+ * Parse the native tandabase CSV format: orchestra, title, year, singer, genre
+ */
+function parseTandabaseCsv(rows: string[][], startIndex: number): CsvImportResult {
   const tandas: ImportedTanda[] = [];
   let currentSongs: ImportedSong[] = [];
   let currentOrchestra = '';
@@ -186,4 +281,43 @@ export function parseCsvToTandas(csvText: string): CsvImportResult {
     cortinas: [],
     skippedTracks: [],
   };
+}
+
+export function parseCsvToTandas(csvText: string): CsvImportResult {
+  const rows = parseRows(csvText);
+  if (rows.length === 0) throw new Error('CSV is empty');
+
+  const firstRow = rows[0];
+  const format = detectFormat(firstRow);
+
+  switch (format) {
+    case 'exportify':
+      return parseExportifyCsv(rows, firstRow);
+
+    case 'tandabase': {
+      // Skip the header row
+      return parseTandabaseCsv(rows, 1);
+    }
+
+    case 'unknown': {
+      // Try to be helpful: check if the first data row looks like it could
+      // work without headers (orchestra, title pattern)
+      const probe = rows[0];
+      const looksLikeData = probe.length >= 2 && probe[0] && probe[1] &&
+        !/^\d+$/.test(probe[0]) && !/^spotify:/.test(probe[0]);
+
+      if (looksLikeData) {
+        // Attempt headerless tandabase format
+        return parseTandabaseCsv(rows, 0);
+      }
+
+      throw new Error(
+        'Unrecognised CSV format.\n\n' +
+        'Supported formats:\n' +
+        '• Tandabase: orchestra, title, year, singer, genre\n' +
+        '• Exportify: Track URI, Track Name, Album Name, Artist Name(s), ...\n\n' +
+        'Make sure your CSV has column headers or follows the orchestra, title, year, singer, genre structure.',
+      );
+    }
+  }
 }

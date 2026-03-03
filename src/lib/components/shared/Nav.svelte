@@ -3,6 +3,7 @@
   import { page } from '$app/state';
   import { authState } from '$lib/stores/auth.svelte';
   import { getFlagsForOwner } from '$lib/firebase/db';
+  import { themeState } from '$lib/stores/theme.svelte';
 
   let flagCount = $state(0);
   let mobileOpen = $state(false);
@@ -64,6 +65,15 @@
 
 
   <div class="nav-right">
+    <!-- Theme toggle -->
+    <button class="theme-toggle desktop-only" onclick={() => themeState.toggle()} aria-label="Toggle theme">
+      {#if themeState.current === 'dark'}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      {:else}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      {/if}
+    </button>
+
     <!-- Desktop: notification bell + profile dropdown -->
     {#if authState.isLoggedIn}
       <a href="/notifications" class="notif-bell desktop-only" aria-label="Notifications">
@@ -133,6 +143,15 @@
       </a>
     {/if}
     <a href="/about" class:active={page.url.pathname === '/about'}>About</a>
+    <button class="mobile-theme-toggle" onclick={() => themeState.toggle()}>
+      {#if themeState.current === 'dark'}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        Light mode
+      {:else}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        Dark mode
+      {/if}
+    </button>
     <div class="mobile-auth">
       <AuthButton />
     </div>
@@ -280,7 +299,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     z-index: 100;
     overflow: hidden;
   }
@@ -306,6 +325,45 @@
   }
   .text-danger { color: var(--tango) !important; }
   .text-danger:hover { background: rgba(248,113,113,0.08) !important; }
+
+  /* Theme toggle */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .mobile-theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.65rem 1.2rem;
+    background: none;
+    border: none;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--text-mid);
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .mobile-theme-toggle:hover {
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
 
   .sign-in-btn {
     background: var(--accent);

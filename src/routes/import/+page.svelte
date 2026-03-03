@@ -16,6 +16,9 @@
     batchSearchYouTube,
     DEFAULT_PREFERRED_CHANNELS,
     YouTubeQuotaError,
+    estimateBatchCost,
+    getQuotaRemaining,
+    getQuotaUsed,
     type BatchSearchItem,
     type BatchSearchResult,
   } from '$lib/utils/youtube';
@@ -47,6 +50,8 @@
   let spotifyPlaylists = $state<SpotifyPlaylistSummary[]>([]);
   let spotifyPlaylistsLoading = $state(false);
   let spotifyMode = $state<'browse' | 'url'>('browse');
+  let spotifyFilter = $state('');
+  let showYearWarning = $state(false);
 
   // Parsed data
   let library = $state<PlistLibrary | null>(null);
@@ -72,6 +77,8 @@
   let autoSavedId = $state<string | null>(null);
   let autoSaveError = $state('');
   let quotaHit = $state(false);
+  let showQuotaWarning = $state(false);
+  let quotaEstimate = $state<{ uncached: number; worstCase: number; cached: number; remaining: number } | null>(null);
 
   $effect(() => {
     if (!authState.loading && !authState.isLoggedIn) {
@@ -135,6 +142,15 @@
     csvText = CSV_EXAMPLE;
   }
 
+  function goToPreview(result: ImportResult, title: string) {
+    importResult = result;
+    setTitle = title;
+    step = 'preview';
+    // Show year warning if no songs have years (Spotify/Exportify source)
+    const hasAnyYear = result.tandas.some(t => t.songs.some(s => s.year));
+    if (!hasAnyYear) showYearWarning = true;
+  }
+
   function processCsv() {
     csvError = '';
     if (!csvText.trim()) {
@@ -143,9 +159,7 @@
     }
     try {
       const result = parseCsvToTandas(csvText);
-      importResult = result;
-      setTitle = 'Imported Set';
-      step = 'preview';
+      goToPreview(result, 'Imported Set');
     } catch (e: any) {
       csvError = e.message || 'Failed to parse CSV.';
     }
@@ -249,14 +263,45 @@
     localStorage.removeItem('spotify_access_token');
     localStorage.removeItem('spotify_token_timestamp');
     localStorage.removeItem('spotify_code_verifier');
+    sessionStorage.removeItem('spotify_playlists_cache');
   }
 
-  // ── Load all user playlists (like Exportify's PlaylistTable.init) ──
+  // ── Load all user playlists (with sessionStorage cache) ──
+  const PLAYLIST_CACHE_KEY = 'spotify_playlists_cache';
+  const PLAYLIST_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+  function getCachedPlaylists(): SpotifyPlaylistSummary[] | null {
+    try {
+      const raw = sessionStorage.getItem(PLAYLIST_CACHE_KEY);
+      if (!raw) return null;
+      const { data, timestamp } = JSON.parse(raw);
+      if (Date.now() - timestamp > PLAYLIST_CACHE_TTL) {
+        sessionStorage.removeItem(PLAYLIST_CACHE_KEY);
+        return null;
+      }
+      return data;
+    } catch { return null; }
+  }
+
+  function cachePlaylists(data: SpotifyPlaylistSummary[]) {
+    try {
+      sessionStorage.setItem(PLAYLIST_CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
+    } catch { /* quota exceeded — ignore */ }
+  }
+
   async function loadSpotifyPlaylists(token: string) {
+    // Try cache first
+    const cached = getCachedPlaylists();
+    if (cached) {
+      spotifyPlaylists = cached;
+      return;
+    }
+
     spotifyPlaylistsLoading = true;
     spotifyError = '';
     try {
       spotifyPlaylists = await fetchAllUserPlaylists(token);
+      cachePlaylists(spotifyPlaylists);
     } catch (e: any) {
       if (e instanceof SpotifyAuthError) {
         disconnectSpotify();
@@ -276,17 +321,18 @@
       const data = await fetchPlaylistTracks(spotifyToken, pl.id);
 
       // Transform to our SpotifyTrack format for spotifyToImportResult
+      // Year is deliberately null — Spotify release dates are album/reissue dates,
+      // not original recording years (wildly inaccurate for tango).
       const tracks = data.tracks.map((t) => ({
         name: t.name,
         artists: t.artists.map((a) => a.name),
         album: t.album.name,
-        year: t.album.release_date ? parseInt(t.album.release_date.slice(0, 4), 10) : null,
+        year: null as number | null,
         duration_ms: t.duration_ms,
       }));
 
-      importResult = spotifyToImportResult({ name: data.name, description: data.description, tracks });
-      setTitle = data.name || 'Spotify Import';
-      step = 'preview';
+      const result = spotifyToImportResult({ name: data.name, description: data.description, tracks });
+      goToPreview(result, data.name || 'Spotify Import');
     } catch (e: any) {
       if (e instanceof SpotifyAuthError) {
         disconnectSpotify();
@@ -356,13 +402,12 @@
         name: t.name,
         artists: t.artists.map((a) => a.name),
         album: t.album.name,
-        year: t.album.release_date ? parseInt(t.album.release_date.slice(0, 4), 10) : null,
+        year: null as number | null,
         duration_ms: t.duration_ms,
       }));
 
-      importResult = spotifyToImportResult({ name: data.name, description: data.description, tracks });
-      setTitle = data.name || 'Spotify Import';
-      step = 'preview';
+      const result = spotifyToImportResult({ name: data.name, description: data.description, tracks });
+      goToPreview(result, data.name || 'Spotify Import');
     } catch (e: any) {
       if (e instanceof SpotifyAuthError) {
         disconnectSpotify();
@@ -375,12 +420,31 @@
 
   function selectPlaylist(playlist: PlistPlaylist) {
     if (!library) return;
-    importResult = importPlaylist(library, playlist);
-    setTitle = importResult.playlistName || 'Imported Set';
-    step = 'preview';
+    const result = importPlaylist(library, playlist);
+    goToPreview(result, result.playlistName || 'Imported Set');
   }
 
   // ── YouTube search ──
+  function confirmSearch() {
+    if (!importResult) return;
+    const queries = importResult.tandas.flatMap(t => t.songs.map(s => s.searchQuery));
+    const handles = channelHandles.split(',').map(h => h.trim()).filter(Boolean);
+    const estimate = estimateBatchCost(queries, handles.length);
+    const remaining = getQuotaRemaining();
+    quotaEstimate = { ...estimate, remaining };
+
+    if (estimate.uncached === 0) {
+      // Everything is cached — skip warning, go straight
+      startSearch();
+    } else if (estimate.worstCase > remaining) {
+      // Will likely exceed quota — show warning
+      showQuotaWarning = true;
+    } else {
+      // Enough budget — show brief confirmation
+      showQuotaWarning = true;
+    }
+  }
+
   async function startSearch() {
     if (!importResult) return;
     step = 'searching';
@@ -586,7 +650,7 @@
     {#if importMode === 'csv'}
       <div class="csv-section">
         <div class="csv-header">
-          <p class="csv-hint">Paste your CSV below, or upload a <code>.csv</code> file. Separate tandas with a blank row.</p>
+          <p class="csv-hint">Paste your CSV below, or upload a <code>.csv</code> file. Exportify CSVs are also supported.</p>
           <div class="csv-actions">
             <button class="secondary-btn small" onclick={loadExample}>Load example</button>
             <label class="secondary-btn small">
@@ -602,13 +666,14 @@
           bind:value={csvText}
         ></textarea>
         {#if csvError}
-          <div class="error-msg">{csvError}</div>
+          <div class="error-msg" style="white-space: pre-line;">{csvError}</div>
         {/if}
         <div class="csv-format-info">
-          <strong>Columns:</strong> orchestra, title, year, singer, genre<br/>
+          <strong>Recommended format:</strong> orchestra, title, year, singer, genre<br/>
           <strong>Singer:</strong> leave empty or write <code>instrumental</code> for instrumental tracks<br/>
           <strong>Genre:</strong> Tango, Vals, or Milonga (defaults to Tango)<br/>
-          <strong>Tandas:</strong> separate with a blank row, or consecutive songs with the same orchestra are auto-grouped
+          <strong>Tandas:</strong> separate with a blank row, or consecutive songs with the same orchestra are auto-grouped<br/>
+          <strong>Exportify:</strong> CSVs exported from <a href="https://exportify.app" target="_blank" rel="noopener">Exportify</a> are auto-detected and artists are grouped into tandas
         </div>
         <button class="primary-btn" onclick={processCsv} disabled={!csvText.trim()}>
           Parse CSV
@@ -645,6 +710,9 @@
           <div class="spotify-connecting">
             <p>Connecting to Spotify...</p>
           </div>
+          {#if spotifyError}
+            <div class="error-msg">{spotifyError}</div>
+          {/if}
         {:else if !spotifyToken}
           <p class="csv-hint">Connect your Spotify account to browse and import playlists.</p>
           <button class="primary-btn spotify-connect-btn" onclick={connectToSpotify}>
@@ -672,27 +740,36 @@
             {#if spotifyPlaylistsLoading}
               <div class="spotify-loading">Loading your playlists...</div>
             {:else if spotifyPlaylists.length > 0}
-              <div class="spotify-playlist-grid">
-                {#each spotifyPlaylists as pl}
+              <input
+                type="text"
+                class="spl-filter"
+                placeholder="Filter playlists..."
+                bind:value={spotifyFilter}
+              />
+              <div class="spotify-playlist-list">
+                {#each spotifyPlaylists.filter(pl => {
+                  if (!spotifyFilter.trim()) return true;
+                  const q = spotifyFilter.toLowerCase();
+                  return pl.name.toLowerCase().includes(q) || pl.owner.toLowerCase().includes(q);
+                }) as pl}
                   <button
-                    class="spotify-playlist-card"
+                    class="spotify-playlist-row"
                     onclick={() => selectSpotifyPlaylist(pl)}
                     disabled={spotifyLoading}
                   >
-                    {#if pl.imageUrl}
-                      <img src={pl.imageUrl} alt="" class="spl-img" />
-                    {:else}
-                      <div class="spl-img spl-img-placeholder">&#9835;</div>
-                    {/if}
-                    <div class="spl-info">
-                      <div class="spl-name">{pl.name}</div>
-                      <div class="spl-meta">{pl.owner} · {pl.trackCount} tracks</div>
-                    </div>
+                    <span class="spl-name">{pl.name}</span>
+                    <span class="spl-meta">{pl.owner} · {pl.trackCount} tracks</span>
                   </button>
+                {:else}
+                  <p class="csv-hint" style="padding: 0.6rem;">No playlists match "{spotifyFilter}"</p>
                 {/each}
               </div>
             {:else}
-              <p class="csv-hint">No playlists found.</p>
+              {#if spotifyError}
+                <div class="error-msg">{spotifyError}</div>
+              {:else}
+                <p class="csv-hint">No playlists found.</p>
+              {/if}
               <button class="secondary-btn small" onclick={() => { if (spotifyToken) loadSpotifyPlaylists(spotifyToken); }}>
                 Retry
               </button>
@@ -816,8 +893,12 @@
         {/each}
       </div>
 
+      <div class="quota-info">
+        <span class="quota-label">YouTube searches remaining today: <strong>{getQuotaRemaining()}</strong> / 100</span>
+      </div>
+
       <div class="action-bar">
-        <button class="primary-btn" onclick={startSearch}>
+        <button class="primary-btn" onclick={confirmSearch}>
           Search YouTube ({stats.songs} songs)
         </button>
         <button class="secondary-btn" onclick={saveSet} disabled={saving}>
@@ -965,6 +1046,74 @@
   {/if}
 </div>
 
+<!-- Year warning dialog (Spotify/Exportify sources) -->
+{#if showYearWarning}
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="dialog-overlay" onclick={() => showYearWarning = false} onkeydown={(e) => { if (e.key === 'Escape') showYearWarning = false; }}>
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="dialog-box" onclick={(e) => e.stopPropagation()}>
+      <h3>No recording years available</h3>
+      <p>
+        Spotify and Exportify only provide <strong>album release dates</strong>, which are often
+        reissue or compilation dates — not the original recording year.
+      </p>
+      <p>
+        For tango this is especially misleading (e.g. a 1938 recording may show as 2011).
+        YouTube searches will use <strong>track name + orchestra</strong> instead, which
+        generally produces better results. (But this means that you might have to add the years yourself if you want a complete list)
+      </p>
+      <button class="primary-btn" onclick={() => showYearWarning = false}>Got it</button>
+    </div>
+  </div>
+{/if}
+
+<!-- Quota warning dialog -->
+{#if showQuotaWarning && quotaEstimate}
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="dialog-overlay" onclick={() => showQuotaWarning = false} onkeydown={(e) => { if (e.key === 'Escape') showQuotaWarning = false; }}>
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="dialog-box" onclick={(e) => e.stopPropagation()}>
+      <h3>YouTube Search Budget</h3>
+      <p>
+        This app is in <strong>development mode</strong> with a shared daily limit of
+        <strong>~100 YouTube searches</strong> (resets at midnight PT).
+      </p>
+      <div class="quota-stats">
+        <div class="qs-row">
+          <span>Songs to search</span>
+          <span><strong>{quotaEstimate.uncached + quotaEstimate.cached}</strong></span>
+        </div>
+        {#if quotaEstimate.cached > 0}
+          <div class="qs-row qs-good">
+            <span>Already cached (free)</span>
+            <span>{quotaEstimate.cached}</span>
+          </div>
+        {/if}
+        <div class="qs-row">
+          <span>New searches needed</span>
+          <span><strong>{quotaEstimate.uncached}</strong> (up to {quotaEstimate.worstCase} API calls)</span>
+        </div>
+        <div class="qs-row {quotaEstimate.worstCase > quotaEstimate.remaining ? 'qs-danger' : 'qs-good'}">
+          <span>Budget remaining today</span>
+          <span><strong>{quotaEstimate.remaining}</strong></span>
+        </div>
+      </div>
+      {#if quotaEstimate.worstCase > quotaEstimate.remaining}
+        <p class="quota-warn-text">
+          This may exceed today's quota. The search will stop when the limit is hit —
+          any songs found so far will be saved. Try a smaller playlist or wait until tomorrow.
+        </p>
+      {/if}
+      <div class="dialog-actions">
+        <button class="primary-btn" onclick={() => { showQuotaWarning = false; startSearch(); }}>
+          {quotaEstimate.worstCase > quotaEstimate.remaining ? 'Search anyway' : 'Start search'}
+        </button>
+        <button class="secondary-btn" onclick={() => showQuotaWarning = false}>Cancel</button>
+      </div>
+    </div>
+  </div>
+{/if}
+
 <style>
   .import-page {
     max-width: 900px;
@@ -1068,6 +1217,15 @@
     padding: 0.6rem 1rem;
     border-radius: var(--radius-sm);
     font-size: var(--fs-xs);
+  }
+  .info-banner {
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: var(--text-mid);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-xs);
+    line-height: 1.5;
   }
 
   /* Step sections */
@@ -1500,51 +1658,48 @@
     color: var(--text-dim);
     font-size: var(--fs-xs);
   }
-  .spotify-playlist-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 0.5rem;
-  }
-  .spotify-playlist-card {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.6rem 0.8rem;
+  .spl-filter {
+    width: 100%;
+    padding: 0.5rem 0.8rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: var(--fs-xs);
+  }
+  .spl-filter:focus { border-color: var(--accent); outline: none; }
+  .spl-filter::placeholder { color: var(--text-dim); }
+  .spotify-playlist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--border);
+  }
+  .spotify-playlist-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 0.5rem 0.8rem;
+    background: var(--surface);
+    border: none;
     cursor: pointer;
-    transition: all 0.12s;
+    transition: background 0.1s;
     text-align: left;
     color: var(--text);
     font-family: 'Outfit', sans-serif;
   }
-  .spotify-playlist-card:hover:not(:disabled) {
-    border-color: var(--accent);
+  .spotify-playlist-row:hover:not(:disabled) {
     background: var(--surface2);
   }
-  .spotify-playlist-card:disabled {
+  .spotify-playlist-row:disabled {
     opacity: 0.6;
     cursor: wait;
-  }
-  .spl-img {
-    width: 44px;
-    height: 44px;
-    border-radius: 4px;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-  .spl-img-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surface2);
-    color: var(--text-dim);
-    font-size: var(--fs-sm);
-  }
-  .spl-info {
-    flex: 1;
-    min-width: 0;
   }
   .spl-name {
     font-size: var(--fs-xs);
@@ -1552,13 +1707,91 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
   }
   .spl-meta {
     font-size: var(--fs-2xs);
     color: var(--text-dim);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    flex-shrink: 0;
+  }
+
+  /* Dialog overlay + box */
+  .dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  .dialog-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    max-width: 460px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .dialog-box h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    margin: 0;
+  }
+  .dialog-box p {
+    font-size: var(--fs-xs);
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .dialog-box .primary-btn {
+    align-self: flex-end;
+    margin-top: 0.4rem;
+  }
+  .dialog-actions {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: flex-end;
+    margin-top: 0.4rem;
+  }
+
+  /* Quota info + stats */
+  .quota-info {
+    text-align: center;
+    padding: 0.4rem 0;
+  }
+  .quota-label {
+    font-size: var(--fs-2xs);
+    color: var(--text-dim);
+  }
+  .quota-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.6rem 0.8rem;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-xs);
+  }
+  .qs-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .qs-good { color: var(--vals); }
+  .qs-danger { color: var(--tango); }
+  .quota-warn-text {
+    font-size: var(--fs-2xs);
+    color: var(--tango);
+    line-height: 1.5;
+    margin: 0;
   }
 
   @media (max-width: 600px) {

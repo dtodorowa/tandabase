@@ -10,11 +10,79 @@ export class YouTubeQuotaError extends Error {
 
 /** Default preferred channels for tango music (channel handles) */
 export const DEFAULT_PREFERRED_CHANNELS = [
-  'radiotangohires9388',
-  'tangotimetravel',
+  'radiotangohires9388'
 ];
 
 const THROTTLE_MS = 150; // delay between API calls for batch operations
+
+// ── Client-side quota tracker ──
+// YouTube Data API search.list costs 100 units; daily quota is 10,000 → ~100 searches/day
+const QUOTA_KEY = 'yt_quota';
+const QUOTA_LIMIT = 100; // in search-equivalents (actual units / 100)
+
+function getQuotaState(): { used: number; date: string } {
+  try {
+    const raw = localStorage.getItem(QUOTA_KEY);
+    if (raw) {
+      const state = JSON.parse(raw);
+      const today = new Date().toISOString().slice(0, 10);
+      if (state.date === today) return state;
+    }
+  } catch { /* ignore */ }
+  return { used: 0, date: new Date().toISOString().slice(0, 10) };
+}
+
+function trackQuotaUsage(searches = 1) {
+  const state = getQuotaState();
+  state.used += searches;
+  try { localStorage.setItem(QUOTA_KEY, JSON.stringify(state)); } catch { /* ignore */ }
+}
+
+export function getQuotaRemaining(): number {
+  return Math.max(0, QUOTA_LIMIT - getQuotaState().used);
+}
+
+export function getQuotaUsed(): number {
+  return getQuotaState().used;
+}
+
+// ── Search result cache (localStorage, 7-day TTL) ──
+const CACHE_KEY = 'yt_search_cache';
+const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+interface CacheEntry {
+  result: YTResult | null;
+  ts: number;
+}
+
+function getSearchCache(): Record<string, CacheEntry> {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return {};
+}
+
+function getCachedResult(cacheKey: string): YTResult | null | undefined {
+  const cache = getSearchCache();
+  const entry = cache[cacheKey];
+  if (!entry) return undefined; // cache miss
+  if (Date.now() - entry.ts > CACHE_TTL) return undefined; // expired
+  return entry.result; // may be null (meaning "not found" was cached)
+}
+
+function setCachedResult(cacheKey: string, result: YTResult | null) {
+  try {
+    const cache = getSearchCache();
+    // Evict expired entries to keep cache size manageable
+    const now = Date.now();
+    for (const key of Object.keys(cache)) {
+      if (now - cache[key].ts > CACHE_TTL) delete cache[key];
+    }
+    cache[cacheKey] = { result, ts: now };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+  } catch { /* quota exceeded — ignore */ }
+}
 
 export interface YTResult {
   video_id: string;
@@ -39,6 +107,7 @@ export async function searchYouTube(query: string, maxResults = 8): Promise<YTRe
 
   const url = `${BASE}?${params}`;
   const res = await fetch(url);
+  trackQuotaUsage(1);
 
   if (!res.ok) {
     const body = await res.text();
@@ -113,6 +182,7 @@ export async function searchYouTubeInChannel(
 
   try {
     const res = await fetch(`${BASE}?${params}`);
+    trackQuotaUsage(1);
     if (!res.ok) {
       if (res.status === 403) {
         const body = await res.text();
@@ -145,22 +215,44 @@ export async function resolveChannelId(handle: string): Promise<string | null> {
   if (!API_KEY) return null;
 
   try {
+    // Use channels.list with forHandle — costs 1 unit instead of 100 (search.list)
     const params = new URLSearchParams({
-      q: handle,
-      part: 'snippet',
-      type: 'channel',
-      maxResults: '1',
+      part: 'id',
+      forHandle: `@${handle}`,
       key: API_KEY,
     });
-    const res = await fetch(`${BASE}?${params}`);
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?${params}`);
     if (!res.ok) return null;
     const data = await res.json();
-    const id = data.items?.[0]?.snippet?.channelId ?? null;
+    const id = data.items?.[0]?.id ?? null;
     channelIdCache.set(handle, id);
     return id;
   } catch {
     return null;
   }
+}
+
+/**
+ * Estimate how many API searches a batch will cost (accounting for cache hits).
+ * Each uncached song costs up to (1 + numChannels) searches in worst case.
+ * Returns { uncached, worstCase, cached } counts.
+ */
+export function estimateBatchCost(
+  queries: string[],
+  numPreferredChannels = DEFAULT_PREFERRED_CHANNELS.length,
+): { uncached: number; worstCase: number; cached: number } {
+  let cached = 0;
+  let uncached = 0;
+  for (const q of queries) {
+    if (getCachedResult(q) !== undefined) {
+      cached++;
+    } else {
+      uncached++;
+    }
+  }
+  // Worst case per uncached song: channel searches + 1 general fallback
+  const worstCase = uncached * (numPreferredChannels + 1);
+  return { uncached, worstCase, cached };
 }
 
 export interface BatchSearchItem {
@@ -213,33 +305,43 @@ export async function batchSearchYouTube(
     let found: YTResult | null = null;
     let source: 'channel' | 'general' | 'not_found' = 'not_found';
 
-    // Try each preferred channel first
-    try {
-      for (const channelId of channelIds) {
-        const channelResults = await searchYouTubeInChannel(item.query, channelId, 1);
-        if (channelResults.length > 0) {
-          found = channelResults[0];
-          source = 'channel';
-          break;
-        }
-        await sleep(THROTTLE_MS);
-      }
-    } catch (e) {
-      if (e instanceof YouTubeQuotaError) throw e;
-    }
-
-    // Fall back to general search
-    if (!found) {
+    // Check cache first — avoids all API calls for repeated queries
+    const cached = getCachedResult(item.query);
+    if (cached !== undefined) {
+      found = cached;
+      source = cached ? 'channel' : 'not_found';
+    } else {
+      // Try each preferred channel first
       try {
-        const generalResults = await searchYouTube(item.query, 1);
-        if (generalResults.length > 0) {
-          found = generalResults[0];
-          source = 'general';
+        for (const channelId of channelIds) {
+          const channelResults = await searchYouTubeInChannel(item.query, channelId, 1);
+          if (channelResults.length > 0) {
+            found = channelResults[0];
+            source = 'channel';
+            break;
+          }
+          await sleep(THROTTLE_MS);
         }
       } catch (e) {
         if (e instanceof YouTubeQuotaError) throw e;
-        // other error — leave as not_found
       }
+
+      // Fall back to general search
+      if (!found) {
+        try {
+          const generalResults = await searchYouTube(item.query, 1);
+          if (generalResults.length > 0) {
+            found = generalResults[0];
+            source = 'general';
+          }
+        } catch (e) {
+          if (e instanceof YouTubeQuotaError) throw e;
+          // other error — leave as not_found
+        }
+      }
+
+      // Cache the result (even null = "not found")
+      setCachedResult(item.query, found);
     }
 
     const batchResult: BatchSearchResult = {
@@ -254,8 +356,8 @@ export async function batchSearchYouTube(
       onProgress(i + 1, items.length, batchResult);
     }
 
-    // Throttle between requests
-    if (i < items.length - 1) {
+    // Throttle between requests (skip if result was cached)
+    if (i < items.length - 1 && cached === undefined) {
       await sleep(THROTTLE_MS);
     }
   }

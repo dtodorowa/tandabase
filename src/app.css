@@ -1,4 +1,4 @@
-:root {
+:root, [data-theme="dark"] {
   --bg: #09090b;
   --surface: #111113;
   --surface2: #18181b;
@@ -17,8 +17,33 @@
   --vals: #4ade80;
   --radius: 10px;
   --radius-sm: 6px;
+  color-scheme: dark;
+}
 
-  /* Type scale */
+[data-theme="light"] {
+  --bg: #faf8ff;
+  --surface: #ffffff;
+  --surface2: #f5f3ff;
+  --surface3: #ede9fe;
+  --border: #e0dced;
+  --border-light: #c4b5fd;
+  --accent: #7c3aed;
+  --accent-dim: rgba(124,58,237,0.08);
+  --accent-glow: rgba(124,58,237,0.04);
+  --accent-bright: #6d28d9;
+  --text: #1e1b4b;
+  --text-mid: #5b5675;
+  --text-dim: #9f95b5;
+  --tango: #dc2626;
+  --milonga: #2563eb;
+  --vals: #16a34a;
+  --radius: 10px;
+  --radius-sm: 6px;
+  color-scheme: light;
+}
+
+/* Type scale (shared by both themes) */
+:root {
   --fs-hero: 4rem;
   --fs-display: 3rem;
   --fs-title: 2.5rem;

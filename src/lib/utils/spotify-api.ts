@@ -45,6 +45,7 @@ export async function spotifyApiCall<T = any>(
   token: string,
   delay = 0,
   badGatewayRetries = 2,
+  rateLimitRetries = 3,
 ): Promise<T> {
   if (delay > 0) {
     await new Promise((r) => setTimeout(r, delay));
@@ -64,12 +65,18 @@ export async function spotifyApiCall<T = any>(
   }
 
   if (response.status === 429) {
-    const retryAfter = parseInt(response.headers.get('Retry-After') ?? '1', 10);
-    return spotifyApiCall<T>(url, token, retryAfter * 1000, badGatewayRetries);
+    if (rateLimitRetries <= 0) {
+      throw new SpotifyRateLimitError(
+        'Spotify rate limit exceeded. The app is in development mode with limited API quota — please wait a minute and try again.'
+      );
+    }
+    const retryAfter = Math.max(parseInt(response.headers.get('Retry-After') ?? '2', 10), 2);
+    const backoff = retryAfter * 1000 * (4 - rateLimitRetries); // exponential-ish backoff
+    return spotifyApiCall<T>(url, token, backoff, badGatewayRetries, rateLimitRetries - 1);
   }
 
   if (response.status === 502 && badGatewayRetries > 0) {
-    return spotifyApiCall<T>(url, token, (3 - badGatewayRetries) * 1000, badGatewayRetries - 1);
+    return spotifyApiCall<T>(url, token, (3 - badGatewayRetries) * 1000, badGatewayRetries - 1, rateLimitRetries);
   }
 
   throw new Error(`Spotify API error: HTTP ${response.status}`);
@@ -79,6 +86,13 @@ export class SpotifyAuthError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'SpotifyAuthError';
+  }
+}
+
+export class SpotifyRateLimitError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SpotifyRateLimitError';
   }
 }
 
