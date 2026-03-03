@@ -10,6 +10,7 @@
     fetchAllUserPlaylists,
     fetchPlaylistTracks,
     SpotifyAuthError,
+    SpotifyForbiddenError,
     type SpotifyPlaylistSummary,
   } from '$lib/utils/spotify-api';
   import {
@@ -32,6 +33,13 @@
 
   // Import mode toggle
   let importMode = $state<'xml' | 'csv' | 'spotify'>('csv');
+
+  function switchTab(tab: 'xml' | 'csv' | 'spotify') {
+    importMode = tab;
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', tab);
+    window.history.replaceState({}, '', url.toString());
+  }
 
   // Upload (XML)
   let dragOver = $state(false);
@@ -303,7 +311,7 @@
       spotifyPlaylists = await fetchAllUserPlaylists(token);
       cachePlaylists(spotifyPlaylists);
     } catch (e: any) {
-      if (e instanceof SpotifyAuthError) {
+      if (e instanceof SpotifyAuthError || e instanceof SpotifyForbiddenError) {
         disconnectSpotify();
       }
       spotifyError = e.message || 'Failed to load playlists.';
@@ -334,7 +342,7 @@
       const result = spotifyToImportResult({ name: data.name, description: data.description, tracks });
       goToPreview(result, data.name || 'Spotify Import');
     } catch (e: any) {
-      if (e instanceof SpotifyAuthError) {
+      if (e instanceof SpotifyAuthError || e instanceof SpotifyForbiddenError) {
         disconnectSpotify();
       }
       spotifyError = e.message || 'Failed to fetch playlist tracks.';
@@ -350,6 +358,16 @@
     const tab = urlParams.get('tab');
     if (tab === 'spotify' || tab === 'csv' || tab === 'xml') {
       importMode = tab;
+    }
+
+    // Handle Spotify OAuth error (?error=access_denied for dev-mode restriction)
+    const oauthError = urlParams.get('error');
+    if (oauthError) {
+      importMode = 'spotify';
+      spotifyError = oauthError === 'access_denied'
+        ? 'SPOTIFY_DEV_MODE'
+        : `Spotify login failed: ${oauthError}`;
+      window.history.replaceState({}, '', `${window.location.origin}/import?tab=spotify`);
     }
 
     // Handle Spotify OAuth callback (?code=...)
@@ -409,7 +427,7 @@
       const result = spotifyToImportResult({ name: data.name, description: data.description, tracks });
       goToPreview(result, data.name || 'Spotify Import');
     } catch (e: any) {
-      if (e instanceof SpotifyAuthError) {
+      if (e instanceof SpotifyAuthError || e instanceof SpotifyForbiddenError) {
         disconnectSpotify();
       }
       spotifyError = e.message || 'Failed to fetch Spotify playlist.';
@@ -642,9 +660,9 @@
   <!-- STEP 1: Upload -->
   {#if step === 'upload'}
     <div class="import-tabs">
-      <button class="import-tab" class:active={importMode === 'csv'} onclick={() => importMode = 'csv'}>CSV</button>
-      <button class="import-tab" class:active={importMode === 'xml'} onclick={() => importMode = 'xml'}>Apple Music</button>
-      <button class="import-tab" class:active={importMode === 'spotify'} onclick={() => importMode = 'spotify'}>Spotify (beta)</button>
+      <button class="import-tab" class:active={importMode === 'csv'} onclick={() => switchTab('csv')}>CSV</button>
+      <button class="import-tab" class:active={importMode === 'xml'} onclick={() => switchTab('xml')}>Apple Music</button>
+      <button class="import-tab" class:active={importMode === 'spotify'} onclick={() => switchTab('spotify')}>Spotify (beta)</button>
     </div>
 
     {#if importMode === 'csv'}
@@ -714,12 +732,32 @@
             <div class="error-msg">{spotifyError}</div>
           {/if}
         {:else if !spotifyToken}
-          <p class="csv-hint">Connect your Spotify account to browse and import playlists.</p>
-          <button class="primary-btn spotify-connect-btn" onclick={connectToSpotify}>
-            Connect to Spotify
-          </button>
-          {#if spotifyError}
-            <div class="error-msg">{spotifyError}</div>
+          {#if spotifyError === 'SPOTIFY_DEV_MODE'}
+            <div class="dev-mode-notice">
+              <h3>Spotify connection unavailable</h3>
+              <p>
+                Tandabase is currently in <strong>development mode</strong> with Spotify, which means
+                only pre-approved accounts can connect directly. (You can send me your email and I can add your account to the list - only 4 slots available, though). I'm working on getting full access approved.
+              </p>
+              <p><strong>Easy workaround:</strong></p>
+              <ol>
+                <li>Go to <a href="https://exportify.app" target="_blank" rel="noopener">exportify.app</a> and log in with your Spotify account</li>
+                <li>Find your playlist and click <strong>Export</strong> to download a CSV file</li>
+                <li>Come back here, switch to the <button class="link-btn" onclick={() => { switchTab('csv'); spotifyError = ''; }}>CSV tab</button>, and upload or paste the file</li>
+              </ol>
+              <p class="dev-mode-hint">
+                Exportify CSVs are auto-detected — artists will be grouped into tandas automatically.
+              </p>
+            </div>
+            <button class="secondary-btn small" onclick={() => spotifyError = ''}>Try connecting anyway</button>
+          {:else}
+            <p class="csv-hint">Connect your Spotify account to browse and import playlists.</p>
+            <button class="primary-btn spotify-connect-btn" onclick={connectToSpotify}>
+              Connect to Spotify
+            </button>
+            {#if spotifyError}
+              <div class="error-msg">{spotifyError}</div>
+            {/if}
           {/if}
         {:else}
           <div class="spotify-header-row">
@@ -1792,6 +1830,64 @@
     color: var(--tango);
     line-height: 1.5;
     margin: 0;
+  }
+
+  /* Dev mode / Exportify fallback notice */
+  .dev-mode-notice {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .dev-mode-notice h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    margin: 0;
+    color: var(--accent);
+  }
+  .dev-mode-notice p {
+    font-size: var(--fs-xs);
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .dev-mode-notice ol {
+    font-size: var(--fs-xs);
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+  .dev-mode-notice a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .dev-mode-notice a:hover {
+    text-decoration: underline;
+  }
+  .dev-mode-hint {
+    font-size: var(--fs-2xs) !important;
+    color: var(--text-dim) !important;
+    font-style: italic;
+  }
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+  }
+  .link-btn:hover {
+    color: var(--accent-bright);
   }
 
   @media (max-width: 600px) {

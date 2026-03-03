@@ -64,6 +64,13 @@ export async function spotifyApiCall<T = any>(
     throw new SpotifyAuthError('Spotify session expired. Please reconnect.');
   }
 
+  if (response.status === 403) {
+    clearSpotifyToken();
+    throw new SpotifyForbiddenError(
+      'SPOTIFY_DEV_MODE'
+    );
+  }
+
   if (response.status === 429) {
     if (rateLimitRetries <= 0) {
       throw new SpotifyRateLimitError(
@@ -93,6 +100,13 @@ export class SpotifyRateLimitError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'SpotifyRateLimitError';
+  }
+}
+
+export class SpotifyForbiddenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SpotifyForbiddenError';
   }
 }
 
