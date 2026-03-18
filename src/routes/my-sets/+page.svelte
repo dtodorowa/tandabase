@@ -3,11 +3,14 @@
   import { getUserSets, deleteSet } from '$lib/firebase/db';
   import type { PracticaSet } from '$lib/types';
   import { goto } from '$app/navigation';
-  import GenreBadge from '$lib/components/shared/GenreBadge.svelte';
+  import { Search, Plus, Pencil, Trash2, Eye, EyeOff, ArrowUpDown } from 'lucide-svelte';
 
   let sets = $state<PracticaSet[]>([]);
   let loading = $state(true);
   let error = $state('');
+  let searchQuery = $state('');
+  let sortBy = $state<'updated' | 'created'>('updated');
+  let deleteConfirmId = $state<string | null>(null);
 
   $effect(() => {
     if (!authState.loading && !authState.isLoggedIn) {
@@ -27,7 +30,6 @@
     error = '';
     try {
       sets = await getUserSets(authState.user.uid);
-      console.log('[my-sets] Loaded', sets.length, 'sets for user', authState.user.uid);
     } catch (e: any) {
       console.error('Failed to load sets:', e);
       error = e.message || 'Failed to load sets';
@@ -37,9 +39,54 @@
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Delete this set?')) return;
-    await deleteSet(id);
-    sets = sets.filter(s => s.id !== id);
+    if (deleteConfirmId === id) {
+      await deleteSet(id);
+      sets = sets.filter(s => s.id !== id);
+      deleteConfirmId = null;
+    } else {
+      deleteConfirmId = id;
+      setTimeout(() => { if (deleteConfirmId === id) deleteConfirmId = null; }, 3000);
+    }
+  }
+
+  const filteredSets = $derived.by(() => {
+    let result = sets;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(s =>
+        s.title.toLowerCase().includes(q) ||
+        s.description?.toLowerCase().includes(q) ||
+        s.tandas.some(t => t.orchestra.toLowerCase().includes(q))
+      );
+    }
+    return [...result].sort((a, b) => {
+      const dateA = sortBy === 'updated' ? (a.updated_at ?? a.created_at) : a.created_at;
+      const dateB = sortBy === 'updated' ? (b.updated_at ?? b.created_at) : b.created_at;
+      return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
+  });
+
+  function formatDate(d: Date | undefined): string {
+    if (!d) return '';
+    const date = d instanceof Date ? d : new Date(d);
+    if (isNaN(date.getTime())) return '';
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / 86400000);
+    if (days === 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return `${days} days ago`;
+    if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function genreColor(genre: string): string {
+    switch (genre) {
+      case 'Tango': return 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400';
+      case 'Milonga': return 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400';
+      case 'Vals': return 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400';
+      default: return 'bg-black/5 text-ink-muted dark:bg-white/5';
+    }
   }
 </script>
 
@@ -47,187 +94,145 @@
   <title>My Sets - Tandabase</title>
 </svelte:head>
 
-<div class="my-sets-page">
-  <div class="page-header">
-    <h1>My Sets</h1>
-    <a href="/create" class="new-btn">+ New Set</a>
+{#if authState.loading || loading}
+  <div class="flex items-center justify-center min-h-[60vh] pt-28">
+    <p class="text-ink-muted text-sm font-light">Loading...</p>
   </div>
+{:else if authState.isLoggedIn}
+  <div class="pt-28 md:pt-36 pb-16 bg-surface dark:bg-background text-ink min-h-screen">
+    <div class="max-w-5xl mx-auto px-6 md:px-16 w-full">
 
-  {#if authState.loading || loading}
-    <div class="loading">Loading...</div>
-  {:else if error}
-    <div class="loading" style="color: var(--tango);">{error}</div>
-  {:else if sets.length === 0}
-    <div class="empty">
-      <img src="https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="empty-img" />
-      <p>You haven't created any sets yet.</p>
-      <a href="/create" class="start-btn">Create your first set &rarr;</a>
-    </div>
-  {:else}
-    <div class="sets-list">
-      {#each sets as set (set.id)}
-        <div class="set-row">
-          <a href="/set/{set.id}" class="set-thumb-link">
-            <img
-              src={set.cover_image || 'https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
-              alt=""
-              class="set-thumb"
-            />
-          </a>
-          <a href="/set/{set.id}" class="set-info">
-            <h3>{set.title}</h3>
-            <div class="set-meta">
-              <span class="vis-badge" class:public={set.visibility === 'public'}>
-                {set.visibility}
-              </span>
-              <span>{set.tanda_count} tandas &middot; {set.song_count} songs</span>
-              {#each set.genre_summary as genre}
-                <GenreBadge {genre} size="sm" />
-              {/each}
-            </div>
-          </a>
-          <div class="set-actions">
-            <a href="/create?edit={set.id}" class="action-btn">Edit</a>
-            <button class="action-btn danger" onclick={() => handleDelete(set.id!)}>Delete</button>
+      <!-- Header -->
+      <div class="pt-8 pb-10 border-b border-black/10 dark:border-white/10 mb-8">
+        <div class="font-mono text-xs text-ink-muted mb-4 uppercase tracking-widest">&gt; My_Sets</div>
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div>
+            <h1 class="font-serif text-5xl md:text-6xl font-bold text-ink tracking-tight leading-tight">My Sets</h1>
+            <p class="text-lg text-ink-muted font-light mt-2">{sets.length} set{sets.length !== 1 ? 's' : ''} total</p>
           </div>
+          <a
+            href="/create"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all no-underline shadow-lg"
+          >
+            <Plus class="w-4 h-4" />
+            New Set
+          </a>
         </div>
-      {/each}
-    </div>
-  {/if}
-</div>
+      </div>
 
-<style>
-  .my-sets-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-  .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .page-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: var(--fs-heading);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .new-btn {
-    background: var(--accent);
-    color: var(--bg);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.15s;
-  }
-  .new-btn:hover { background: var(--accent-bright); }
-  .loading, .empty {
-    text-align: center;
-    padding: 3rem;
-    color: var(--text-dim);
-    font-size: var(--fs-sm);
-  }
-  .empty-img {
-    width: 160px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: var(--radius);
-    margin-bottom: 1rem;
-    opacity: 0.7;
-  }
-  .start-btn {
-    display: inline-block;
-    margin-top: 0.75rem;
-    color: var(--accent);
-    font-weight: 500;
-    font-size: var(--fs-sm);
-  }
-  .sets-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .set-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.8rem 1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    transition: all 0.12s;
-  }
-  .set-row:hover { border-color: var(--border-light); }
-  .set-thumb-link {
-    flex-shrink: 0;
-  }
-  .set-thumb {
-    width: 64px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-    display: block;
-  }
-  .set-info {
-    flex: 1;
-    min-width: 0;
-    text-decoration: none;
-    color: var(--text);
-  }
-  .set-info h3 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-  }
-  .set-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.2rem;
-    font-size: var(--fs-label);
-    color: var(--text-dim);
-    flex-wrap: wrap;
-  }
-  .vis-badge {
-    padding: 0.1rem 0.35rem;
-    border-radius: 3px;
-    font-size: var(--fs-micro);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-  }
-  .vis-badge.public {
-    background: var(--accent-dim);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .set-actions {
-    display: flex;
-    gap: 0.35rem;
-    flex-shrink: 0;
-  }
-  .action-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text-mid);
-    padding: 0.3rem 0.6rem;
-    font-size: var(--fs-label);
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.15s;
-    text-decoration: none;
-    font-family: 'Outfit', sans-serif;
-  }
-  .action-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .action-btn.danger:hover { border-color: var(--tango); color: var(--tango); }
-</style>
+      {#if error}
+        <div class="p-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 text-red-700 dark:text-red-400 text-sm mb-6">
+          {error}
+        </div>
+      {:else if sets.length === 0}
+        <!-- Empty state -->
+        <div class="flex flex-col items-center justify-center py-20 text-center">
+          <div class="w-32 h-32 rounded-2xl overflow-hidden mb-6 opacity-60">
+            <img
+              src="https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <h3 class="font-serif text-2xl text-ink mb-2">No sets yet</h3>
+          <p class="text-sm text-ink-muted mb-6 max-w-xs">Create your first practica set to start building your milonga playlist.</p>
+          <a
+            href="/create"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all no-underline shadow-lg"
+          >
+            <Plus class="w-4 h-4" />
+            Create your first set
+          </a>
+        </div>
+      {:else}
+        <!-- Search & Sort bar -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+          <div class="relative flex-1">
+            <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint" />
+            <input
+              type="text"
+              placeholder="Search sets by title or orchestra..."
+              bind:value={searchQuery}
+              class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-card border border-black/5 dark:border-white/5 rounded-xl text-sm text-ink outline-none focus:border-ink dark:focus:border-white transition-colors font-sans"
+            />
+          </div>
+          <button
+            onclick={() => sortBy = sortBy === 'updated' ? 'created' : 'updated'}
+            class="flex items-center gap-2 px-4 py-2.5 border border-black/5 dark:border-white/5 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:border-ink/30 dark:hover:border-white/30 transition-all cursor-pointer bg-white dark:bg-card font-sans shrink-0"
+          >
+            <ArrowUpDown class="w-3.5 h-3.5" />
+            {sortBy === 'updated' ? 'Last updated' : 'Date created'}
+          </button>
+        </div>
+
+        <!-- Cards grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {#each filteredSets as set (set.id)}
+            <div class="group bg-white dark:bg-card rounded-2xl border border-black/5 dark:border-white/5 overflow-hidden hover:shadow-lg hover:border-black/15 dark:hover:border-white/15 transition-all">
+              <!-- Card image -->
+              <a href="/set/{set.id}" class="block relative h-36 overflow-hidden">
+                <img
+                  src={set.cover_image || 'https://images.unsplash.com/photo-1619983081563-430f63602796?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+                  alt=""
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+                  <div class="flex gap-1.5">
+                    {#each set.genre_summary as genre}
+                      <span class="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest {genreColor(genre)}">
+                        {genre}
+                      </span>
+                    {/each}
+                  </div>
+                  <span class="text-[10px] text-white/70 font-mono">
+                    {set.visibility === 'public' ? '🌐' : '🔒'}
+                  </span>
+                </div>
+              </a>
+
+              <!-- Card body -->
+              <div class="p-4">
+                <a href="/set/{set.id}" class="block no-underline">
+                  <h3 class="font-serif text-lg text-ink font-medium leading-snug truncate">{set.title}</h3>
+                  <p class="text-xs text-ink-muted mt-1">
+                    {set.tanda_count} tandas · {set.song_count} songs
+                  </p>
+                </a>
+
+                <div class="flex items-center justify-between mt-4 pt-3 border-t border-black/5 dark:border-white/5">
+                  <span class="text-[10px] text-ink-faint font-mono">
+                    {formatDate(sortBy === 'updated' ? (set.updated_at ?? set.created_at) : set.created_at)}
+                  </span>
+                  <div class="flex gap-1.5">
+                    <a
+                      href="/create?edit={set.id}"
+                      class="w-8 h-8 rounded-lg border border-black/5 dark:border-white/5 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 hover:border-ink/30 dark:hover:border-white/30 transition-all no-underline"
+                      title="Edit"
+                    >
+                      <Pencil class="w-3.5 h-3.5 text-ink-muted" />
+                    </a>
+                    <button
+                      onclick={() => handleDelete(set.id!)}
+                      class="w-8 h-8 rounded-lg border cursor-pointer bg-transparent font-sans flex items-center justify-center transition-all
+                        {deleteConfirmId === set.id
+                          ? 'border-tango bg-red-50 dark:bg-red-900/20'
+                          : 'border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 hover:border-ink/30 dark:hover:border-white/30'}"
+                      title={deleteConfirmId === set.id ? 'Click again to confirm' : 'Delete'}
+                    >
+                      <Trash2 class="w-3.5 h-3.5 {deleteConfirmId === set.id ? 'text-tango' : 'text-ink-muted'}" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {/each}
+        </div>
+
+        {#if filteredSets.length === 0 && searchQuery.trim()}
+          <p class="text-center text-sm text-ink-muted py-12">No sets match "{searchQuery}"</p>
+        {/if}
+      {/if}
+    </div>
+  </div>
+{/if}

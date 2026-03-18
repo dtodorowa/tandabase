@@ -652,9 +652,41 @@
 </svelte:head>
 
 <div class="import-page">
-  <div class="page-header">
-    <h1>Import Playlist</h1>
-    <p class="subtitle">Create a practica set from a CSV file, Apple Music XML, or Spotify playlist</p>
+  <!-- New styled header -->
+  <div class="pt-28 md:pt-36 pb-8 -mx-6 -mt-6 px-6 md:px-12 bg-surface dark:bg-background border-b border-black/10 dark:border-white/10 mb-6">
+    <div class="font-mono text-xs text-ink-muted mb-4 uppercase tracking-widest">&gt; Import</div>
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-ink tracking-tight leading-tight">Import Playlist</h1>
+    <p class="text-base text-ink-muted font-light mt-2 max-w-xl">
+      Create a practica set from a CSV file, Apple Music XML, or Spotify playlist.
+    </p>
+
+    <!-- Collapsible tutorial -->
+    <details class="mt-6 bg-white dark:bg-card rounded-xl border border-black/5 dark:border-white/5 overflow-hidden">
+      <summary class="flex items-center gap-3 px-5 py-3 cursor-pointer text-sm font-medium text-ink hover:bg-black/2 dark:hover:bg-white/2 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+        <span class="text-base">💡</span>
+        <span>How to use this</span>
+        <span class="ml-auto text-ink-faint text-xs">click to expand</span>
+      </summary>
+      <div class="px-5 pb-5 pt-1 text-sm text-ink-muted leading-relaxed space-y-3 border-t border-black/5 dark:border-white/5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
+          <div class="flex flex-col gap-1.5">
+            <span class="text-xs font-bold text-ink uppercase tracking-widest">Option 1 — CSV</span>
+            <p class="text-xs leading-relaxed">Type or paste your playlist in CSV format: <code class="bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded text-[11px]">orchestra, title, year, singer, genre</code>. Separate tandas with a blank row. You can also upload a CSV exported from <a href="https://exportify.app" target="_blank" rel="noopener" class="text-ink underline">Exportify</a> — it auto-detects the format.</p>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <span class="text-xs font-bold text-ink uppercase tracking-widest">Option 2 — Apple Music</span>
+            <p class="text-xs leading-relaxed">In Apple Music: <strong>File → Library → Export Playlist… → XML</strong>. Then drag the file here or click to upload. Songs are auto-grouped into tandas by artist.</p>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <span class="text-xs font-bold text-ink uppercase tracking-widest">Option 3 — Spotify</span>
+            <p class="text-xs leading-relaxed">Connect your Spotify account to browse and import playlists directly. Or use <a href="https://exportify.app" target="_blank" rel="noopener" class="text-ink underline">Exportify</a> to download a CSV and import via the CSV tab.</p>
+          </div>
+        </div>
+        <p class="text-xs text-ink-faint pt-2 border-t border-black/5 dark:border-white/5">
+          After importing, we'll search YouTube for each track. You can review matches before saving. The set is auto-saved after search to preserve your YouTube results.
+        </p>
+      </div>
+    </details>
   </div>
 
   <!-- STEP 1: Upload -->
@@ -1160,17 +1192,6 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-  }
-  .page-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: var(--fs-heading);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .subtitle {
-    font-size: var(--fs-xs);
-    color: var(--text-dim);
-    margin-top: 0.2rem;
   }
 
   /* Drop zone */

@@ -44,7 +44,7 @@
   <title>tandabase | Digital Tanda Archive</title>
 </svelte:head>
 
-<main class="grow pt-24 md:pt-32 pb-16 bg-surface dark:bg-background text-ink selection:bg-ink selection:text-white dark:selection:bg-white dark:selection:text-black">
+<main class="grow pt-24 md:pt-32 bg-surface dark:bg-background text-ink selection:bg-ink selection:text-white dark:selection:bg-white dark:selection:text-black">
 
   <!-- Hero Section -->
   <section class="w-full min-h-[70vh] flex flex-col items-center justify-center relative px-6 text-center">
@@ -91,7 +91,7 @@
           <div class="snap-center shrink-0 w-[85vw] md:w-[450px] aspect-square rounded-xl bg-black/5 dark:bg-white/5 animate-pulse"></div>
         {/each}
       {:else}
-        {#each sets as set, i (set.id)}
+        {#each sets.slice(0, 7) as set, i (set.id)}
           <!-- svelte-ignore a11y_no_static_element_interactions -->
           <!-- svelte-ignore a11y_click_events_have_key_events -->
           <div
@@ -150,6 +150,16 @@
     </div>
   </section>
 
+
+  <!-- NOT a DJ tool -->
+  <section class="w-full bg-ink-muted text-surface py-32 px-6 text-center my-32">
+    <h2 class="font-serif text-5xl md:text-7xl tracking-tighter mb-8 text-surface">This is <span class="italic text-surface/50">NOT</span> a DJ tool.</h2>
+    <p class="font-light text-xl text-surface/70 max-w-2xl mx-auto leading-relaxed">
+      No autoplay. No cortina gaps. Just YouTube embeds for studying.<br><br>
+      If you want to DJ a milonga, buy the music and support the labels preserving this history.
+    </p>
+  </section>
+
   <!-- Tanda Roulette -->
   <section class="w-full max-w-6xl mx-auto px-6 md:px-16 mb-32 flex flex-col items-center">
     <div class="text-center mb-16">
@@ -194,17 +204,9 @@
     {/if}
   </section>
 
-  <!-- NOT a DJ tool -->
-  <section class="w-full bg-ink text-white py-32 px-6 text-center my-32">
-    <h2 class="font-serif text-5xl md:text-7xl tracking-tighter mb-8 text-white">This is <span class="italic text-white/50">NOT</span> a DJ tool.</h2>
-    <p class="font-light text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
-      No autoplay. No cortina gaps. Just YouTube embeds for studying.<br><br>
-      If you want to DJ a milonga, buy the music and support the labels preserving this history.
-    </p>
-  </section>
 
   <!-- Import Section -->
-  <section class="w-full max-w-7xl mx-auto px-6 md:px-16 mb-32">
+  <!-- <section class="w-full max-w-7xl mx-auto px-6 md:px-16 mb-32">
     <div class="flex flex-col lg:flex-row gap-20 items-center">
       <div class="lg:w-1/2">
         <div class="font-mono text-xs text-ink-muted mb-6 uppercase tracking-widest">&gt; sys.import_module</div>
@@ -239,19 +241,19 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- Orchestra Marquee -->
-  <section class="py-12 border-y border-black/5 dark:border-white/5 overflow-hidden relative flex items-center mb-32 bg-card">
+  <!-- <section class="py-12 border-y border-black/5 dark:border-white/5 overflow-hidden relative flex items-center mb-32 bg-card">
     <div class="whitespace-nowrap flex font-serif text-5xl md:text-6xl italic text-ink-faint uppercase tracking-widest">
       <div class="animate-marquee">
         DI SARLI &bull; D'ARIENZO &bull; PUGLIESE &bull; TROILO &bull; CAL&Oacute; &bull; BIAGI &bull; DE CARO &bull; CANARO &bull; DI SARLI &bull; D'ARIENZO &bull; PUGLIESE &bull; TROILO &bull; CAL&Oacute; &bull; BIAGI &bull; DE CARO &bull; CANARO &bull;&nbsp;
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- Community Fix Section -->
-  <section class="w-full max-w-6xl mx-auto px-6 md:px-16 mb-24">
+  <!-- <section class="w-full max-w-6xl mx-auto px-6 md:px-16 mb-24">
     <div class="flex flex-col md:flex-row gap-16 items-center">
       <div class="md:w-1/2">
         <div class="font-mono text-xs text-ink-muted mb-4 uppercase tracking-widest">/* Community_Driven */</div>
@@ -284,7 +286,8 @@
         </div>
       </div>
     </div>
-  </section>
+  </section>  -->
+
 
   <!-- Footer -->
   <footer class="bg-card border-t border-black/5 dark:border-white/5 pt-20 pb-10 px-6 md:px-16 mt-auto">
@@ -293,7 +296,7 @@
       <div class="lg:col-span-1">
         <a href="/" class="font-serif text-3xl italic tracking-tight text-ink block mb-6 no-underline">tandabase.</a>
         <p class="text-ink-muted font-light leading-relaxed max-w-sm mb-8">
-          An ad-less, open-source player for tango nerds to build, share, and study tandas. Built for ears, not algorithms.
+          An ad-less, open-source player for tango nerds to build, share, and study tandas. 
         </p>
         <div class="font-mono text-xs text-ink/40 uppercase tracking-widest">
           &gt; System_Status: Online

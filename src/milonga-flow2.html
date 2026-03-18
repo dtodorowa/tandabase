@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tandabase | Digital Tanda Archive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Inter"', 'sans-serif'], serif: ['"Newsreader"', 'serif'] },
+                    colors: { surface: '#F7F7F7', ink: '#111111', 'ink-muted': '#737373', 'ink-faint': '#CCCCCC' }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-enter { opacity: 0; transform: translateY(10px); transition: all 0.6s cubic-bezier(0.84, 0, 0.16, 1); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); }
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #111111; cursor: pointer; margin-top: -6px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #CCCCCC; border-radius: 2px; }
+        input[type=range]:focus { outline: none; }
+    </style>
+</head>
+<body class="bg-surface text-ink font-sans antialiased min-h-screen flex flex-col overflow-x-hidden selection:bg-ink selection:text-white">
+
+    <nav class="fixed top-0 inset-x-0 w-full z-40 flex justify-between items-center px-6 md:px-16 py-6 md:py-8 mix-blend-multiply bg-surface/80 backdrop-blur-md border-b border-black/5 transition-all duration-300">
+        <a href="#" onclick="switchView('landing')" class="font-serif text-3xl italic tracking-tight text-ink">tandabase</a>
+        <div class="hidden md:flex gap-12 font-sans text-xs uppercase tracking-[0.15em] font-medium">
+            <button onclick="switchView('landing')" id="nav-landing" class="text-ink-muted transition-colors nav-link">Home</button>
+            <button onclick="switchView('browse')" id="nav-browse" class="text-ink-muted hover:text-ink transition-colors nav-link">Archive</button>
+            <button onclick="switchView('builder')" id="nav-builder" class="text-ink transition-colors nav-link">Builder</button>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-xs font-medium uppercase tracking-[0.15em] text-ink-muted hidden md:block">Daniela</span>
+            <div class="w-10 h-10 rounded-full bg-ink/10 overflow-hidden border border-black/10">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Profile" class="w-full h-full object-cover grayscale mix-blend-multiply">
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-24 md:pt-32 pb-16">
+        <div id="view-landing" class="view-section hidden fade-enter"></div>
+        <div id="view-browse" class="view-section hidden fade-enter"></div>
+
+        <div id="view-builder" class="view-section block w-full fade-enter-active">
+            <div class="max-w-[1600px] mx-auto px-6 md:px-16 w-full">
+                <div class="pt-8 pb-12 border-b border-black/10 mb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                    <div>
+                        <div class="font-mono text-xs text-ink-muted mb-4 uppercase tracking-widest">> Tanda_Matrix</div>
+                        <h1 class="font-serif text-5xl md:text-6xl font-bold text-ink tracking-tight leading-tight">Set Architect</h1>
+                        <p class="text-lg text-ink-muted font-light max-w-xl mt-4">Define the parameters. The app will generate a structural framework.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-12 items-start">
+                    <div class="w-full lg:w-1/3 bg-white p-8 rounded-2xl border border-black/5 shadow-sm sticky top-32">
+                        <h3 class="font-medium text-lg text-ink mb-8 border-b border-black/5 pb-4">Global Parameters</h3>
+                        <div class="space-y-8">
+                            <div>
+                                <div class="flex justify-between items-center mb-4">
+                                    <label class="text-sm font-medium text-ink">Milonga Duration</label>
+                                    <span id="durationLabel" class="font-mono text-sm text-ink-muted">4 Hours</span>
+                                </div>
+                                <input type="range" id="durationInput" min="2" max="6" step="0.5" value="4" class="w-full" oninput="updateBuilder()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full lg:w-2/3">
+                        <div class="flex justify-between items-end mb-6">
+                            <h3 class="font-serif text-3xl text-ink">Timeline Overview</h3>
+                            <span id="slotCountLabel" class="text-sm font-medium text-ink-muted bg-surface px-4 py-1.5 rounded-full border border-black/5">24 Tandas</span>
+                        </div>
+                        <div id="slotsContainer" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="constraintPanel" class="fixed right-0 top-0 bottom-0 w-full md:w-[450px] bg-white border-l border-black/10 shadow-2xl z-50 transform translate-x-full transition-transform duration-500 ease-spring flex flex-col">
+            
+            <div class="p-6 border-b border-black/5 flex justify-between items-center bg-surface/50 shrink-0">
+                <div>
+                    <span id="panelSlotNum" class="font-mono text-xs text-ink-muted uppercase tracking-widest">Slot 01</span>
+                    <h3 id="panelSlotType" class="font-serif text-3xl text-ink mt-1">Tango</h3>
+                </div>
+                <button onclick="closeConstraintPanel()" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <div id="panelStateAbstract" class="flex flex-col flex-grow overflow-hidden">
+                <div class="p-6 overflow-y-auto flex-grow">
+                    <div class="mb-8">
+                        <span class="text-[10px] font-bold px-2 py-1 rounded bg-emerald-100 text-emerald-800 uppercase tracking-widest">Warm-Up Phase</span>
+                        <p class="text-sm text-ink-muted mt-3 leading-relaxed">Easy, accessible music for early arrivals.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs font-medium text-ink uppercase tracking-widest border-b border-black/5 pb-2 mb-3">Suggested Orchestras</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="p-3 border border-ink bg-surface rounded-lg text-sm font-medium text-ink text-left">D'Arienzo (35-41)</button>
+                                <button class="p-3 border border-black/10 hover:border-black/30 rounded-lg text-sm text-ink/70 text-left transition-colors">Canaro (30s)</button>
+                                <button class="p-3 border border-black/10 hover:border-black/30 rounded-lg text-sm text-ink/70 text-left transition-colors">Fresedo</button>
+                                <button class="p-3 border border-black/10 hover:border-black/30 rounded-lg text-sm text-ink/70 text-left transition-colors">Lomuto</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-black/5 bg-surface/50 shrink-0">
+                    <button onclick="startTrackSelection()" class="w-full py-3 bg-ink text-white rounded-xl text-sm font-medium hover:bg-ink-muted transition-colors shadow-lg">
+                        Lock Orchestra: D'Arienzo
+                    </button>
+                </div>
+            </div>
+
+            <div id="panelStateConcrete" class="hidden flex-col flex-grow overflow-hidden bg-surface">
+                
+                <div class="p-6 bg-white border-b border-black/5 shrink-0">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-serif text-xl text-ink">D'Arienzo <span class="text-ink-muted text-base italic">(1935-1941)</span></h4>
+                        <span id="trackProgressText" class="font-mono text-xs font-bold text-ink">0 / 4 Tracks</span>
+                    </div>
+                    
+                    <div class="space-y-2" id="trackPlaceholders">
+                        <div id="ph-1" class="w-full py-2 px-3 border border-ink bg-white rounded-md flex items-center gap-3 transition-colors">
+                            <span class="text-xs font-mono text-ink font-bold">01</span>
+                            <span class="text-sm text-ink font-medium" id="txt-1">Pending: The Draw...</span>
+                        </div>
+                        <div id="ph-2" class="w-full py-2 px-3 border border-black/5 bg-black/5 rounded-md flex items-center gap-3 transition-colors opacity-50">
+                            <span class="text-xs font-mono text-ink-muted">02</span>
+                            <span class="text-sm text-ink-muted" id="txt-2">Pending: The Body...</span>
+                        </div>
+                        <div id="ph-3" class="w-full py-2 px-3 border border-black/5 bg-black/5 rounded-md flex items-center gap-3 transition-colors opacity-50">
+                            <span class="text-xs font-mono text-ink-muted">03</span>
+                            <span class="text-sm text-ink-muted" id="txt-3">Pending: The Body...</span>
+                        </div>
+                        <div id="ph-4" class="w-full py-2 px-3 border border-black/5 bg-black/5 rounded-md flex items-center gap-3 transition-colors opacity-50">
+                            <span class="text-xs font-mono text-ink-muted">04</span>
+                            <span class="text-sm text-ink-muted" id="txt-4">Pending: The Peak...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 overflow-y-auto flex-grow relative">
+                    <div class="sticky top-0 bg-surface pb-4 z-10">
+                        <p id="wizardPrompt" class="text-sm font-medium text-indigo-700 bg-indigo-50 border border-indigo-100 p-3 rounded-lg leading-relaxed shadow-sm">
+                            <strong class="uppercase text-[10px] tracking-widest block mb-1">Rule 4.2 - Track 1</strong>
+                            Pick a popular, highly recognizable track to draw dancers to the floor immediately.
+                        </p>
+                    </div>
+
+                    <div class="space-y-2 mt-2" id="availableTracks">
+                        </div>
+                </div>
+                
+                <div class="p-6 border-t border-black/5 bg-white shrink-0 hidden" id="saveTandaBtnContainer">
+                    <button onclick="closeConstraintPanel()" class="w-full py-3 bg-emerald-600 text-white rounded-xl text-sm font-medium hover:bg-emerald-700 transition-colors shadow-lg flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Save Tanda to Timeline
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div id="constraintBackdrop" onclick="closeConstraintPanel()" class="fixed inset-0 bg-black/10 z-40 hidden opacity-0 transition-opacity duration-500"></div>
+
+    </main>
+
+    <script>
+        // Initialize Timeline
+        updateBuilder();
+
+        function switchView(targetId) {
+            // simplified for snippet logic
+        }
+
+        function updateBuilder() {
+            const hours = parseFloat(document.getElementById('durationInput').value);
+            document.getElementById('durationLabel').innerText = hours + ' Hours';
+            const total = Math.floor(hours * 6);
+            document.getElementById('slotCountLabel').innerText = total + ' Tandas';
+            
+            const container = document.getElementById('slotsContainer');
+            container.innerHTML = ''; 
+            for (let i = 0; i < total; i++) {
+                let type = (i < 3 || i === total - 1) ? 'Tango' : ['Tango', 'Tango', 'Vals', 'Tango', 'Tango', 'Milonga'][i % 6];
+                if (total - i <= 6 && type === 'Milonga') type = 'Tango';
+                
+                container.insertAdjacentHTML('beforeend', `
+                    <div onclick="openConstraintPanel(${i + 1}, '${type}')" class="group relative bg-surface border-2 border-dashed border-black/15 rounded-xl p-5 cursor-pointer hover:bg-white hover:border-ink/50 hover:shadow-md transition-all">
+                        <span class="font-mono text-[10px] font-bold text-ink-muted">#${String(i+1).padStart(2, '0')}</span>
+                        <h4 class="font-serif text-2xl text-ink mt-2">${type}</h4>
+                    </div>
+                `);
+            }
+        }
+
+        function openConstraintPanel(slotNum, type) {
+            document.getElementById('panelStateAbstract').classList.remove('hidden');
+            document.getElementById('panelStateAbstract').classList.add('flex');
+            document.getElementById('panelStateConcrete').classList.add('hidden');
+            document.getElementById('panelStateConcrete').classList.remove('flex');
+            
+            document.getElementById('panelSlotNum').innerText = `Slot ${String(slotNum).padStart(2, '0')}`;
+            document.getElementById('panelSlotType').innerText = type;
+
+            const panel = document.getElementById('constraintPanel');
+            const backdrop = document.getElementById('constraintBackdrop');
+            backdrop.classList.remove('hidden');
+            setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+            panel.classList.remove('translate-x-full');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeConstraintPanel() {
+            const panel = document.getElementById('constraintPanel');
+            const backdrop = document.getElementById('constraintBackdrop');
+            panel.classList.add('translate-x-full');
+            backdrop.classList.add('opacity-0');
+            setTimeout(() => backdrop.classList.add('hidden'), 500);
+            document.body.style.overflow = 'auto';
+            
+            // Reset Wizard State for next time
+            currentTrackStep = 1;
+            selectedTracks = [];
+        }
+
+        // --- TRACK SELECTION WIZARD LOGIC ---
+        let currentTrackStep = 1;
+        let selectedTracks = [];
+
+        const mockLibrary = {
+            hits: [
+                { title: 'Paciencia', singer: 'Enrique Carbel', year: '1937' },
+                { title: 'El Flete', singer: 'Instrumental', year: '1936' },
+                { title: 'Nueve De Julio', singer: 'Instrumental', year: '1935' }
+            ],
+            body: [
+                { title: 'El Cencerro', singer: 'Instrumental', year: '1937' },
+                { title: 'La Viruta', singer: 'Instrumental', year: '1936' },
+                { title: 'Don Juan', singer: 'Instrumental', year: '1936' },
+                { title: 'El Africano', singer: 'Instrumental', year: '1937' }
+            ],
+            peak: [
+                { title: 'Pensalo Bien', singer: 'Alberto Echagüe', year: '1938' },
+                { title: 'Loca', singer: 'Alberto Echagüe', year: '1938' }
+            ]
+        };
+
+        function startTrackSelection() {
+            // Swap UI States
+            document.getElementById('panelStateAbstract').classList.add('hidden');
+            document.getElementById('panelStateAbstract').classList.remove('flex');
+            document.getElementById('panelStateConcrete').classList.remove('hidden');
+            document.getElementById('panelStateConcrete').classList.add('flex');
+            
+            currentTrackStep = 1;
+            selectedTracks = [];
+            renderWizardStep();
+        }
+
+        function renderWizardStep() {
+            const trackList = document.getElementById('availableTracks');
+            const prompt = document.getElementById('wizardPrompt');
+            document.getElementById('trackProgressText').innerText = `${currentTrackStep - 1} / 4 Tracks`;
+
+            // Update UI styles for placeholders (bold active, fade others)
+            for (let i = 1; i <= 4; i++) {
+                const ph = document.getElementById(`ph-${i}`);
+                if (i === currentTrackStep) {
+                    ph.className = "w-full py-2 px-3 border border-ink bg-white rounded-md flex items-center gap-3 transition-colors shadow-sm";
+                    ph.querySelector('span:first-child').className = "text-xs font-mono text-ink font-bold";
+                    ph.querySelector('span:last-child').className = "text-sm text-ink font-medium";
+                } else if (i < currentTrackStep) {
+                    ph.className = "w-full py-2 px-3 border border-black/10 bg-surface rounded-md flex items-center gap-3 transition-colors";
+                }
+            }
+
+            let tracksToShow = [];
+
+            if (currentTrackStep === 1) {
+                prompt.innerHTML = `<strong class="uppercase text-[10px] tracking-widest block mb-1 text-indigo-800">Rule 4.2 - Track 1 (The Hook)</strong> Pick a popular, highly recognizable track to draw dancers to the floor immediately.`;
+                prompt.className = "text-sm font-medium text-indigo-900 bg-indigo-50 border border-indigo-200 p-3 rounded-lg leading-relaxed shadow-sm";
+                tracksToShow = mockLibrary.hits;
+            } else if (currentTrackStep === 2 || currentTrackStep === 3) {
+                prompt.innerHTML = `<strong class="uppercase text-[10px] tracking-widest block mb-1 text-emerald-800">Rule 4.2 - Track ${currentTrackStep} (The Body)</strong> Pick a solid, danceable track. You can place one lesser-known track here.`;
+                prompt.className = "text-sm font-medium text-emerald-900 bg-emerald-50 border border-emerald-200 p-3 rounded-lg leading-relaxed shadow-sm";
+                tracksToShow = mockLibrary.body.filter(t => !selectedTracks.includes(t.title));
+            } else if (currentTrackStep === 4) {
+                prompt.innerHTML = `<strong class="uppercase text-[10px] tracking-widest block mb-1 text-rose-800">Rule 4.2 - Track 4 (The Peak)</strong> The highlight. The most expressive or dynamic piece. Never drop sharply at the end.`;
+                prompt.className = "text-sm font-medium text-rose-900 bg-rose-50 border border-rose-200 p-3 rounded-lg leading-relaxed shadow-sm";
+                tracksToShow = mockLibrary.peak;
+            }
+
+            // Render clickable tracks
+            trackList.innerHTML = tracksToShow.map(track => `
+                <div onclick="selectTrack('${track.title}')" class="group flex justify-between items-center p-3 rounded-xl border border-black/5 hover:border-ink hover:bg-black/5 cursor-pointer transition-all bg-white">
+                    <div>
+                        <p class="text-sm font-medium text-ink group-hover:text-ink transition-colors">${track.title}</p>
+                        <p class="text-xs text-ink-muted mt-0.5">${track.singer} • ${track.year}</p>
+                    </div>
+                    <div class="w-6 h-6 rounded-full border border-black/10 group-hover:bg-ink group-hover:border-ink flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectTrack(title) {
+            selectedTracks.push(title);
+            
+            // Update the placeholder text visually
+            const txtEl = document.getElementById(`txt-${currentTrackStep}`);
+            txtEl.innerText = title;
+            txtEl.className = "text-sm text-ink font-medium";
+
+            if (currentTrackStep < 4) {
+                currentTrackStep++;
+                renderWizardStep();
+            } else {
+                // Tanda is complete!
+                document.getElementById('trackProgressText').innerText = "4 / 4 Tracks";
+                document.getElementById('availableTracks').innerHTML = '';
+                document.getElementById('wizardPrompt').innerHTML = `<strong class="uppercase text-[10px] tracking-widest block mb-1 text-emerald-800">Tanda Complete</strong> You have successfully built this set.`;
+                document.getElementById('wizardPrompt').className = "text-sm font-medium text-emerald-900 bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-center shadow-sm";
+                document.getElementById('saveTandaBtnContainer').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

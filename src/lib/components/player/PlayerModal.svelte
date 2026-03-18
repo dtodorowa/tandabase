@@ -198,12 +198,12 @@
       </div>
 
       <!-- Content: Video + Sidebar -->
-      <div class="grow flex flex-col md:flex-row overflow-hidden">
+      <div class="grow flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
 
         <!-- Left: Video + Now Playing -->
-        <div class="w-full md:w-1/2 p-6 md:p-16 flex flex-col justify-center items-center relative overflow-y-auto">
+        <div class="w-full md:w-1/2 px-4 py-3 md:p-12 flex flex-col md:justify-center items-center relative md:overflow-y-auto shrink-0 md:shrink">
           <!-- Video embed -->
-          <div class="w-full max-w-md aspect-video rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.15)] bg-ink relative group">
+          <div class="w-full max-w-lg aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.15)] bg-ink relative group">
             {#if player.currentSong?.video_id}
               <iframe
                 class="w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"
@@ -221,19 +221,19 @@
           </div>
 
           <!-- Now Playing info -->
-          <div class="w-full mt-10 text-center">
-            <span class="text-[10px] font-medium px-3 py-1 rounded-full bg-ink/5 dark:bg-white/5 text-ink-muted mb-4 inline-block tracking-[0.2em] uppercase">Now Playing</span>
-            <h3 class="font-serif text-3xl text-ink mb-2">
+          <div class="w-full mt-4 md:mt-10 text-center">
+            <span class="text-[10px] font-medium px-3 py-1 rounded-full bg-ink/5 dark:bg-white/5 text-ink-muted mb-2 md:mb-4 inline-block tracking-[0.2em] uppercase">Now Playing</span>
+            <h3 class="font-serif text-xl md:text-3xl text-ink mb-1 md:mb-2">
               {player.currentSong?.title ?? 'Select a track'}
             </h3>
-            <p class="text-ink-muted font-light text-sm">
+            <p class="text-ink-muted font-light text-xs md:text-sm">
               {player.currentTanda?.orchestra ?? ''}
               {#if player.currentSong?.singer} · {player.currentSong.singer}{/if}
               {#if player.currentSong?.year} · {player.currentSong.year}{/if}
             </p>
 
             <!-- Prev / Next controls -->
-            <div class="mt-8 flex justify-center gap-6 items-center">
+            <div class="mt-4 md:mt-8 flex justify-center gap-6 items-center">
               <button
                 onclick={() => player.prev()}
                 disabled={player.isFirst}
@@ -252,7 +252,7 @@
             </div>
 
             <!-- Wrong video / flag -->
-            <div class="mt-6">
+            <div class="mt-3 md:mt-6">
               {#if isOwner}
                 <button
                   class="text-xs text-ink-faint hover:text-ink transition-colors underline underline-offset-4 cursor-pointer bg-transparent border-none font-sans"
@@ -340,7 +340,7 @@
         </div>
 
         <!-- Right: Track sidebar -->
-        <div class="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-black/5 dark:border-white/5 overflow-y-auto no-scrollbar relative p-6 md:p-12">
+        <div class="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-black/5 dark:border-white/5 overflow-y-auto no-scrollbar relative p-4 md:p-12 grow min-h-0">
 
           {#each player.tandas as tanda, ti (tanda.id)}
             {@const isActiveTanda = ti === player.currentTandaIndex}

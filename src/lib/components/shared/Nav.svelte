@@ -28,8 +28,8 @@
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/browse', label: 'Archive' },
-    { href: '/about', label: 'About' },
+    { href: '/browse', label: 'Community Sets' },
+    // { href: '/about', label: 'About' },
   ];
 </script>
 
@@ -50,12 +50,12 @@
       </a>
     {/each}
     {#if authState.isLoggedIn}
-      <a
+      <!-- <a
         href="/import"
         class="transition-colors no-underline {page.url.pathname === '/import' ? 'text-ink' : 'text-ink-muted hover:text-ink'}"
       >
         Import
-      </a>
+      </a> -->
       <a
         href="/my-sets"
         class="transition-colors no-underline {page.url.pathname === '/my-sets' ? 'text-ink' : 'text-ink-muted hover:text-ink'}"
@@ -173,7 +173,7 @@
         </a>
       {/each}
       {#if authState.isLoggedIn}
-        <a href="/import" class="py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 no-underline transition-colors">Import</a>
+        <!-- <a href="/import" class="py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 no-underline transition-colors">Import</a> -->
         <a href="/my-sets" class="py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 no-underline transition-colors">My Sets</a>
         <a href="/notifications" class="py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 no-underline transition-colors">
           Notifications

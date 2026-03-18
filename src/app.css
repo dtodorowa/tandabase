@@ -74,6 +74,9 @@
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 }
+.dark .glass {
+  background: rgba(10, 10, 10, 0.88);
+}
 
 /* Fade animation */
 .fade-in { animation: fadeIn 0.3s ease-out both; }
