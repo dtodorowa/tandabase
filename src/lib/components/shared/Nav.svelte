@@ -1,9 +1,9 @@
 <script lang="ts">
-  import AuthButton from './AuthButton.svelte';
   import { page } from '$app/state';
   import { authState } from '$lib/stores/auth.svelte';
   import { getFlagsForOwner } from '$lib/firebase/db';
   import { themeState } from '$lib/stores/theme.svelte';
+  import { Sun, Moon, Menu, X, Bell, ChevronDown } from 'lucide-svelte';
 
   let flagCount = $state(0);
   let mobileOpen = $state(false);
@@ -25,482 +25,192 @@
     mobileOpen = false;
     profileOpen = false;
   });
+
+  const navLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/browse', label: 'Archive' },
+    { href: '/about', label: 'About' },
+  ];
 </script>
 
-<nav class="nav">
-  <div class="nav-left">
-    <!-- Mobile: profile pic -->
-    <div class="mobile-avatar">
-      {#if !authState.isLoggedIn}
-     
-      {:else if authState.isLoggedIn && authState.user?.photoURL}
-        <a href="/my-sets"><img src={authState.user.photoURL} alt="" class="mobile-avatar-img" /></a>
-      {:else if authState.isLoggedIn}
-        <a href="/my-sets" class="mobile-avatar-placeholder">{authState.user?.displayName?.charAt(0).toUpperCase() ?? 'U'}</a>
-      {:else}
-        <button class="mobile-avatar-placeholder" onclick={() => authState.signInWithGoogle()}>?</button>
-      {/if}
-    </div>
+<nav class="fixed top-0 inset-x-0 w-full z-40 flex justify-between items-center px-6 md:px-16 py-6 md:py-8 bg-surface/80 dark:bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 transition-all duration-300">
+  <!-- Logo -->
+  <a href="/" class="font-serif text-3xl italic tracking-tight text-ink no-underline">
+    tandabase
+  </a>
 
-    <!-- Desktop: logo + primary links -->
-    <a href="/" class="logo desktop-logo">
-      <span class="logo-text">tanda<span class="logo-accent">base</span></span>
-    </a>
-
-    <div class="primary-links desktop-only">
-      <a href="/browse" class:active={page.url.pathname === '/browse'}>Browse</a>
-      {#if authState.isLoggedIn}
-        <a href="/create" class:active={page.url.pathname === '/create'}>Create</a>
-        <a href="/import" class:active={page.url.pathname === '/import'}>Import</a>
-        <a href="/my-sets" class:active={page.url.pathname === '/my-sets'}>My Sets</a>
-      {/if}
-      <a href="/about" class:active={page.url.pathname === '/about'}>About</a>
-    </div>
+  <!-- Desktop nav links -->
+  <div class="hidden md:flex gap-12 font-sans text-xs uppercase tracking-[0.15em] font-medium">
+    {#each navLinks as link (link.href)}
+      <a
+        href={link.href}
+        class="transition-colors no-underline {page.url.pathname === link.href ? 'text-ink' : 'text-ink-muted hover:text-ink'}"
+      >
+        {link.label}
+      </a>
+    {/each}
+    {#if authState.isLoggedIn}
+      <a
+        href="/import"
+        class="transition-colors no-underline {page.url.pathname === '/import' ? 'text-ink' : 'text-ink-muted hover:text-ink'}"
+      >
+        Import
+      </a>
+      <a
+        href="/my-sets"
+        class="transition-colors no-underline {page.url.pathname === '/my-sets' ? 'text-ink' : 'text-ink-muted hover:text-ink'}"
+      >
+        My Sets
+      </a>
+    {/if}
   </div>
 
-  <!-- Mobile: centered logo -->
-    <a href="/" class="logo mobile-logo">
-      <span class="logo-text">tanda<span class="logo-accent">base</span></span>
-    </a>
-
-
-  <div class="nav-right">
+  <!-- Right side: theme toggle + profile -->
+  <div class="flex items-center gap-4">
     <!-- Theme toggle -->
-    <button class="theme-toggle desktop-only" onclick={() => themeState.toggle()} aria-label="Toggle theme">
+    <button
+      onclick={() => themeState.toggle()}
+      aria-label="Toggle theme"
+      class="hidden md:flex w-10 h-10 items-center justify-center rounded-full border border-black/10 dark:border-white/10 text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+    >
       {#if themeState.current === 'dark'}
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <Sun class="w-4 h-4" />
       {:else}
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <Moon class="w-4 h-4" />
       {/if}
     </button>
 
-    <!-- Desktop: notification bell + profile dropdown -->
+    <!-- Notification bell -->
     {#if authState.isLoggedIn}
-      <a href="/notifications" class="notif-bell desktop-only" aria-label="Notifications">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-        </svg>
+      <a href="/notifications" class="hidden md:flex relative w-10 h-10 items-center justify-center rounded-full text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 transition-colors no-underline">
+        <Bell class="w-4 h-4" />
         {#if flagCount > 0}
-          <span class="notif-dot"></span>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-tango rounded-full border-2 border-surface"></span>
         {/if}
       </a>
     {/if}
 
-    <div class="profile-menu desktop-only">
-      {#if authState.isLoggedIn}
-        <button class="profile-trigger" onclick={() => profileOpen = !profileOpen}>
-          {#if authState.user?.photoURL}
-            <img src={authState.user.photoURL} alt="" class="avatar" />
-          {:else}
-            <span class="avatar avatar-fallback">{authState.user?.displayName?.charAt(0).toUpperCase() ?? 'U'}</span>
-          {/if}
-          <span class="profile-name">{authState.user?.displayName ?? 'User'}</span>
-          <svg class="chevron" class:open={profileOpen} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+    <!-- Profile area -->
+    {#if authState.isLoggedIn}
+      <div class="relative hidden md:block">
+        <button
+          onclick={() => profileOpen = !profileOpen}
+          class="flex items-center gap-3 cursor-pointer bg-transparent border-none"
+        >
+          <span class="text-xs font-medium uppercase tracking-[0.15em] text-ink-muted">
+            {authState.user?.displayName ?? 'User'}
+          </span>
+          <div class="w-10 h-10 rounded-full bg-ink/10 dark:bg-white/10 overflow-hidden border border-black/10 dark:border-white/10">
+            {#if authState.user?.photoURL}
+              <img src={authState.user.photoURL} alt="Profile" class="w-full h-full object-cover" />
+            {:else}
+              <span class="w-full h-full flex items-center justify-center text-sm font-semibold text-ink-muted">
+                {authState.user?.displayName?.charAt(0).toUpperCase() ?? 'U'}
+              </span>
+            {/if}
+          </div>
+          <ChevronDown class="w-3 h-3 text-ink-muted transition-transform {profileOpen ? 'rotate-180' : ''}" />
         </button>
 
         {#if profileOpen}
           <!-- svelte-ignore a11y_no_static_element_interactions -->
-          <div class="dropdown-backdrop" onclick={() => profileOpen = false}></div>
-          <div class="dropdown">
-            <a href="/my-sets" class="dropdown-item">My Sets</a>
-            <!-- <a href="/about" class="dropdown-item">About Tandabase</a> -->
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item text-danger" onclick={() => { authState.logout(); profileOpen = false; }}>Sign out</button>
+          <div class="fixed inset-0 z-99" onclick={() => profileOpen = false}></div>
+          <div class="absolute top-full right-0 mt-2 w-52 bg-card border border-border rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)] z-100 overflow-hidden">
+            <a href="/my-sets" class="block px-4 py-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors no-underline">My Sets</a>
+            <a href="/notifications" class="block px-4 py-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors no-underline">
+              Notifications
+              {#if flagCount > 0}
+                <span class="ml-2 px-1.5 py-0.5 text-[10px] font-bold bg-tango text-white rounded-full">{flagCount}</span>
+              {/if}
+            </a>
+            <div class="h-px bg-border mx-2"></div>
+            <button
+              class="block w-full text-left px-4 py-3 text-sm text-tango hover:bg-tango/5 transition-colors cursor-pointer border-none bg-transparent font-sans"
+              onclick={() => { authState.logout(); profileOpen = false; }}
+            >
+              Sign out
+            </button>
           </div>
         {/if}
-      {:else}
-        <button class="sign-in-btn" onclick={() => authState.signInWithGoogle()}>Sign in</button>
-      {/if}
-    </div>
+      </div>
+    {:else}
+      <button
+        class="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-xs font-medium tracking-wide text-primary-foreground bg-primary rounded-full transition-transform active:scale-95 cursor-pointer border-none"
+        onclick={() => authState.signInWithGoogle()}
+      >
+        Sign in
+      </button>
+    {/if}
 
-    <!-- Mobile: hamburger -->
-    <button class="hamburger" onclick={() => mobileOpen = !mobileOpen} aria-label="Menu">
+    <!-- Mobile hamburger -->
+    <button
+      class="md:hidden flex w-10 h-10 items-center justify-center rounded-full border border-black/10 dark:border-white/10 text-ink-muted hover:text-ink transition-colors cursor-pointer bg-transparent"
+      onclick={() => mobileOpen = !mobileOpen}
+      aria-label="Menu"
+    >
       {#if mobileOpen}
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <X class="w-5 h-5" />
       {:else}
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <Menu class="w-5 h-5" />
       {/if}
     </button>
   </div>
 </nav>
 
+<!-- Mobile drawer -->
 {#if mobileOpen}
-  <div class="mobile-backdrop" onclick={() => mobileOpen = false} role="presentation"></div>
-  <div class="mobile-drawer">
-    <a href="/browse" class:active={page.url.pathname === '/browse'}>Browse</a>
-    {#if authState.isLoggedIn}
-      <a href="/create" class:active={page.url.pathname === '/create'}>Create</a>
-      <a href="/import" class:active={page.url.pathname === '/import'}>Import</a>
-      <a href="/my-sets" class:active={page.url.pathname === '/my-sets'}>My Sets</a>
-      <a href="/notifications" class="notif-link" class:active={page.url.pathname === '/notifications'}>
-        Notifications
-        {#if flagCount > 0}
-          <span class="notif-badge">{flagCount}</span>
-        {/if}
-      </a>
-    {/if}
-    <a href="/about" class:active={page.url.pathname === '/about'}>About</a>
-    <button class="mobile-theme-toggle" onclick={() => themeState.toggle()}>
-      {#if themeState.current === 'dark'}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        Light mode
-      {:else}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        Dark mode
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="fixed inset-0 bg-black/20 z-90 md:hidden" onclick={() => mobileOpen = false}></div>
+  <div class="fixed top-0 right-0 bottom-0 w-72 bg-card dark:bg-card border-l border-border z-100 md:hidden flex flex-col pt-24 pb-6 px-6 overflow-y-auto shadow-2xl">
+
+    <div class="flex flex-col gap-1 mb-8">
+      {#each navLinks as link}
+        <a
+          href={link.href}
+          class="py-3 px-4 rounded-lg text-sm font-medium no-underline transition-colors {page.url.pathname === link.href ? 'text-ink bg-black/5 dark:bg-white/5' : 'text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5'}"
+        >
+          {link.label}
+        </a>
+      {/each}
+      {#if authState.isLoggedIn}
+        <a href="/import" class="py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 no-underline transition-colors">Import</a>
+        <a href="/my-sets" class="py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 no-underline transition-colors">My Sets</a>
+        <a href="/notifications" class="py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 no-underline transition-colors">
+          Notifications
+          {#if flagCount > 0}
+            <span class="ml-2 px-1.5 py-0.5 text-[10px] font-bold bg-tango text-white rounded-full">{flagCount}</span>
+          {/if}
+        </a>
       {/if}
-    </button>
-    <div class="mobile-auth">
-      <AuthButton />
+    </div>
+
+    <div class="border-t border-border pt-6 mt-auto flex flex-col gap-3">
+      <button
+        class="flex items-center gap-3 py-3 px-4 rounded-lg text-sm font-medium text-ink-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/5 transition-colors w-full cursor-pointer bg-transparent border-none font-sans"
+        onclick={() => themeState.toggle()}
+      >
+        {#if themeState.current === 'dark'}
+          <Sun class="w-4 h-4" /> Light mode
+        {:else}
+          <Moon class="w-4 h-4" /> Dark mode
+        {/if}
+      </button>
+
+      {#if authState.isLoggedIn}
+        <button
+          class="flex items-center gap-3 py-3 px-4 rounded-lg text-sm font-medium text-tango hover:bg-tango/5 transition-colors w-full cursor-pointer bg-transparent border-none font-sans"
+          onclick={() => { authState.logout(); mobileOpen = false; }}
+        >
+          Sign out
+        </button>
+      {:else}
+        <button
+          class="w-full py-3 px-4 rounded-full text-sm font-medium text-primary-foreground bg-primary transition-colors cursor-pointer border-none font-sans"
+          onclick={() => authState.signInWithGoogle()}
+        >
+          Sign in with Google
+        </button>
+      {/if}
     </div>
   </div>
 {/if}
-
-<style>
-  .nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    height: 56px;
-    position: relative;
-    z-index: 50;
-  }
-
-  /* ── Left: logo + primary links ── */
-  .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
-  }
-  .logo {
-    text-decoration: none;
-    display: flex;
-    align-items: baseline;
-  }
-  .mobile-logo { display: none; }
-  .logo-text {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.35rem;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-  .logo-accent { color: var(--accent); }
-
-  .primary-links {
-    display: flex;
-    gap: 1.5rem;
-  }
-  .primary-links a {
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: var(--text-dim);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-  .primary-links a:hover { color: var(--text); }
-  .primary-links a.active { color: var(--text); }
-
-  /* ── Right: bell + profile ── */
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-  }
-
-  /* Notification bell */
-  .notif-bell {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    color: var(--text-dim);
-    transition: background 0.15s, color 0.15s;
-    text-decoration: none;
-  }
-  .notif-bell:hover { background: var(--surface2); color: var(--text); }
-  .notif-dot {
-    position: absolute;
-    top: 6px;
-    right: 7px;
-    width: 7px;
-    height: 7px;
-    background: var(--tango);
-    border-radius: 50%;
-    border: 2px solid var(--bg);
-  }
-
-  /* Profile dropdown */
-  .profile-menu { position: relative; }
-  .profile-trigger {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-dim);
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    font-family: 'Outfit', sans-serif;
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--radius-sm);
-    transition: background 0.15s, color 0.15s;
-  }
-  .profile-trigger:hover { background: var(--surface2); color: var(--text); }
-
-  .avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--border);
-  }
-  .avatar-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--accent-dim);
-    color: var(--accent);
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-  .profile-name {
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .chevron {
-    opacity: 0.5;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .chevron.open { transform: rotate(180deg); }
-
-  .dropdown-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 99;
-  }
-  .dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    width: 200px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    z-index: 100;
-    overflow: hidden;
-  }
-  .dropdown-item {
-    display: block;
-    width: 100%;
-    padding: 0.65rem 1rem;
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    font-size: var(--fs-sm);
-    font-family: 'Outfit', sans-serif;
-    text-decoration: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.12s, color 0.12s;
-  }
-  .dropdown-item:hover { background: var(--surface2); color: var(--text); }
-  .dropdown-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 0.2rem 0;
-  }
-  .text-danger { color: var(--tango) !important; }
-  .text-danger:hover { background: rgba(248,113,113,0.08) !important; }
-
-  /* Theme toggle */
-  .theme-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .theme-toggle:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-  .mobile-theme-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.65rem 1.2rem;
-    background: none;
-    border: none;
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: var(--text-mid);
-    font-family: 'Outfit', sans-serif;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-  .mobile-theme-toggle:hover {
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-
-  .sign-in-btn {
-    background: var(--accent);
-    border: 1px solid var(--accent);
-    color: var(--bg);
-    padding: 0.35rem 0.9rem;
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    font-family: 'Outfit', sans-serif;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .sign-in-btn:hover { background: var(--accent-bright); border-color: var(--accent-bright); }
-
-  /* ── Mobile hamburger ── */
-  .hamburger {
-    display: none;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-mid);
-    width: 34px;
-    height: 34px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.12s;
-  }
-  .hamburger:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ── Mobile drawer ── */
-  .mobile-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 90;
-  }
-  .mobile-drawer {
-    display: none;
-    position: fixed;
-    top: 56px;
-    right: 0;
-    bottom: 0;
-    width: 240px;
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    z-index: 100;
-    flex-direction: column;
-    padding: 1rem 0;
-    overflow-y: auto;
-  }
-  .mobile-drawer a {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.65rem 1.2rem;
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: var(--text-mid);
-    text-decoration: none;
-    transition: all 0.12s;
-  }
-  .mobile-drawer a:hover, .mobile-drawer a.active {
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-  .mobile-auth {
-    padding: 0.8rem 1.2rem;
-    margin-top: auto;
-    border-top: 1px solid var(--border);
-  }
-  .notif-link {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-  }
-  .notif-badge {
-    background: var(--tango);
-    color: #fff;
-    font-size: var(--fs-micro);
-    font-weight: 700;
-    min-width: 15px;
-    height: 15px;
-    border-radius: 99px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0.25rem;
-    line-height: 1;
-  }
-
-  /* ── Mobile avatar (hidden on desktop) ── */
-  .mobile-avatar { display: none; }
-  .mobile-avatar-img {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    object-fit: cover;
-  }
-  .mobile-avatar-placeholder {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--accent-dim);
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 600;
-    border: 1px solid var(--border);
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  /* ── Desktop-only / mobile toggle ── */
-  .desktop-only { display: flex; }
-
-  @media (max-width: 700px) {
-    .desktop-only { display: none !important; }
-    .hamburger { display: flex; }
-    .mobile-backdrop { display: block; }
-    .mobile-drawer { display: flex; }
-    .nav {
-      padding: 0 1rem;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-    }
-    .nav-left { justify-content: flex-start; }
-    .desktop-logo { display: none; }
-    .mobile-avatar { display: flex; }
-    .mobile-logo { display: flex; justify-content: center; }
-    .nav-right { justify-content: flex-end; }
-  }
-</style>

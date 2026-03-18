@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TangoSync MVP</title>
+    <style>
+        /* 2026 Aesthetic: Soft, blurred, pastel, glassmorphism */
+        :root {
+            --bg-color: #fce7f3; /* Soft pink background */
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --track-violin: #a78bfa; /* Soft purple */
+            --track-vocal: #f472b6; /* Soft pink */
+            --track-bandoneon: #38bdf8; /* Soft blue */
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            font-weight: 800;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* YouTube Player Hiding/Styling */
+        #player-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        /* Timeline & Grid */
+        .timeline-wrapper {
+            position: relative;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            padding-top: 30px;
+            overflow-x: hidden;
+            border: 1px solid white;
+        }
+
+        /* The moving playhead */
+        .playhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0%; /* Will be updated by JS */
+            width: 3px;
+            background: #ff3b3b;
+            box-shadow: 0 0 10px #ff3b3b;
+            z-index: 10;
+            transition: left 0.1s linear;
+            pointer-events: none;
+        }
+
+        /* Playhead nub */
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -6px;
+            width: 15px;
+            height: 15px;
+            background: #ff3b3b;
+            border-radius: 50%;
+        }
+
+        .track {
+            display: flex;
+            align-items: center;
+            height: 60px;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            position: relative;
+        }
+
+        .track-label {
+            width: 100px;
+            font-weight: 600;
+            color: #444;
+            padding-left: 15px;
+            z-index: 2;
+        }
+
+        .measure-grid {
+            display: flex;
+            flex-grow: 1;
+            height: 100%;
+            position: absolute;
+            left: 100px;
+            right: 0;
+        }
+
+        .measure {
+            flex: 1;
+            border-left: 1px dashed rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Cute block notes */
+        .note {
+            height: 20px;
+            border-radius: 8px;
+            position: absolute;
+            opacity: 0.8;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            color: #555;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        <h1>✨ TangoSync</h1>
+        
+        <div id="player-container">
+            <div id="youtube-player"></div>
+        </div>
+
+        <div class="timeline-wrapper">
+            <div class="playhead" id="playhead"></div>
+            
+            <div class="track">
+                <div class="track-label">Part</div>
+                <div class="measure-grid">
+                    <div class="measure" style="background: rgba(167, 139, 250, 0.2);"><span style="margin:auto; font-weight:bold; color:#7c3aed;">Intro (Pickup)</span></div>
+                    <div class="measure" style="background: rgba(244, 114, 182, 0.2);"><span style="margin:auto; font-weight:bold; color:#db2777;">Part A</span></div>
+                    <div class="measure" style="background: rgba(244, 114, 182, 0.2);"></div>
+                    <div class="measure" style="background: rgba(244, 114, 182, 0.2);"></div>
+                </div>
+            </div>
+
+            <div class="track">
+                <div class="track-label">Violin</div>
+                <div class="measure-grid">
+                    <div class="measure">
+                        <div class="note" style="left: 50%; width: 40%; background: var(--track-violin);"></div>
+                    </div>
+                    <div class="measure">
+                        <div class="note" style="left: 10%; width: 20%; background: var(--track-violin);"></div>
+                        <div class="note" style="left: 40%; width: 50%; background: var(--track-violin);"></div>
+                    </div>
+                    <div class="measure"></div>
+                    <div class="measure"></div>
+                </div>
+            </div>
+
+            <div class="track">
+                <div class="track-label">Vocals</div>
+                <div class="measure-grid">
+                    <div class="measure"></div>
+                    <div class="measure"></div>
+                    <div class="measure">
+                        <div class="note" style="left: 0%; width: 90%; background: var(--track-vocal);"></div>
+                    </div>
+                    <div class="measure">
+                        <div class="note" style="left: 10%; width: 30%; background: var(--track-vocal);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button onclick="playVideo()">▶ Play Sync</button>
+            <button onclick="pauseVideo()">⏸ Pause</button>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let player;
+        let syncInterval;
+        const totalDurationToMap = 16; // We are mapping 16 seconds to our grid for this MVP demo
+
+        // Initialize YouTube Player
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '200',
+                width: '356',
+                videoId: 'b9oE-O4B0v4', // Example Tango track (Por una cabeza)
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 0 // Hide native controls to use our UI
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function playVideo() {
+            if(player && typeof player.playVideo === 'function') {
+                player.playVideo();
+            }
+        }
+
+        function pauseVideo() {
+            if(player && typeof player.pauseVideo === 'function') {
+                player.pauseVideo();
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                // Start moving the playhead
+                syncInterval = setInterval(updatePlayhead, 50);
+            } else {
+                clearInterval(syncInterval);
+            }
+        }
+
+        function updatePlayhead() {
+            let currentTime = player.getCurrentTime();
+            let playhead = document.getElementById('playhead');
+            
+            // Map the current time to a percentage width of the grid
+            // For this MVP, we assume the 4 measures represent exactly 16 seconds.
+            let percentage = (currentTime / totalDurationToMap) * 100;
+            
+            // Offset the percentage slightly to account for the track-label width (100px)
+            // In a real Svelte app, you'd calculate exact pixel widths.
+            let labelOffset = (100 / document.querySelector('.timeline-wrapper').offsetWidth) * 100;
+            let actualPosition = labelOffset + (percentage * (1 - (labelOffset/100)));
+
+            if(actualPosition <= 100) {
+                playhead.style.left = actualPosition + '%';
+            } else {
+                // Reset or stop when we hit the end of our mapped grid
+                clearInterval(syncInterval);
+                pauseVideo();
+            }
+        }
+    </script>
+</body>
+</html>

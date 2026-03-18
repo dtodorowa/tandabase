@@ -1,29 +1,35 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { replaceState } from '$app/navigation';
-  import { player } from '$lib/stores/player.svelte';
+  import { getSet, getCommentsForSet, createComment, deleteComment } from '$lib/firebase/db';
+  import { playerModal } from '$lib/stores/playerModal.svelte';
   import { authState } from '$lib/stores/auth.svelte';
-  import { getSet, getCommentsForSet } from '$lib/firebase/db';
   import type { PracticaSet, Comment, Tanda } from '$lib/types';
-  import TandaComments from '$lib/components/player/TandaComments.svelte';
-  import SongList from '$lib/components/player/SongList.svelte';
-  import VideoPlayer from '$lib/components/player/VideoPlayer.svelte';
-  import MobilePlayerView from '$lib/components/player/MobilePlayerView.svelte';
+  import { FileDown, MessageCircle, Send, Trash2, ChevronDown } from 'lucide-svelte';
 
   import seedData from '$lib/data/seed.json';
 
-  let isOwner = $derived(
-    !!authState.user && !!player.set && player.set.authorId === authState.user.uid
-  );
-
+  let practicaSet = $state<PracticaSet | null>(null);
   let loading = $state(true);
   let error = $state('');
   let comments = $state<Comment[]>([]);
 
-  const setId = $derived(page.params.id);
+  // Comment input state
+  let newSetComment = $state('');
+  let sendingSetComment = $state(false);
+  let tandaCommentTexts = $state<Record<number, string>>({});
+  let sendingTandaComment = $state<Record<number, boolean>>({});
+  let expandedTandaComments = $state<Record<number, boolean>>({});
+  let showSetComments = $state(true);
+
+  const setId = $derived(page.params.id ?? '');
+
+  // Set-level comments (tandaIndex === -1)
+  const setLevelComments = $derived(
+    comments.filter(c => c.tandaIndex === -1)
+  );
 
   $effect(() => {
-    loadSet(setId);
+    if (setId) loadSet(setId);
   });
 
   async function loadSet(id: string) {
@@ -31,7 +37,7 @@
     error = '';
     try {
       if (id === 'demo') {
-        const demoSet: PracticaSet = {
+        practicaSet = {
           id: 'demo',
           title: seedData.meta.title,
           description: seedData.meta.description,
@@ -45,6 +51,7 @@
           updated_at: new Date(seedData.meta.updated_at),
           tandas: seedData.tandas.map(t => ({
             ...t,
+            genre: t.genre as import('$lib/types').Genre,
             songs: t.songs.map(s => ({
               ...s,
               video_title: s.title,
@@ -52,16 +59,13 @@
             })),
           })),
         };
-        player.loadSet(demoSet);
-        applyTandaParam();
       } else {
         const set = await getSet(id);
         if (!set) {
           error = 'Set not found';
           return;
         }
-        player.loadSet(set);
-        applyTandaParam();
+        practicaSet = set;
         loadComments(id);
       }
     } catch (e) {
@@ -72,62 +76,15 @@
     }
   }
 
-  function applyTandaParam() {
-    const t = page.url.searchParams.get('tanda');
-    if (t !== null) {
-      const idx = parseInt(t, 10);
-      if (!isNaN(idx) && idx >= 0 && idx < player.tandas.length) {
-        player.selectTanda(idx);
-      }
-    }
-  }
-
-  // Keep URL in sync with current tanda
-  $effect(() => {
-    const idx = player.currentTandaIndex;
-    if (!player.set) return;
-    const url = new URL(window.location.href);
-    url.searchParams.set('tanda', String(idx));
-    replaceState(url, {});
-  });
-
-  function getTandaShareUrl(): string {
-    const url = new URL(window.location.href);
-    url.searchParams.set('tanda', String(player.currentTandaIndex));
-    return url.toString();
-  }
-
-  // ── Share popup ──
-  let shareOpen = $state(false);
-  let linkCopied = $state(false);
-
-  function copyShareLink() {
-    navigator.clipboard.writeText(getTandaShareUrl());
-    linkCopied = true;
-    setTimeout(() => { linkCopied = false; }, 2000);
-  }
-
-  function shareToFacebook() {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getTandaShareUrl())}`, '_blank', 'width=600,height=400');
-    shareOpen = false;
-  }
-
-  function shareToTwitter() {
-    const text = player.set ? `Check out "${player.set.title}" on Tandabase` : 'Check out this tanda set';
-    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(getTandaShareUrl())}&text=${encodeURIComponent(text)}`, '_blank', 'width=600,height=400');
-    shareOpen = false;
-  }
-
-  function shareToWhatsApp() {
-    const text = player.set ? `Check out "${player.set.title}" on Tandabase: ${getTandaShareUrl()}` : getTandaShareUrl();
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-    shareOpen = false;
-  }
-
   function getYearRange(tanda: Tanda): string {
     const years = tanda.songs.map(s => s.year).filter((y): y is number => y !== null).sort();
     if (!years.length) return '';
     return years[0] === years[years.length - 1] ? String(years[0]) : `${years[0]}\u2013${years[years.length - 1]}`;
+  }
+
+  function getSingers(tanda: Tanda): string {
+    const singers = [...new Set(tanda.songs.map(s => s.singer).filter(Boolean))];
+    return singers.join(', ');
   }
 
   async function loadComments(id: string) {
@@ -138,379 +95,374 @@
     }
   }
 
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.key === 'ArrowRight') player.next();
-    if (e.key === 'ArrowLeft') player.prev();
+  function openPlayer(tandaIndex: number) {
+    if (!practicaSet) return;
+    playerModal.openModal(practicaSet, tandaIndex);
   }
 
-  let touchX = 0;
-  function handleTouchStart(e: TouchEvent) {
-    touchX = e.changedTouches[0].screenX;
+  function formatDate(d: any): string {
+    if (!d) return '';
+    const date = d.toDate ? d.toDate() : (d instanceof Date ? d : new Date(d));
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   }
-  function handleTouchEnd(e: TouchEvent) {
-    const d = e.changedTouches[0].screenX - touchX;
-    if (Math.abs(d) > 80) {
-      if (d > 0) player.prev();
-      else player.next();
+
+  // ── Comment actions ──
+  async function postSetComment() {
+    if (!newSetComment.trim() || !authState.user || !practicaSet?.id) return;
+    sendingSetComment = true;
+    try {
+      await createComment({
+        setId: practicaSet.id,
+        tandaIndex: -1,
+        authorId: authState.user.uid,
+        authorName: authState.user.displayName || 'Anonymous',
+        authorPhoto: authState.user.photoURL || null,
+        text: newSetComment.trim(),
+      });
+      newSetComment = '';
+      loadComments(practicaSet.id);
+    } catch (e) {
+      console.error('Failed to post comment:', e);
+    } finally {
+      sendingSetComment = false;
     }
+  }
+
+  async function postTandaComment(tandaIndex: number) {
+    const text = tandaCommentTexts[tandaIndex]?.trim();
+    if (!text || !authState.user || !practicaSet?.id) return;
+    sendingTandaComment = { ...sendingTandaComment, [tandaIndex]: true };
+    try {
+      await createComment({
+        setId: practicaSet.id,
+        tandaIndex,
+        authorId: authState.user.uid,
+        authorName: authState.user.displayName || 'Anonymous',
+        authorPhoto: authState.user.photoURL || null,
+        text,
+      });
+      tandaCommentTexts = { ...tandaCommentTexts, [tandaIndex]: '' };
+      loadComments(practicaSet.id);
+    } catch (e) {
+      console.error('Failed to post comment:', e);
+    } finally {
+      sendingTandaComment = { ...sendingTandaComment, [tandaIndex]: false };
+    }
+  }
+
+  async function handleDeleteComment(commentId: string) {
+    if (!practicaSet?.id) return;
+    try {
+      await deleteComment(commentId);
+      loadComments(practicaSet.id);
+    } catch (e) {
+      console.error('Failed to delete comment:', e);
+    }
+  }
+
+  // ── PDF Export ──
+  function exportPDF() {
+    if (!practicaSet) return;
+    const w = window.open('', '_blank');
+    if (!w) return;
+
+    let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${practicaSet.title}</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px; color: #111; max-width: 800px; margin: 0 auto; }
+      h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+      .meta { font-size: 12px; color: #737373; margin-bottom: 32px; }
+      .tanda { margin-bottom: 28px; page-break-inside: avoid; }
+      .tanda-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+      .tanda-num { font-size: 14px; color: #ccc; font-style: italic; }
+      .tanda-name { font-size: 18px; font-weight: 600; }
+      .tanda-meta { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.1em; }
+      table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #999; padding: 4px 0; border-bottom: 1px solid #eee; }
+      td { padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
+      td.num { color: #ccc; width: 30px; }
+      td.year { color: #999; text-align: right; font-variant-numeric: tabular-nums; width: 50px; }
+      td.singer { color: #737373; font-style: italic; width: 140px; }
+      .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #ccc; text-align: center; }
+      @media print { body { padding: 20px; } }
+    </style></head><body>`;
+
+    html += `<h1>${practicaSet.title}</h1>`;
+    html += `<p class="meta">By ${practicaSet.authorName} · ${practicaSet.tanda_count} tandas · ${practicaSet.song_count} songs</p>`;
+
+    for (const tanda of practicaSet.tandas) {
+      const yr = getYearRange(tanda);
+      const singers = getSingers(tanda);
+      html += `<div class="tanda">`;
+      html += `<div class="tanda-header">
+        <span class="tanda-num">${String(tanda.num).padStart(2, '0')}</span>
+        <span class="tanda-name">${tanda.orchestra}</span>
+        <span class="tanda-meta">${tanda.genre}${singers ? ' · ' + singers : ''}${yr ? ' · ' + yr : ''}</span>
+      </div>`;
+      html += `<table><thead><tr><th>#</th><th>Title</th><th>Singer</th><th style="text-align:right">Year</th></tr></thead><tbody>`;
+      tanda.songs.forEach((song, si) => {
+        html += `<tr><td class="num">${si + 1}</td><td>${song.title}</td><td class="singer">${song.singer || ''}</td><td class="year">${song.year || ''}</td></tr>`;
+      });
+      html += `</tbody></table></div>`;
+    }
+
+    html += `<div class="footer">Exported from tandabase · ${new Date().toLocaleDateString()}</div>`;
+    html += `</body></html>`;
+
+    w.document.write(html);
+    w.document.close();
+    setTimeout(() => w.print(), 300);
   }
 </script>
 
 <svelte:head>
-  <title>{player.set?.title ?? 'Tandabase'}</title>
+  <title>{practicaSet?.title ?? 'Tandabase'}</title>
 </svelte:head>
 
-<svelte:window onkeydown={handleKeydown} />
-<svelte:body ontouchstart={handleTouchStart} ontouchend={handleTouchEnd} />
+<div class="pt-28 md:pt-36 pb-16 bg-surface dark:bg-background text-ink min-h-screen">
+  {#if loading}
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <p class="text-ink-muted text-sm font-light">Loading set...</p>
+    </div>
+  {:else if error}
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <p class="text-tango text-sm font-light">{error}</p>
+    </div>
+  {:else if practicaSet}
+    <div class="max-w-4xl mx-auto px-6 w-full">
 
-{#if loading}
-  <div class="center-msg">Loading set...</div>
-{:else if error}
-  <div class="center-msg error">{error}</div>
-{:else if player.set}
-  <!-- Mobile: dedicated mobile player view -->
-  <div class="mobile-only">
-    <MobilePlayerView {comments} {isOwner} setId={player.set.id} oncommentadded={() => loadComments(player.set?.id ?? '')} />
-  </div>
-
-  <!-- Desktop: 2-panel layout -->
-  <div class="desktop-only">
-    <div class="layout">
-      <!-- Left: set info + tanda list with inline song expand -->
-      <aside class="panel-left">
-        <div class="set-header">
-          <div class="set-header-top">
-            <h1 class="set-title">{player.set.title}</h1>
-            <div class="share-wrap">
-              <button class="share-btn" onclick={() => shareOpen = !shareOpen}>Share</button>
-              {#if shareOpen}
-                <!-- svelte-ignore a11y_no_static_element_interactions -->
-                <div class="share-backdrop" onclick={() => shareOpen = false}></div>
-                <div class="share-popup">
-                  <button class="share-option" onclick={copyShareLink}>
-                    <span>{linkCopied ? '✓ Copied!' : '🔗 Copy link'}</span>
-                  </button>
-                  <button class="share-option" onclick={shareToWhatsApp}>
-                    <span>💬 WhatsApp</span>
-                  </button>
-                  <button class="share-option" onclick={shareToFacebook}>
-                    <span>📘 Facebook</span>
-                  </button>
-                  <button class="share-option" onclick={shareToTwitter}>
-                    <span>🐦 X / Twitter</span>
-                  </button>
-                </div>
-              {/if}
-            </div>
-          </div>
-          <span class="meta-text">{player.tandas.length} tandas &middot; {player.set.song_count} songs</span>
+      <!-- Set header -->
+      <div class="pt-12 pb-16 border-b border-black/10 dark:border-white/10 mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <a href="/browse" class="text-ink-muted hover:text-ink text-xs uppercase tracking-[0.15em] font-medium flex items-center gap-2 transition-colors no-underline">
+            ← Back to Archive
+          </a>
+          <button
+            onclick={exportPDF}
+            class="flex items-center gap-2 px-5 py-2.5 rounded-full border border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5 transition-all cursor-pointer bg-transparent font-sans text-sm font-medium text-ink-muted hover:text-ink"
+          >
+            <FileDown class="w-4 h-4" />
+            Export PDF
+          </button>
         </div>
 
-        <div class="tanda-list">
-          {#each player.tandas as tanda, i}
-            {@const yr = getYearRange(tanda)}
-            {@const isActive = i === player.currentTandaIndex}
-            <div class="tanda-item" class:active={isActive}>
-              <button class="tanda-row" onclick={() => player.selectTanda(i)}>
-                <span class="tanda-num">{String(tanda.num).padStart(2, '0')}</span>
-                <span class="tanda-orch">{tanda.orchestra}</span>
-                <span class="genre-tag {tanda.genre}">{tanda.genre}</span>
-                {#if yr}<span class="tanda-years">{yr}</span>{/if}
-                <span class="tanda-chevron" class:open={isActive}>&#9662;</span>
+        <h1 class="font-serif text-5xl md:text-6xl font-bold text-ink mb-6 tracking-tight leading-tight">
+          {practicaSet.title}
+        </h1>
+
+        <div class="flex flex-col md:flex-row md:items-center gap-6 justify-between">
+          {#if practicaSet.description}
+            <p class="text-lg text-ink-muted font-light max-w-xl leading-relaxed">
+              {practicaSet.description}
+            </p>
+          {:else}
+            <p class="text-lg text-ink-muted font-light max-w-xl leading-relaxed">
+              A set by {practicaSet.authorName}.
+            </p>
+          {/if}
+
+          <div class="flex flex-col items-start md:items-end gap-2 shrink-0">
+            <span class="text-xs uppercase tracking-widest text-ink-faint font-medium">Structure</span>
+            <span class="text-ink font-medium tracking-wide">{practicaSet.tanda_count} Tandas &bull; {practicaSet.song_count} Songs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tanda list -->
+      <div class="space-y-16">
+        {#each practicaSet.tandas as tanda, i (tanda.id)}
+          {@const yr = getYearRange(tanda)}
+          {@const singers = getSingers(tanda)}
+          {@const tandaComments = comments.filter(c => c.tandaIndex === i)}
+          {@const isExpanded = expandedTandaComments[i] ?? false}
+
+          <div>
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-6">
+              <div class="flex items-baseline gap-6">
+                <span class="font-serif text-4xl italic text-ink-faint">{String(tanda.num).padStart(2, '0')}</span>
+                <div>
+                  <h2 class="font-medium text-2xl text-ink mb-1">{tanda.orchestra}</h2>
+                  <span class="text-xs font-medium text-ink-muted tracking-widest uppercase">
+                    {tanda.songs.length} tracks
+                    {#if singers} &bull; {singers}{/if}
+                    {#if yr} &bull; {yr}{/if}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onclick={() => openPlayer(i)}
+                class="text-sm font-medium px-6 py-3 rounded-full border border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5 transition-all w-full md:w-auto cursor-pointer bg-transparent font-sans"
+              >
+                Open Player
+              </button>
+            </div>
+
+            <!-- Song list -->
+            <div class="pl-14 space-y-3">
+              {#each tanda.songs as song, si}
+                <div class="flex justify-between items-center text-sm gap-4">
+                  <span class="text-ink/80 dark:text-ink-muted">{si + 1}. {song.title}</span>
+                  <div class="flex items-center gap-3 shrink-0">
+                    {#if song.singer}
+                      <span class="text-ink-faint text-xs italic">{song.singer}</span>
+                    {/if}
+                    {#if song.year}
+                      <span class="text-ink-faint text-xs font-mono">{song.year}</span>
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+            </div>
+
+            <!-- Tanda comments -->
+            <div class="pl-14 mt-6">
+              <button
+                onclick={() => expandedTandaComments = { ...expandedTandaComments, [i]: !isExpanded }}
+                class="flex items-center gap-2 text-xs font-medium text-ink-muted hover:text-ink tracking-widest uppercase cursor-pointer bg-transparent border-none font-sans transition-colors group"
+              >
+                <MessageCircle class="w-3.5 h-3.5" />
+                {tandaComments.length > 0 ? `${tandaComments.length} comment${tandaComments.length > 1 ? 's' : ''}` : 'Add comment'}
+                <ChevronDown class="w-3 h-3 transition-transform {isExpanded ? 'rotate-180' : ''}" />
               </button>
 
-              {#if isActive}
-                <div class="song-expand">
-                  {#each tanda.songs as song, si}
-                    <button
-                      class="song-row"
-                      class:playing={si === player.currentSongIndex}
-                      onclick={() => player.selectSong(si)}
-                    >
-                      <span class="song-idx">{si + 1}</span>
-                      <span class="song-name">{song.title}</span>
-                      {#if song.singer}
-                        <span class="song-singer">{song.singer}</span>
-                      {/if}
-                    </button>
-                  {/each}
+              {#if isExpanded}
+                <div class="mt-4 space-y-4">
+                  {#if tandaComments.length > 0}
+                    <div class="space-y-3">
+                      {#each tandaComments as comment}
+                        <div class="flex gap-3 group/comment">
+                          {#if comment.authorPhoto}
+                            <img src={comment.authorPhoto} alt="" class="w-7 h-7 rounded-full object-cover shrink-0" />
+                          {:else}
+                            <div class="w-7 h-7 rounded-full bg-black/5 dark:bg-white/5 shrink-0 flex items-center justify-center text-[10px] font-medium text-ink-muted">
+                              {comment.authorName?.charAt(0).toUpperCase() ?? '?'}
+                            </div>
+                          {/if}
+                          <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-0.5">
+                              <span class="text-xs font-medium text-ink">{comment.authorName}</span>
+                              <span class="text-[10px] text-ink-faint">{formatDate(comment.created_at)}</span>
+                              {#if authState.user?.uid === comment.authorId && comment.id}
+                                <button
+                                  onclick={() => handleDeleteComment(comment.id!)}
+                                  class="opacity-0 group-hover/comment:opacity-100 transition-opacity cursor-pointer bg-transparent border-none p-0 ml-auto"
+                                >
+                                  <Trash2 class="w-3 h-3 text-ink-faint hover:text-tango transition-colors" />
+                                </button>
+                              {/if}
+                            </div>
+                            <p class="text-sm text-ink-muted leading-relaxed">{comment.text}</p>
+                          </div>
+                        </div>
+                      {/each}
+                    </div>
+                  {/if}
+
+                  <!-- Tanda comment input -->
+                  {#if authState.isLoggedIn && practicaSet.id !== 'demo'}
+                    <div class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 bg-transparent border-b border-black/10 dark:border-white/10 focus:border-ink dark:focus:border-white text-sm text-ink py-2 outline-none transition-colors font-sans placeholder:text-ink-faint"
+                        placeholder="Share your thoughts on this tanda..."
+                        bind:value={tandaCommentTexts[i]}
+                        onkeydown={(e: KeyboardEvent) => e.key === 'Enter' && postTandaComment(i)}
+                      />
+                      <button
+                        onclick={() => postTandaComment(i)}
+                        disabled={sendingTandaComment[i] || !tandaCommentTexts[i]?.trim()}
+                        class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer bg-transparent border-none transition-colors disabled:opacity-30 disabled:cursor-default"
+                      >
+                        <Send class="w-4 h-4 text-ink-muted" />
+                      </button>
+                    </div>
+                  {:else if !authState.isLoggedIn}
+                    <p class="text-xs text-ink-faint italic">Sign in to leave a comment.</p>
+                  {/if}
                 </div>
               {/if}
             </div>
-          {/each}
-        </div>
-      </aside>
-
-      <!-- Right: video player + comments (always visible) -->
-      <main class="panel-right">
-        <VideoPlayer song={player.currentSong} tanda={player.currentTanda} {isOwner} />
-        {#if player.currentTanda && player.set?.id}
-          <div class="comments-bar">
-            <TandaComments
-              {comments}
-              setId={player.set.id}
-              tandaIndex={player.currentTandaIndex}
-              oncommentadded={() => loadComments(player.set?.id ?? '')}
-            />
           </div>
+
+          {#if i < practicaSet.tandas.length - 1}
+            <hr class="border-black/5 dark:border-white/5" />
+          {/if}
+        {/each}
+      </div>
+
+      <!-- Set-level comments -->
+      <div class="mt-24 pt-16 border-t border-black/10 dark:border-white/10">
+        <button
+          onclick={() => showSetComments = !showSetComments}
+          class="flex items-center gap-3 mb-8 cursor-pointer bg-transparent border-none font-sans group"
+        >
+          <MessageCircle class="w-5 h-5 text-ink-muted" />
+          <h2 class="font-serif text-3xl text-ink">Discussion</h2>
+          {#if setLevelComments.length > 0}
+            <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-black/5 dark:bg-white/5 text-ink-muted">{setLevelComments.length}</span>
+          {/if}
+          <ChevronDown class="w-4 h-4 text-ink-faint transition-transform {showSetComments ? 'rotate-180' : ''}" />
+        </button>
+
+        {#if showSetComments}
+          <!-- Set comment input at top -->
+          {#if authState.isLoggedIn && practicaSet.id !== 'demo'}
+            <div class="mb-8 p-6 rounded-2xl border border-black/5 dark:border-white/5 bg-card">
+              <textarea
+                class="w-full bg-transparent text-sm text-ink outline-none resize-none font-sans placeholder:text-ink-faint leading-relaxed"
+                rows="3"
+                placeholder="Share your thoughts on this set — what works, what doesn't, suggestions..."
+                bind:value={newSetComment}
+              ></textarea>
+              <div class="flex justify-end mt-3">
+                <button
+                  onclick={postSetComment}
+                  disabled={sendingSetComment || !newSetComment.trim()}
+                  class="px-5 py-2 rounded-full bg-ink text-primary-foreground text-xs font-medium tracking-wide cursor-pointer border-none font-sans transition-opacity hover:opacity-80 disabled:opacity-30 disabled:cursor-default"
+                >
+                  {sendingSetComment ? 'Posting...' : 'Post Comment'}
+                </button>
+              </div>
+            </div>
+          {:else if !authState.isLoggedIn}
+            <p class="text-sm text-ink-faint italic mb-8">Sign in to join the discussion.</p>
+          {/if}
+
+          {#if setLevelComments.length === 0}
+            <p class="text-sm text-ink-faint font-light">No comments yet. Be the first to share your thoughts.</p>
+          {:else}
+            <div class="space-y-6">
+              {#each setLevelComments as comment}
+                <div class="flex gap-4 group/comment">
+                  {#if comment.authorPhoto}
+                    <img src={comment.authorPhoto} alt="" class="w-9 h-9 rounded-full object-cover shrink-0" />
+                  {:else}
+                    <div class="w-9 h-9 rounded-full bg-black/5 dark:bg-white/5 shrink-0 flex items-center justify-center text-xs font-medium text-ink-muted">
+                      {comment.authorName?.charAt(0).toUpperCase() ?? '?'}
+                    </div>
+                  {/if}
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-3 mb-1">
+                      <span class="text-sm font-medium text-ink">{comment.authorName}</span>
+                      <span class="text-xs text-ink-faint">{formatDate(comment.created_at)}</span>
+                      {#if authState.user?.uid === comment.authorId && comment.id}
+                        <button
+                          onclick={() => handleDeleteComment(comment.id!)}
+                          class="opacity-0 group-hover/comment:opacity-100 transition-opacity cursor-pointer bg-transparent border-none p-0 ml-auto"
+                        >
+                          <Trash2 class="w-3.5 h-3.5 text-ink-faint hover:text-tango transition-colors" />
+                        </button>
+                      {/if}
+                    </div>
+                    <p class="text-sm text-ink-muted leading-relaxed">{comment.text}</p>
+                  </div>
+                </div>
+              {/each}
+            </div>
+          {/if}
         {/if}
-      </main>
+      </div>
     </div>
-  </div>
-{/if}
-
-<style>
-  .center-msg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - 56px);
-    font-size: var(--fs-sm);
-    color: var(--text-dim);
-  }
-  .center-msg.error { color: var(--tango); }
-
-  /* ── 2-Panel Desktop Layout ── */
-  .layout {
-    display: flex;
-    height: calc(100vh - 56px);
-    height: calc(100dvh - 56px);
-  }
-
-  /* Left panel: set info + tanda list */
-  .panel-left {
-    width: 380px;
-    min-width: 320px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .set-header {
-    padding: 1rem 1rem 0.7rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .set-header-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.3rem;
-  }
-  .set-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: var(--fs-lead);
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.15;
-    margin: 0;
-  }
-  .meta-text {
-    font-size: var(--fs-xs);
-    color: var(--text-dim);
-  }
-
-  /* Share popup */
-  .share-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text-mid);
-    padding: 0.25rem 0.6rem;
-    font-size: var(--fs-xs);
-    font-weight: 500;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'Outfit', sans-serif;
-    flex-shrink: 0;
-  }
-  .share-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .share-wrap { position: relative; }
-  .share-backdrop { position: fixed; inset: 0; z-index: 50; }
-  .share-popup {
-    position: absolute;
-    top: calc(100% + 6px);
-    right: 0;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    min-width: 180px;
-    z-index: 51;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .share-option {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 0.8rem;
-    background: none;
-    border: none;
-    color: var(--text);
-    font-size: var(--fs-xs);
-    font-family: 'Outfit', sans-serif;
-    cursor: pointer;
-    transition: background 0.12s;
-    text-align: left;
-    white-space: nowrap;
-  }
-  .share-option:hover { background: var(--surface2); }
-
-  /* Tanda list */
-  .tanda-list {
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-  .tanda-list::-webkit-scrollbar { width: 3px; }
-  .tanda-list::-webkit-scrollbar-track { background: transparent; }
-  .tanda-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-  .tanda-item {
-    border-bottom: 1px solid var(--border);
-  }
-  .tanda-item.active {
-    background: var(--accent-dim);
-  }
-
-  .tanda-row {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 1rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--text);
-    font-family: 'Outfit', sans-serif;
-    font-size: var(--fs-sm);
-    text-align: left;
-    transition: background 0.12s;
-  }
-  .tanda-row:hover { background: var(--surface2); }
-  .tanda-item.active .tanda-row:hover { background: rgba(255,255,255,0.04); }
-
-  .tanda-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-xs);
-    color: var(--text-dim);
-    min-width: 20px;
-    font-weight: 500;
-  }
-  .tanda-item.active .tanda-num { color: var(--accent); }
-
-  .tanda-orch {
-    font-weight: 500;
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .tanda-item.active .tanda-orch { color: var(--accent-bright); font-weight: 600; }
-
-  .genre-tag {
-    font-size: var(--fs-2xs);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 0.1rem 0.35rem;
-    border-radius: 3px;
-    flex-shrink: 0;
-  }
-  .genre-tag.Tango   { background: rgba(248,113,113,0.1); color: var(--tango); }
-  .genre-tag.Milonga { background: rgba(96,165,250,0.1); color: var(--milonga); }
-  .genre-tag.Vals    { background: rgba(74,222,128,0.1); color: var(--vals); }
-
-  .tanda-years {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
-    color: var(--text-dim);
-    flex-shrink: 0;
-  }
-  .tanda-chevron {
-    font-size: var(--fs-2xs);
-    color: var(--text-dim);
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .tanda-chevron.open { transform: rotate(180deg); }
-
-  /* Inline song expansion */
-  .song-expand {
-    padding: 0 0 0.3rem;
-  }
-  .song-row {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.3rem 1rem 0.3rem 2.6rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--text-mid);
-    font-family: 'Outfit', sans-serif;
-    font-size: var(--fs-xs);
-    text-align: left;
-    transition: all 0.1s;
-  }
-  .song-row:hover { background: rgba(255,255,255,0.04); color: var(--text); }
-  .song-row.playing {
-    color: var(--accent-bright);
-    font-weight: 600;
-  }
-  .song-idx {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
-    color: var(--text-dim);
-    min-width: 14px;
-  }
-  .song-row.playing .song-idx { color: var(--accent); }
-  .song-name {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .song-singer {
-    font-size: var(--fs-2xs);
-    color: var(--text-dim);
-    font-style: italic;
-    flex-shrink: 0;
-    max-width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Right panel: video + comments */
-  .panel-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow-y: auto;
-  }
-  .comments-bar {
-    flex-shrink: 0;
-    border-top: 1px solid var(--border);
-    padding: 0.4rem 1.2rem;
-    background: var(--surface);
-  }
-
-  .mobile-only { display: none; }
-  .desktop-only { display: block; }
-
-  @media (max-width: 700px) {
-    .desktop-only { display: none; }
-    .mobile-only { display: block; }
-  }
-</style>
+  {/if}
+</div>

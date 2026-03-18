@@ -1,0 +1,120 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Light mode (default) — matches landing.html palette */
+  --background: 0 0% 97%;          /* #F7F7F7 */
+  --foreground: 0 0% 7%;            /* #111111 */
+
+  --card: 0 0% 100%;                /* white */
+  --card-foreground: 0 0% 7%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 7%;
+
+  --primary: 0 0% 7%;               /* #111111 — ink */
+  --primary-foreground: 0 0% 97%;   /* #F7F7F7 — surface */
+
+  --secondary: 0 0% 96%;            /* #F5F5F5 */
+  --secondary-foreground: 0 0% 7%;
+
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;     /* #737373 — ink-muted */
+
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 7%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 0 0% 90%;               /* #E5E5E5 */
+  --input: 0 0% 90%;
+  --ring: 0 0% 7%;
+
+  --radius: 0.75rem;
+
+  /* Custom tokens from landing.html */
+  --ink: 0 0% 7%;                   /* #111111 */
+  --ink-muted: 0 0% 45%;            /* #737373 */
+  --ink-faint: 0 0% 80%;            /* #CCCCCC */
+  --surface: 0 0% 97%;              /* #F7F7F7 */
+
+  /* Genre colors */
+  --tango: 0 91% 71%;
+  --milonga: 213 94% 68%;
+  --vals: 142 71% 73%;
+
+  /* Sidebar (shadcn convention) */
+  --sidebar: 0 0% 97%;
+  --sidebar-foreground: 0 0% 7%;
+  --sidebar-primary: 0 0% 7%;
+  --sidebar-primary-foreground: 0 0% 97%;
+  --sidebar-accent: 0 0% 96%;
+  --sidebar-accent-foreground: 0 0% 7%;
+  --sidebar-border: 0 0% 90%;
+  --sidebar-ring: 0 0% 7%;
+
+  /* Chart colors */
+  --chart-1: 0 91% 71%;
+  --chart-2: 213 94% 68%;
+  --chart-3: 142 71% 73%;
+  --chart-4: 38 92% 50%;
+  --chart-5: 262 83% 58%;
+}
+
+.dark {
+  --background: 240 6% 6%;          /* #0F0F12 */
+  --foreground: 0 0% 95%;           /* #F2F2F2 */
+
+  --card: 240 5% 10%;               /* #18181B */
+  --card-foreground: 0 0% 95%;
+
+  --popover: 240 5% 10%;
+  --popover-foreground: 0 0% 95%;
+
+  --primary: 0 0% 95%;              /* light text on dark bg */
+  --primary-foreground: 240 6% 6%;
+
+  --secondary: 240 4% 16%;          /* #27272A */
+  --secondary-foreground: 0 0% 95%;
+
+  --muted: 240 4% 16%;
+  --muted-foreground: 240 5% 65%;   /* #A1A1AA */
+
+  --accent: 240 4% 16%;
+  --accent-foreground: 0 0% 95%;
+
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 240 4% 16%;
+  --input: 240 4% 16%;
+  --ring: 0 0% 83%;
+
+  /* Custom tokens dark */
+  --ink: 0 0% 95%;
+  --ink-muted: 240 5% 65%;
+  --ink-faint: 240 4% 32%;
+  --surface: 240 6% 6%;
+
+  /* Genre colors (slightly adjusted for dark) */
+  --tango: 0 91% 65%;
+  --milonga: 213 94% 62%;
+  --vals: 142 71% 55%;
+
+  /* Sidebar */
+  --sidebar: 240 5% 8%;
+  --sidebar-foreground: 0 0% 95%;
+  --sidebar-primary: 0 0% 95%;
+  --sidebar-primary-foreground: 240 5% 8%;
+  --sidebar-accent: 240 4% 16%;
+  --sidebar-accent-foreground: 0 0% 95%;
+  --sidebar-border: 240 4% 16%;
+  --sidebar-ring: 0 0% 83%;
+
+  /* Chart colors */
+  --chart-1: 0 91% 65%;
+  --chart-2: 213 94% 62%;
+  --chart-3: 142 71% 55%;
+  --chart-4: 38 92% 50%;
+  --chart-5: 262 83% 58%;
+}
