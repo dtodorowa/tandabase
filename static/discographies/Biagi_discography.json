@@ -54,7 +54,8 @@
     "genre": "Vals",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Teofilo Ibanez"
+    "singer": "Teofilo Ibanez",
+    "youtube_id": "-AhlwBGxKII"
   },
   {
     "title": "El trece (El 13)",
@@ -180,7 +181,8 @@
     "genre": "Vals",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Andres Falgas"
+    "singer": "Andres Falgas",
+    "youtube_id": "nXiC1l1aiSg"
   },
   {
     "title": "Pura clase",
@@ -194,7 +196,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "M5L312uYABM"
   },
   {
     "title": "Cielo!",
@@ -236,7 +239,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Andres Falgas"
+    "singer": "Andres Falgas",
+    "youtube_id": "zHgXEhZO5JY"
   },
   {
     "title": "Son cosas del bandoneon",
@@ -334,7 +338,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Andres Falgas"
+    "singer": "Andres Falgas",
+    "youtube_id": "EPqply_vkLc"
   },
   {
     "title": "El ultimo adios",
@@ -348,7 +353,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Andres Falgas"
+    "singer": "Andres Falgas",
+    "youtube_id": "k-FPenpo2lQ"
   },
   {
     "title": "A mi no me interesa",
@@ -362,7 +368,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Andres Falgas"
+    "singer": "Andres Falgas",
+    "youtube_id": "zP-nRYMW2Tk"
   },
   {
     "title": "El estribo",
@@ -390,7 +397,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "3i5XM_Lsq24"
   },
   {
     "title": "Todo te nombra",
@@ -404,7 +412,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "qBjvzmtkEP0"
   },
   {
     "title": "Cantando se van las penas",
@@ -460,7 +469,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "Kjdrre8ul8Y"
   },
   {
     "title": "Callecita de mi barrio",
@@ -502,7 +512,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "czWBFOHq7ds"
   },
   {
     "title": "Misa de once",
@@ -530,7 +541,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "0QJZ0cJ7gOs"
   },
   {
     "title": "La marca del fuego",
@@ -600,7 +612,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "xCExw05tn_c"
   },
   {
     "title": "Pajaro ciego",
@@ -628,7 +641,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "NG5rn_-UpDo"
   },
   {
     "title": "Sera lo mejor",
@@ -642,7 +656,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "CcyTOJOFvco"
   },
   {
     "title": "La marcha nupcial",
@@ -670,7 +685,8 @@
     "genre": "Vals",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "M3fWsO0RM0E"
   },
   {
     "title": "Lagrimas y sonrisas (*C*)",
@@ -698,7 +714,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "tTLzTssluFc"
   },
   {
     "title": "Zaraza",
@@ -726,7 +743,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "kqllRgeLQG0"
   },
   {
     "title": "Ya lo ves...",
@@ -740,7 +758,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "4vVHEg-oyNc"
   },
   {
     "title": "Ahora no me conoces (Ahora... No me conoces)",
@@ -796,7 +815,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "cugM5W9jVbU"
   },
   {
     "title": "Didi (Di di)",
@@ -824,7 +844,8 @@
     "genre": "Milonga",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "UkCZ7huHVHE"
   },
   {
     "title": "Marcheta (Marquitta)",
@@ -880,7 +901,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "NcBHD6U6lQk"
   },
   {
     "title": "Sentimiento gaucho",
@@ -894,7 +916,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "NgRoXluxCpM"
   },
   {
     "title": "Te odio",
@@ -922,7 +945,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "wK8HIbfHSNI"
   },
   {
     "title": "La cumparsita",
@@ -936,7 +960,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "KesjRl8bdEs"
   },
   {
     "title": "Amor y vals",
@@ -978,7 +1003,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "uQqvxcN5eTw"
   },
   {
     "title": "Oyendo tu voz (Escuchando tu voz)",
@@ -1006,7 +1032,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "qyf95zZO6x4"
   },
   {
     "title": "La cumparsita",
@@ -1048,7 +1075,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "6lcSDkZMS-I"
   },
   {
     "title": "Senor! Senor!",
@@ -1062,7 +1090,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "RGGtq1WD2f4"
   },
   {
     "title": "A la luz del candil",
@@ -1076,7 +1105,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "JKva6ZZhdGU"
   },
   {
     "title": "Arlette",
@@ -1090,7 +1120,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "824slRCSJ2U"
   },
   {
     "title": "Por algo sera",
@@ -1104,7 +1135,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "J7cfm7di_64"
   },
   {
     "title": "Yo tengo un punal",
@@ -1118,7 +1150,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "-Ow77qtEbZk"
   },
   {
     "title": "Barrio reo",
@@ -1132,7 +1165,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "7hePXQAQQww"
   },
   {
     "title": "Cancion de rango (Pa' que se callen)",
@@ -1174,7 +1208,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "39tbrCU9s3Y"
   },
   {
     "title": "Adios, te vas....! (Adios te vas)",
@@ -1216,7 +1251,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "3r4zVDYBTMU"
   },
   {
     "title": "Si la llegaran a ver",
@@ -1412,7 +1448,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "adYUp3QRi20"
   },
   {
     "title": "Copas, amigos y besos",
@@ -1468,7 +1505,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "q-TsuqrEZFk"
   },
   {
     "title": "Me quede mirandola",
@@ -2140,7 +2178,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Hugo Duval"
+    "singer": "Hugo Duval",
+    "youtube_id": "TdTkxnxaedM"
   },
   {
     "title": "No me digas que no",
@@ -2238,7 +2277,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Hugo Duval"
+    "singer": "Hugo Duval",
+    "youtube_id": "M8E-FkYWDPI"
   },
   {
     "title": "Ramona",
@@ -2364,7 +2404,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Hugo Duval"
+    "singer": "Hugo Duval",
+    "youtube_id": "XMq2jBOmlis"
   },
   {
     "title": "En el lago azul",
@@ -2392,7 +2433,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Hugo Duval"
+    "singer": "Hugo Duval",
+    "youtube_id": "8tz8BywB7Io"
   },
   {
     "title": "La cancion",

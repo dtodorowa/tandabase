@@ -50,6 +50,18 @@ class EditorState {
       .map((t, i) => ({ ...t, num: i + 1 }));
   }
 
+  removeTandas(tandaIds: Set<string>) {
+    this.tandas = this.tandas
+      .filter(t => !tandaIds.has(t.id))
+      .map((t, i) => ({ ...t, num: i + 1 }));
+  }
+
+  updateTandas(tandaIds: Set<string>, updates: Partial<Tanda>) {
+    this.tandas = this.tandas.map(t =>
+      tandaIds.has(t.id) ? { ...t, ...updates } : t
+    );
+  }
+
   addSongToTanda(tandaId: string, song: Song) {
     this.tandas = this.tandas.map(t =>
       t.id === tandaId ? { ...t, songs: [...t.songs, song] } : t

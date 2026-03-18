@@ -5,7 +5,7 @@
   import { page } from '$app/state';
   import { getSet } from '$lib/firebase/db';
   import TandaBuilderPanel from '$lib/components/editor/TandaBuilderPanel.svelte';
-  import { Plus, Minus, Save, Eye, EyeOff } from 'lucide-svelte';
+  import { Plus, Minus, Save, Eye, EyeOff, Trash2, X, CheckSquare } from 'lucide-svelte';
   import type { Genre } from '$lib/types';
   import { untrack } from 'svelte';
 
@@ -13,6 +13,40 @@
   let openSlotIndex = $state<number | null>(null);
   let tandaCount = $state(4);
   let didInit = false;
+
+  // ── Multi-select state ──
+  let selectedTandas = $state<Set<string>>(new Set());
+  let lastClickedIndex = $state<number | null>(null);
+  let selectionMode = $state(false);
+
+  let selectedCount = $derived(selectedTandas.size);
+
+  // ── Hover popover state ──
+  let hoveredIndex = $state<number | null>(null);
+  let hoverTimer: ReturnType<typeof setTimeout> | null = null;
+  let popoverPosition = $state<{ x: number; y: number } | null>(null);
+
+  function handleTandaMouseEnter(index: number, event: MouseEvent) {
+    const target = event.currentTarget as HTMLElement;
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = setTimeout(() => {
+      const rect = target.getBoundingClientRect();
+      popoverPosition = {
+        x: rect.left + rect.width / 2,
+        y: rect.top,
+      };
+      hoveredIndex = index;
+    }, 700);
+  }
+
+  function handleTandaMouseLeave() {
+    if (hoverTimer) {
+      clearTimeout(hoverTimer);
+      hoverTimer = null;
+    }
+    hoveredIndex = null;
+    popoverPosition = null;
+  }
 
   $effect(() => {
     if (!authState.loading && !authState.isLoggedIn) {
@@ -60,7 +94,7 @@
   }
 
   function adjustCount(delta: number) {
-    const next = Math.max(1, Math.min(20, tandaCount + delta));
+    const next = Math.max(1, Math.min(999, tandaCount + delta));
     if (next === tandaCount) return;
     tandaCount = next;
     syncTandaCount();
@@ -75,6 +109,77 @@
       songCount: tanda.songs.length,
       filled: tanda.songs.length > 0,
     };
+  }
+
+  // ── Multi-select handlers ──
+  function handleTandaClick(index: number, event: MouseEvent) {
+    const tanda = editor.tandas[index];
+    if (!tanda) return;
+
+    if (selectionMode) {
+      // In selection mode, every click toggles selection
+      if (event.shiftKey && lastClickedIndex !== null) {
+        // Shift+click: select range
+        const start = Math.min(lastClickedIndex, index);
+        const end = Math.max(lastClickedIndex, index);
+        const next = new Set(selectedTandas);
+        for (let i = start; i <= end; i++) {
+          const t = editor.tandas[i];
+          if (t) next.add(t.id);
+        }
+        selectedTandas = next;
+      } else {
+        // Regular click in selection mode: toggle this one
+        const next = new Set(selectedTandas);
+        if (next.has(tanda.id)) {
+          next.delete(tanda.id);
+        } else {
+          next.add(tanda.id);
+        }
+        selectedTandas = next;
+        // Exit selection mode if nothing selected
+        if (next.size === 0) {
+          selectionMode = false;
+        }
+      }
+      lastClickedIndex = index;
+    } else {
+      // Not in selection mode: open the panel as before
+      openSlotIndex = index;
+    }
+  }
+
+  function enterSelectionMode() {
+    selectionMode = true;
+    selectedTandas = new Set();
+    lastClickedIndex = null;
+  }
+
+  function exitSelectionMode() {
+    selectionMode = false;
+    selectedTandas = new Set();
+    lastClickedIndex = null;
+  }
+
+  function selectAll() {
+    const next = new Set<string>();
+    for (const t of editor.tandas) {
+      next.add(t.id);
+    }
+    selectedTandas = next;
+    selectionMode = true;
+  }
+
+  function deleteSelected() {
+    if (selectedTandas.size === 0) return;
+    editor.removeTandas(selectedTandas);
+    tandaCount = editor.tandas.length;
+    exitSelectionMode();
+  }
+
+  function changeGenreSelected(genre: Genre) {
+    if (selectedTandas.size === 0) return;
+    editor.updateTandas(selectedTandas, { genre });
   }
 
   async function handleSave() {
@@ -165,12 +270,12 @@
               <div class="flex-1 h-1 bg-black/5 dark:bg-white/5 rounded-full relative">
                 <div
                   class="h-full bg-ink dark:bg-white rounded-full transition-all"
-                  style="width: {(tandaCount / 20) * 100}%"
+                  style="width: {Math.min((tandaCount / 20) * 100, 100)}%"
                 ></div>
               </div>
               <button
                 onclick={() => adjustCount(1)}
-                disabled={tandaCount >= 20}
+                disabled={tandaCount >= 999}
                 class="w-10 h-10 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent disabled:opacity-30 disabled:cursor-default"
               >
                 <Plus class="w-4 h-4" />
@@ -217,23 +322,119 @@
         <div class="w-full lg:w-2/3">
           <div class="flex justify-between items-end mb-6">
             <h3 class="font-serif text-3xl text-ink">Timeline</h3>
-            <span class="text-sm font-medium text-ink-muted bg-surface dark:bg-background px-4 py-1.5 rounded-full border border-black/5 dark:border-white/5">
-              {tandaCount} Tandas · {editor.songCount} Songs
-            </span>
+            <div class="flex items-center gap-3">
+              {#if !selectionMode}
+                <button
+                  onclick={enterSelectionMode}
+                  class="text-xs font-medium text-ink-muted hover:text-ink bg-surface dark:bg-background px-3 py-1.5 rounded-full border border-black/5 dark:border-white/5 transition-colors cursor-pointer bg-transparent font-sans"
+                >
+                  <span class="flex items-center gap-1.5">
+                    <CheckSquare class="w-3 h-3" />
+                    Select
+                  </span>
+                </button>
+              {/if}
+              <span class="text-sm font-medium text-ink-muted bg-surface dark:bg-background px-4 py-1.5 rounded-full border border-black/5 dark:border-white/5">
+                {tandaCount} Tandas · {editor.songCount} Songs
+              </span>
+            </div>
           </div>
+
+          <!-- Bulk action toolbar -->
+          {#if selectionMode}
+            <div class="mb-4 flex items-center gap-3 flex-wrap bg-white dark:bg-card p-3 rounded-xl border border-black/10 dark:border-white/10 shadow-sm">
+              <span class="text-sm font-medium text-ink mr-1">
+                {selectedCount} selected
+              </span>
+
+              <button
+                onclick={selectAll}
+                class="text-xs px-3 py-1.5 rounded-lg bg-surface dark:bg-background border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent font-sans text-ink-muted hover:text-ink"
+              >
+                Select All
+              </button>
+
+              <div class="w-px h-5 bg-black/10 dark:bg-white/10"></div>
+
+              <!-- Genre change buttons -->
+              <span class="text-xs text-ink-muted">Genre:</span>
+              <button
+                onclick={() => changeGenreSelected('Tango')}
+                disabled={selectedCount === 0}
+                class="text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400 hover:opacity-80 transition-opacity cursor-pointer border-none font-sans disabled:opacity-30 disabled:cursor-default"
+              >
+                Tango
+              </button>
+              <button
+                onclick={() => changeGenreSelected('Milonga')}
+                disabled={selectedCount === 0}
+                class="text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 hover:opacity-80 transition-opacity cursor-pointer border-none font-sans disabled:opacity-30 disabled:cursor-default"
+              >
+                Milonga
+              </button>
+              <button
+                onclick={() => changeGenreSelected('Vals')}
+                disabled={selectedCount === 0}
+                class="text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 hover:opacity-80 transition-opacity cursor-pointer border-none font-sans disabled:opacity-30 disabled:cursor-default"
+              >
+                Vals
+              </button>
+
+              <div class="w-px h-5 bg-black/10 dark:bg-white/10"></div>
+
+              <!-- Delete -->
+              <button
+                onclick={deleteSelected}
+                disabled={selectedCount === 0}
+                class="text-xs px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors cursor-pointer border-none font-sans flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-default"
+              >
+                <Trash2 class="w-3 h-3" />
+                Delete
+              </button>
+
+              <div class="ml-auto">
+                <button
+                  onclick={exitSelectionMode}
+                  class="text-xs px-3 py-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent border-none font-sans text-ink-muted hover:text-ink flex items-center gap-1"
+                >
+                  <X class="w-3 h-3" />
+                  Cancel
+                </button>
+              </div>
+            </div>
+          {/if}
 
           <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {#each editor.tandas as tanda, i (tanda.id)}
               {@const summary = getSlotSummary(i)}
+              {@const isSelected = selectedTandas.has(tanda.id)}
               <!-- svelte-ignore a11y_no_static_element_interactions -->
               <!-- svelte-ignore a11y_click_events_have_key_events -->
               <div
-                onclick={() => openSlotIndex = i}
+                onclick={(e) => handleTandaClick(i, e)}
+                onmouseenter={(e) => summary.filled && handleTandaMouseEnter(i, e)}
+                onmouseleave={handleTandaMouseLeave}
                 class="group relative rounded-xl p-5 cursor-pointer transition-all border-2
-                  {summary.filled
-                    ? 'bg-white dark:bg-card border-black/10 dark:border-white/10 hover:border-ink dark:hover:border-white shadow-sm hover:shadow-md'
-                    : 'bg-surface dark:bg-background border-dashed border-black/15 dark:border-white/15 hover:bg-white dark:hover:bg-card hover:border-ink/50 dark:hover:border-white/50 hover:shadow-md'}"
+                  {isSelected
+                    ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 dark:border-blue-400 shadow-md ring-2 ring-blue-200 dark:ring-blue-800'
+                    : summary.filled
+                      ? 'bg-white dark:bg-card border-black/10 dark:border-white/10 hover:border-ink dark:hover:border-white shadow-sm hover:shadow-md'
+                      : 'bg-surface dark:bg-background border-dashed border-black/15 dark:border-white/15 hover:bg-white dark:hover:bg-card hover:border-ink/50 dark:hover:border-white/50 hover:shadow-md'}"
               >
+                <!-- Selection checkbox indicator -->
+                {#if selectionMode}
+                  <div class="absolute top-2 right-2 w-5 h-5 rounded border-2 flex items-center justify-center transition-all
+                    {isSelected
+                      ? 'bg-blue-500 border-blue-500 dark:bg-blue-400 dark:border-blue-400'
+                      : 'border-black/20 dark:border-white/20 bg-transparent group-hover:border-black/40 dark:group-hover:border-white/40'}">
+                    {#if isSelected}
+                      <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                    {/if}
+                  </div>
+                {/if}
+
                 <span class="font-mono text-[10px] font-bold text-ink-muted">#{String(i + 1).padStart(2, '0')}</span>
 
                 {#if summary.filled}
@@ -255,27 +456,84 @@
             {/each}
 
             <!-- Add tanda slot -->
-            <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <div
-              onclick={() => adjustCount(1)}
-              class="group relative bg-transparent border-2 border-dashed border-black/10 dark:border-white/10 rounded-xl p-5 cursor-pointer hover:border-ink/30 dark:hover:border-white/30 transition-all flex flex-col items-center justify-center min-h-[120px]"
-            >
-              <Plus class="w-6 h-6 text-ink-faint group-hover:text-ink transition-colors" />
-              <span class="text-xs text-ink-faint group-hover:text-ink-muted mt-1 transition-colors">Add Tanda</span>
-            </div>
+            {#if !selectionMode}
+              <!-- svelte-ignore a11y_no_static_element_interactions -->
+              <!-- svelte-ignore a11y_click_events_have_key_events -->
+              <div
+                onclick={() => adjustCount(1)}
+                class="group relative bg-transparent border-2 border-dashed border-black/10 dark:border-white/10 rounded-xl p-5 cursor-pointer hover:border-ink/30 dark:hover:border-white/30 transition-all flex flex-col items-center justify-center min-h-[120px]"
+              >
+                <Plus class="w-6 h-6 text-ink-faint group-hover:text-ink transition-colors" />
+                <span class="text-xs text-ink-faint group-hover:text-ink-muted mt-1 transition-colors">Add Tanda</span>
+              </div>
+            {/if}
           </div>
+
+          {#if selectionMode}
+            <p class="text-xs text-ink-muted mt-4">
+              Click to select individual tandas. Hold <kbd class="px-1.5 py-0.5 rounded bg-surface dark:bg-background border border-black/10 dark:border-white/10 font-mono text-[10px]">Shift</kbd> and click to select a range.
+            </p>
+          {/if}
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Song popover on hover -->
+  {#if hoveredIndex !== null && popoverPosition && editor.tandas[hoveredIndex]?.songs.length > 0}
+    {@const hTanda = editor.tandas[hoveredIndex]}
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <div
+      class="fixed z-50 pointer-events-none"
+      style="left: {popoverPosition.x}px; top: {popoverPosition.y}px; transform: translate(-50%, -100%);"
+    >
+      <div class="bg-white dark:bg-card border border-black/10 dark:border-white/10 rounded-xl shadow-xl p-3 mb-2 min-w-[220px] max-w-[320px]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-serif text-sm font-medium text-ink">{hTanda.orchestra}</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-widest
+            {hTanda.genre === 'Tango' ? 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
+             hTanda.genre === 'Milonga' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' :
+             'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'}">
+            {hTanda.genre}
+          </span>
+        </div>
+        <div class="space-y-1">
+          {#each hTanda.songs as song, si}
+            <div class="flex items-center gap-2 text-xs">
+              <span class="font-mono text-[10px] text-ink-faint w-4 shrink-0">{si + 1}.</span>
+              <span class="text-ink truncate flex-1">{song.title}</span>
+              {#if song.singer}
+                <span class="text-ink-muted text-[10px] shrink-0">{song.singer}</span>
+              {/if}
+              {#if song.year}
+                <span class="font-mono text-[10px] text-ink-faint shrink-0">{song.year}</span>
+              {/if}
+              {#if song.video_id}
+                <span class="text-green-500 text-[10px] shrink-0" title="Has YouTube video">&#9658;</span>
+              {:else}
+                <span class="text-ink-faint text-[10px] shrink-0" title="No video yet">&#9644;</span>
+              {/if}
+            </div>
+          {/each}
+        </div>
+      </div>
+    </div>
+  {/if}
+
   <!-- Builder Panel (side panel) -->
-  {#if openSlotIndex !== null}
+  {#if openSlotIndex !== null && !selectionMode}
     <TandaBuilderPanel
       slotIndex={openSlotIndex}
       onclose={() => openSlotIndex = null}
+      ondelete={() => {
+        const tanda = editor.tandas[openSlotIndex ?? -1];
+        if (tanda) {
+          editor.removeTanda(tanda.id);
+          tandaCount = editor.tandas.length;
+        }
+        openSlotIndex = null;
+      }}
     />
   {/if}
 {/if}
-

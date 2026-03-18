@@ -11,6 +11,7 @@ export interface Recording {
   rating: number;
   orchestra: string;
   singer: string;
+  youtube_id?: string;
 }
 
 // Known orchestras mapped to their JSON filenames
@@ -100,7 +101,8 @@ export function getGenres(recordings: Recording[]): string[] {
 export function searchRecordings(
   recordings: Recording[],
   query: string,
-  filters?: { genre?: string; singer?: string; year?: string }
+  filters?: { genre?: string; singer?: string; year?: string },
+  maxResults = 100,
 ): Recording[] {
   let filtered = recordings;
 
@@ -115,7 +117,7 @@ export function searchRecordings(
   }
 
   if (!query.trim()) {
-    return filtered.slice(0, 100); // limit default results
+    return filtered.slice(0, maxResults);
   }
 
   const q = query.toLowerCase().trim();
@@ -133,5 +135,5 @@ export function searchRecordings(
       if (bTitle !== aTitle) return bTitle - aTitle;
       return (b.rating ?? 0) - (a.rating ?? 0);
     })
-    .slice(0, 50);
+    .slice(0, maxResults);
 }

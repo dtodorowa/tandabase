@@ -53,7 +53,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Carlos Ortega"
+    "singer": "Carlos Ortega",
+    "youtube_id": "wFeqc9NxUn0"
   },
   {
     "title": "Tierrita",
@@ -67,7 +68,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "EjLfJb53nnM"
   },
   {
     "title": "Carrasco",
@@ -95,7 +97,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "YjORel8WGZM"
   },
   {
     "title": "Arganaraz (Aquellas farras)",
@@ -137,7 +140,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "w-gIglHyYvQ"
   },
   {
     "title": "Recuerdo",
@@ -151,7 +155,8 @@
     "genre": "Vals",
     "rating": 90,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "FCxaN_XNz18"
   },
   {
     "title": "La vida es corta",
@@ -179,7 +184,8 @@
     "genre": "Milonga",
     "rating": 100,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "vv-OZJrD6nw"
   },
   {
     "title": "La serenata (mi amor)",
@@ -207,7 +213,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "ZSS4HKshHCU"
   },
   {
     "title": "Comparsa criolla",
@@ -263,7 +270,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "xRB3QQFuJz0"
   },
   {
     "title": "Adios pueblo",
@@ -277,7 +285,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "xlQ16e-jf8s"
   },
   {
     "title": "Noches de Colon",
@@ -291,7 +300,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "96hCe7EiBi8"
   },
   {
     "title": "Didi (Di di)",
@@ -333,7 +343,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "bnH_7hosDy4"
   },
   {
     "title": "La huella",
@@ -347,7 +358,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "6FrxAsofvo4"
   },
   {
     "title": "Ese sos vos",
@@ -361,7 +373,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "fe2rxEQcuDY"
   },
   {
     "title": "Recuerdo malevo",
@@ -389,7 +402,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "F7gFhyYK5Yw"
   },
   {
     "title": "Tango (Voz de tango)",
@@ -417,7 +431,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "USswBQecuXY"
   },
   {
     "title": "Madame Yvonne (Madame Ivonne)",
@@ -445,7 +460,8 @@
     "genre": "Milonga",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "JNID3K0tO2E"
   },
   {
     "title": "Decile que vuelva",
@@ -459,7 +475,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "NhNEZRPGxPE"
   },
   {
     "title": "La copa del olvido",
@@ -501,7 +518,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "xSyn31IygEM"
   },
   {
     "title": "Esta noche me emborracho",
@@ -515,7 +533,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "P5-_YLYGeLQ"
   },
   {
     "title": "Como se pianta la vida",
@@ -529,7 +548,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "dwEiXBaVX8M"
   },
   {
     "title": "Marisabel",
@@ -543,7 +563,8 @@
     "genre": "Vals",
     "rating": 90,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "4b7GcKpHLlE"
   },
   {
     "title": "Muneca brava",
@@ -557,7 +578,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "wwTdct7w1UU"
   },
   {
     "title": "Un crimen",
@@ -571,7 +593,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "5dEn2mSg2K0"
   },
   {
     "title": "Cuatro compases",
@@ -585,7 +608,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "jZowG3H3lzA"
   },
   {
     "title": "Recuerdo",
@@ -599,7 +623,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "GSFizZyJIx0"
   },
   {
     "title": "Asi se baila el tango",
@@ -613,7 +638,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "FRV-bf8AeTw"
   },
   {
     "title": "Cancion de rango (Pa' que se callen)",
@@ -627,7 +653,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "XkHTT-tqdaE"
   },
   {
     "title": "Me llaman \"El Zorro\" (Me llaman El Zorro)",
@@ -655,7 +682,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "XQx8jVSQHFA"
   },
   {
     "title": "A otra cosa, che pebeta",
@@ -683,7 +711,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "_o-93erFzxg"
   },
   {
     "title": "Entre suenos",
@@ -711,7 +740,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "J3jyLnOeLnU"
   },
   {
     "title": "Mi piba (Mi piba linda)",
@@ -739,7 +769,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "EHwEWoTFV7I"
   },
   {
     "title": "La ultima copa",
@@ -753,7 +784,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "AoJwEv80hvo"
   },
   {
     "title": "Que me quiten lo bailao!...",
@@ -767,7 +799,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "Va7ZivWrnAM"
   },
   {
     "title": "Bailongo de los domingos",
@@ -781,7 +814,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "WvFO477dJEo"
   },
   {
     "title": "Barajando recuerdos",
@@ -795,7 +829,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Alberto Castillo"
+    "singer": "Alberto Castillo",
+    "youtube_id": "ofEWQdVTD5U"
   },
   {
     "title": "Al pasar",
@@ -809,7 +844,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "daPnU6_L80o"
   },
   {
     "title": "Muchachos comienza la ronda (Muchachos..! Comienza la ronda)",
@@ -837,7 +873,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "HhjVLfCFksA"
   },
   {
     "title": "Vieja esquina",
@@ -865,7 +902,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "MDTQBZLTfnw"
   },
   {
     "title": "Palomita mia",
@@ -879,7 +917,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "1u_Kf8cS-7U"
   },
   {
     "title": "Dos palabras, por favor",
@@ -907,7 +946,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "E6_KxdPZ5A0"
   },
   {
     "title": "Malvon",
@@ -921,7 +961,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "QZNjwqr6InQ"
   },
   {
     "title": "Oigo tu voz",
@@ -935,7 +976,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "sXoN5LAp1QE"
   },
   {
     "title": "Que nunca me falte",
@@ -949,7 +991,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "531B0dHESPE"
   },
   {
     "title": "Una emocion",
@@ -977,7 +1020,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "iVJ6P-O5ipE"
   },
   {
     "title": "Sollozo de bandoneon",
@@ -991,7 +1035,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "_fESHK8HtqA"
   },
   {
     "title": "Quien canta mejor que yo",
@@ -1033,7 +1078,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "cjw4TlKrEjk"
   },
   {
     "title": "Y siempre igual (Y... siempre igual)",
@@ -1089,7 +1135,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "Gk9hKCJv-hg"
   },
   {
     "title": "Y como le iba contando",
@@ -1201,7 +1248,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "p5f7btCpWsg"
   },
   {
     "title": "Encuentro",
@@ -1215,7 +1263,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "aoX6agaVE9c"
   },
   {
     "title": "En el salon",
@@ -1229,7 +1278,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "tbY9K_XLfV8"
   },
   {
     "title": "Prisionero",
@@ -1243,7 +1293,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "gha4-jSrlqI"
   },
   {
     "title": "Igual que un bandoneon",
@@ -1257,7 +1308,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "tPZzBSn4sAk"
   },
   {
     "title": "Raza criolla (El taita)",
@@ -1285,7 +1337,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "6SRIngKTNww"
   },
   {
     "title": "Esta noche al pasar",
@@ -1299,7 +1352,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "WEuRbGNnvII"
   },
   {
     "title": "Me beso y se fue",
@@ -1313,7 +1367,8 @@
     "genre": "Vals",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "47KKjLB5FwA"
   },
   {
     "title": "Que sera de ti",
@@ -1327,7 +1382,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "cDfiNE85xjE"
   },
   {
     "title": "Igual que una sombra",
@@ -1341,7 +1397,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "FGFldiF7L5Y"
   },
   {
     "title": "La uruguayita Lucia",
@@ -1355,7 +1412,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "QIjgBsmZ10U"
   },
   {
     "title": "Discos de Gardel",
@@ -1509,7 +1567,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Ricardo Tanturi",
-    "singer": "Enrique Campos"
+    "singer": "Enrique Campos",
+    "youtube_id": "yigutJHmkTs"
   },
   {
     "title": "Tu llamado",

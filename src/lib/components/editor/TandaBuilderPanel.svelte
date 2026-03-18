@@ -10,15 +10,19 @@
   } from '$lib/utils/discography';
   import { searchYouTube, extractVideoId, getVideoById, type YTResult } from '$lib/utils/youtube';
   import type { Song, Genre } from '$lib/types';
-  import { X, Search, ArrowLeft, Music, Plus, Check, ChevronDown } from 'lucide-svelte';
+  import { X, Search, ArrowLeft, Music, Plus, Check, ChevronDown, Trash2 } from 'lucide-svelte';
 
   let {
     slotIndex,
     onclose,
+    ondelete,
   }: {
     slotIndex: number;
     onclose: () => void;
+    ondelete?: () => void;
   } = $props();
+
+  let showDeleteConfirm = $state(false);
 
   // Panel state machine
   type PanelStep = 'orchestra' | 'songs' | 'youtube';
@@ -68,7 +72,7 @@
     searchRecordings(recordings, songQuery, {
       genre: genreFilter || undefined,
       singer: singerFilter || undefined,
-    })
+    }, 2000)
   );
 
   // Initialize from existing tanda data if editing (run once on mount)
@@ -187,6 +191,18 @@
     onclose();
   }
 
+  function selectAllFiltered() {
+    for (const rec of filteredRecordings) {
+      if (!isAlreadySelected(rec)) {
+        selectRecording(rec);
+      }
+    }
+  }
+
+  function clearAllSongs() {
+    selectedSongs = [];
+  }
+
   function isAlreadySelected(rec: Recording): boolean {
     return selectedSongs.some(s =>
       s.title === rec.title && (s.year === (parseInt(rec.recording_date) || null))
@@ -265,13 +281,23 @@
         {/if}
       </h3>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1">
       {#if step !== 'orchestra'}
         <button
           onclick={() => step = 'orchestra'}
           class="w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
+          title="Back to orchestras"
         >
           <ArrowLeft class="w-5 h-5 text-ink-muted" />
+        </button>
+      {/if}
+      {#if ondelete}
+        <button
+          onclick={() => showDeleteConfirm = true}
+          class="w-10 h-10 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
+          title="Delete this tanda"
+        >
+          <Trash2 class="w-4 h-4 text-ink-muted hover:text-red-500 transition-colors" />
         </button>
       {/if}
       <button
@@ -362,9 +388,9 @@
   <!-- STEP: Song Selection from Discography -->
   {#if step === 'songs'}
     <div class="flex flex-col grow overflow-hidden">
-      <!-- Selected songs summary (sticky top) -->
-      <div class="p-4 bg-white dark:bg-card border-b border-black/5 dark:border-white/5 shrink-0">
-        <div class="flex justify-between items-center mb-3">
+      <!-- Selected songs summary (sticky top, scrollable) -->
+      <div class="bg-white dark:bg-card border-b border-black/5 dark:border-white/5 shrink-0 flex flex-col max-h-[40vh]">
+        <div class="flex justify-between items-center p-4 pb-2">
           <h4 class="font-serif text-lg text-ink">
             {selectedOrchestra}
             <span class="text-ink-muted text-sm italic ml-1">{selectedGenre}</span>
@@ -372,8 +398,8 @@
           <span class="font-mono text-xs font-bold text-ink">{selectedSongs.length} tracks</span>
         </div>
 
-        <!-- Track placeholders -->
-        <div class="space-y-1.5">
+        <!-- Track list (scrollable) -->
+        <div class="overflow-y-auto px-4 pb-4 space-y-1.5">
           {#each selectedSongs as song, si}
             <div class="w-full py-2 px-3 border border-black/10 dark:border-white/10 bg-surface dark:bg-background rounded-lg flex items-center gap-3">
               <span class="text-[10px] font-mono text-ink-muted font-bold">{String(si + 1).padStart(2, '0')}</span>
@@ -440,6 +466,24 @@
                   {/each}
                 </select>
               {/if}
+            </div>
+            <!-- Select All / Clear buttons -->
+            <div class="flex items-center gap-2 mt-2">
+              <button
+                onclick={selectAllFiltered}
+                class="text-[10px] font-medium px-2.5 py-1 rounded-lg border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent font-sans text-ink-muted hover:text-ink"
+              >
+                + Add all {filteredRecordings.length} shown
+              </button>
+              {#if selectedSongs.length > 0}
+                <button
+                  onclick={clearAllSongs}
+                  class="text-[10px] font-medium px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-800/30 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer bg-transparent font-sans text-red-400 hover:text-red-500"
+                >
+                  Clear all
+                </button>
+              {/if}
+              <span class="text-[10px] text-ink-faint ml-auto">{filteredRecordings.length} results</span>
             </div>
           </div>
 
@@ -582,6 +626,39 @@
         >
           <ArrowLeft class="w-4 h-4" />
           Back to Discography
+        </button>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Delete confirmation overlay -->
+  {#if showDeleteConfirm}
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <div
+      class="absolute inset-0 bg-white/95 dark:bg-card/95 z-10 flex flex-col items-center justify-center p-8 gap-4"
+      onclick={(e: MouseEvent) => { if (e.target === e.currentTarget) showDeleteConfirm = false; }}
+    >
+      <Trash2 class="w-8 h-8 text-red-400" />
+      <p class="text-sm text-ink text-center font-medium">
+        Delete Tanda #{String(slotIndex + 1).padStart(2, '0')}{tanda?.orchestra ? ` (${tanda.orchestra})` : ''}?
+      </p>
+      <p class="text-xs text-ink-muted text-center">
+        {tanda?.songs.length || 0} tracks will be removed. This can't be undone.
+      </p>
+      <div class="flex gap-3 mt-2">
+        <button
+          onclick={() => showDeleteConfirm = false}
+          class="px-5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent font-sans"
+        >
+          Cancel
+        </button>
+        <button
+          onclick={() => { showDeleteConfirm = false; ondelete?.(); }}
+          class="px-5 py-2.5 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors cursor-pointer border-none font-sans flex items-center gap-2"
+        >
+          <Trash2 class="w-3.5 h-3.5" />
+          Delete
         </button>
       </div>
     </div>
