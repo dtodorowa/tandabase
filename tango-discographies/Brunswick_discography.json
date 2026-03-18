@@ -123,7 +123,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Tipica Brunswick",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "2hhva0N28SM"
   },
   {
     "title": "Larga Ausencia",
@@ -459,7 +460,8 @@
     "genre": "Vals",
     "rating": 60,
     "orchestra": "Orquesta Tipica Brunswick",
-    "singer": "Luis Diaz"
+    "singer": "Luis Diaz",
+    "youtube_id": "a75TW0udwuY"
   },
   {
     "title": "Que me contas?",
@@ -515,7 +517,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Tipica Brunswick",
-    "singer": "Antonio Rodriguez Lesende"
+    "singer": "Antonio Rodriguez Lesende",
+    "youtube_id": "sK6fFbYzQgc"
   },
   {
     "title": "Ave nocturna",
@@ -627,7 +630,8 @@
     "genre": "Vals",
     "rating": 50,
     "orchestra": "Orquesta Tipica Brunswick",
-    "singer": "Teofilo Ibanez"
+    "singer": "Teofilo Ibanez",
+    "youtube_id": "pyXlaaSHPbw"
   },
   {
     "title": "La cumparsita",
