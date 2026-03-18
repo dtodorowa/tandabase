@@ -236,7 +236,8 @@
     "genre": "Tango",
     "rating": 10,
     "orchestra": "Cuarteto Anibal Troilo y Roberto Grela",
-    "singer": "Alberto Marino"
+    "singer": "Alberto Marino",
+    "youtube_id": "tTDA31ep_FE"
   },
   {
     "title": "El panuelito",
@@ -264,7 +265,8 @@
     "genre": "Tango",
     "rating": 10,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "3OlBS5sCa9E"
   },
   {
     "title": "La cachila",
@@ -642,7 +644,8 @@
     "genre": "Tango",
     "rating": 20,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Angel Cardenas arr. de Julian Plaza"
+    "singer": "Angel Cardenas arr. de Julian Plaza",
+    "youtube_id": "NFYEiFfKR_4"
   },
   {
     "title": "Yo te bendigo",
@@ -726,7 +729,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "R-9keGKCWHA"
   },
   {
     "title": "Chique!... (El elegante)",
@@ -1804,7 +1808,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Alberto Marino arr. de Astor Piazzolla"
+    "singer": "Alberto Marino arr. de Astor Piazzolla",
+    "youtube_id": "P5W3yP2McsY"
   },
   {
     "title": "El distinguido ciudadano",
@@ -1818,7 +1823,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "viAu63sTqEE"
   },
   {
     "title": "Garua",
@@ -1846,7 +1852,8 @@
     "genre": "Vals",
     "rating": 100,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Alberto Marino y Francisco Fiorentino"
+    "singer": "Alberto Marino y Francisco Fiorentino",
+    "youtube_id": "R71mIS3vdUM"
   },
   {
     "title": "Tal vez sera su voz (Tal vez sera mi alcohol)",
@@ -1902,7 +1909,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Francisco Fiorentino"
+    "singer": "Francisco Fiorentino",
+    "youtube_id": "4kmoL7-2g8w"
   },
   {
     "title": "Pablo",
@@ -1916,7 +1924,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "iQTcj51EFBc"
   },
   {
     "title": "Uruguaya",
@@ -1944,7 +1953,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Francisco Fiorentino"
+    "singer": "Francisco Fiorentino",
+    "youtube_id": "sjt5YuAzLDc"
   },
   {
     "title": "El barrio del tambor",
@@ -5433,7 +5443,8 @@
     "genre": "Vals Peruano",
     "rating": 60,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Roberto Goyeneche y Angel Cardenas"
+    "singer": "Roberto Goyeneche y Angel Cardenas",
+    "youtube_id": "f2y1snojf6o"
   },
   {
     "title": "Lo que vos te mereces",
@@ -5573,7 +5584,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "_Leg42kVjGc"
   },
   {
     "title": "La vuelta del montonero",
@@ -5601,7 +5613,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Roberto Goyeneche"
+    "singer": "Roberto Goyeneche",
+    "youtube_id": "LzHI0UU45Tc"
   },
   {
     "title": "Yo tengo un pecado nuevo (Ay, mi paloma)",
@@ -5657,7 +5670,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Angel Cardenas"
+    "singer": "Angel Cardenas",
+    "youtube_id": "dk94Dx6Eo7Q"
   },
   {
     "title": "Quejas de bandoneon",
@@ -5685,7 +5699,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Roberto Goyeneche"
+    "singer": "Roberto Goyeneche",
+    "youtube_id": "Lb6DlTyT2xo"
   },
   {
     "title": "Aquel tapado de armino",
@@ -5867,7 +5882,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orchesta Anibal Troilo",
-    "singer": "Roberto Goyeneche arr. de Julian Plaza"
+    "singer": "Roberto Goyeneche arr. de Julian Plaza",
+    "youtube_id": "tn5g6oBSnZA"
   },
   {
     "title": "El motivo",
@@ -5895,7 +5911,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Anibal Troilo arr. de Julian Plaza",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "F7ZvAlNXPqU"
   },
   {
     "title": "Nocturna",
@@ -5909,7 +5926,8 @@
     "genre": "Milonga",
     "rating": 80,
     "orchestra": "Orquesta Anibal Troilo arr. de Julian Plaza",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "vY0sqQgG9UI"
   },
   {
     "title": "Tierrita",
@@ -5937,7 +5955,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Roberto Goyeneche"
+    "singer": "Roberto Goyeneche",
+    "youtube_id": "meJ17tW6ehY"
   },
   {
     "title": "Cuesta abajo",
@@ -5993,7 +6012,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Anibal Troilo",
-    "singer": "Roberto Goyeneche y Elba Beron"
+    "singer": "Roberto Goyeneche y Elba Beron",
+    "youtube_id": "dSssDTrWEag"
   },
   {
     "title": "Garua",
