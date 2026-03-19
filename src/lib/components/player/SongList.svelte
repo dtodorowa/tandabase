@@ -3,12 +3,26 @@
   import { player } from '$lib/stores/player.svelte';
 
   let { songs }: { songs: Song[] } = $props();
+
+  let songElements: HTMLElement[] = [];
+
+  $effect(() => {
+    const idx = player.currentSongIndex;
+    const el = songElements[idx];
+    if (el) {
+      // Small delay so the DOM settles before scrolling
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  });
 </script>
 
 <div class="song-list">
   <div class="song-list-label">Songs</div>
   {#each songs as song, i}
     <button
+      bind:this={songElements[i]}
       class="song-item fade-in"
       class:playing={i === player.currentSongIndex}
       style="animation-delay: {i * 0.04}s"

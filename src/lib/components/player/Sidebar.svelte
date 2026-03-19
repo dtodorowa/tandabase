@@ -4,6 +4,18 @@
 
   let { tandas, onclose }: { tandas: Tanda[]; onclose?: () => void } = $props();
 
+  let tandaElements: HTMLElement[] = [];
+
+  $effect(() => {
+    const idx = player.currentTandaIndex;
+    const el = tandaElements[idx];
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  });
+
   function getYearRange(tanda: Tanda): string {
     const years = tanda.songs.map(s => s.year).filter((y): y is number => y !== null).sort();
     if (!years.length) return '';
@@ -20,6 +32,7 @@
 {#each tandas as tanda, i}
   {@const yr = getYearRange(tanda)}
   <button
+    bind:this={tandaElements[i]}
     class="tanda-item"
     class:active={i === player.currentTandaIndex}
     onclick={() => handleClick(i)}

@@ -15,8 +15,33 @@
   let shareOpen = $state(false);
   let linkCopied = $state(false);
 
+  let songElements: HTMLElement[] = [];
+  let tandaElements: HTMLElement[] = [];
+
   const tanda = $derived(player.currentTanda);
   const song = $derived(player.currentSong);
+
+  // Scroll current song to the top of the list area
+  $effect(() => {
+    const idx = player.currentSongIndex;
+    const el = songElements[idx];
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  });
+
+  // Scroll current tanda to the top of the list area
+  $effect(() => {
+    const idx = player.currentTandaIndex;
+    const el = tandaElements[idx];
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  });
 
   function selectTanda(i: number) {
     player.selectTanda(i);
@@ -61,8 +86,8 @@
       <div class="video-wrap">
         {#if song?.video_id}
           <iframe
-            src="https://www.youtube.com/embed/{song.video_id}?rel=0"
-            allow="encrypted-media"
+            src="https://www.youtube.com/embed/{song.video_id}?rel=0&autoplay=1&playsinline=1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
             title={song.title}
           ></iframe>
@@ -127,7 +152,7 @@
         <div class="song-list">
           {#each tanda.songs as s, i (s.id ?? i)}
             {@const active = i === player.currentSongIndex}
-            <button class="song-row" class:active onclick={() => player.selectSong(i)}>
+            <button bind:this={songElements[i]} class="song-row" class:active onclick={() => player.selectSong(i)}>
               <div class="song-idx" class:active>
                 {#if active}
                   <span class="eq"><span></span><span></span><span></span></span>
@@ -167,7 +192,7 @@
     <div class="tandas-list">
       {#each player.tandas as t, i (t.id ?? i)}
         {@const active = i === player.currentTandaIndex}
-        <button class="tanda-item" class:active onclick={() => selectTanda(i)}>
+        <button bind:this={tandaElements[i]} class="tanda-item" class:active onclick={() => selectTanda(i)}>
           <div class="tanda-item-num" class:active>
             {String(t.num ?? i + 1).padStart(2, '0')}
           </div>
