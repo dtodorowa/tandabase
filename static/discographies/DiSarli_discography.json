@@ -11,7 +11,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "BnarozuIflg"
   },
   {
     "title": "La lluvia (en vivo)",
@@ -68,7 +69,7 @@
     "rating": 70,
     "orchestra": "Sexteto Carlos Di Sarli",
     "singer": "Instrumental",
-    "youtube_id": "5N4FGHIU-sc"
+    "youtube_id": "QhTJv0nqgTE"
   },
   {
     "title": "T.B.C.",
@@ -83,7 +84,7 @@
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
     "singer": "Instrumental",
-    "youtube_id": "Df1rSgv4J8M"
+    "youtube_id": "yLh4sxCbfH0"
   },
   {
     "title": "Arlequin",
@@ -202,7 +203,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "4rhzbNZY4Rw"
   },
   {
     "title": "Sos una fiera",
@@ -230,7 +232,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "BUoZ6ovL-SU"
   },
   {
     "title": "Flor marchita",
@@ -244,7 +247,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "M1rcfnmpGj4"
   },
   {
     "title": "Mi pibe (La chance)",
@@ -258,7 +262,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "hlE1Ho92cM0"
   },
   {
     "title": "Barrilete",
@@ -272,7 +277,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "88cldhryNis"
   },
   {
     "title": "Belen",
@@ -301,7 +307,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "s1S54T94TCg"
   },
   {
     "title": "Pobre yo",
@@ -344,7 +351,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Santiago Devincenzi"
+    "singer": "Santiago Devincenzi",
+    "youtube_id": "xt13J6pCjFI"
   },
   {
     "title": "Cortate el pelo",
@@ -358,7 +366,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Santiago Devincenzi"
+    "singer": "Santiago Devincenzi",
+    "youtube_id": "Se8ut84PABg"
   },
   {
     "title": "Sos una maquieta",
@@ -372,7 +381,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Santiago Devincenzi"
+    "singer": "Santiago Devincenzi",
+    "youtube_id": "TlT7c6uGtUE"
   },
   {
     "title": "Campaneando",
@@ -386,7 +396,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Santiago Devincenzi"
+    "singer": "Santiago Devincenzi",
+    "youtube_id": "amH3IBQka9A"
   },
   {
     "title": "No te aguanto mas",
@@ -429,7 +440,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Santiago Devincenzi"
+    "singer": "Santiago Devincenzi",
+    "youtube_id": "aQsBzohGX4s"
   },
   {
     "title": "Quien te ve",
@@ -1150,7 +1162,8 @@
     "genre": "Milonga",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "jLu8x4b6aIM"
   },
   {
     "title": "Alma mia",
@@ -1209,7 +1222,8 @@
     "genre": "Milonga",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Antonio Rodriguez Lesende"
+    "singer": "Antonio Rodriguez Lesende",
+    "youtube_id": "FphL90QDCzU"
   },
   {
     "title": "Cosas olvidadas",
@@ -1238,7 +1252,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "XZEcv854I2w"
   },
   {
     "title": "Milonguero viejo",
@@ -1282,7 +1297,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Agustin Volpe"
+    "singer": "Agustin Volpe",
+    "youtube_id": "sSenM9kzVmw"
   },
   {
     "title": "El jaguar",
@@ -1355,7 +1371,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "qDPPPGv4cP4"
   },
   {
     "title": "Lo pasado, paso (Lo pasao paso)",
@@ -1369,7 +1386,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "HqxaLObg8J8"
   },
   {
     "title": "Nobleza de arrabal",
@@ -1413,7 +1431,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "_HhaExjO3aA"
   },
   {
     "title": "Charlemos...",
@@ -1457,7 +1476,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "QbIOLAD4fDo"
   },
   {
     "title": "La cachila",
@@ -1486,7 +1506,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "DAgsQ26uz4U"
   },
   {
     "title": "Mi refugio",
@@ -1590,7 +1611,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "--V71_4mbXE"
   },
   {
     "title": "Germaine",
@@ -1604,7 +1626,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "2ZlPXBF31iE"
   },
   {
     "title": "Marejada",
@@ -1618,7 +1641,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "2NuIagLTFd4"
   },
   {
     "title": "Cuando el amor muere",
@@ -1632,7 +1656,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "eKzQr6G389c"
   },
   {
     "title": "Sentimiento criollo",
@@ -1646,7 +1671,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "fISoM8wu0zo"
   },
   {
     "title": "Don Juan",
@@ -1690,7 +1716,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "ALfBSBo-HIU"
   },
   {
     "title": "La mulateada",
@@ -1704,7 +1731,8 @@
     "genre": "Milonga",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "txWGX4zNdVs"
   },
   {
     "title": "El recodo",
@@ -1733,7 +1761,8 @@
     "genre": "Milonga",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "QvpB_VKSFdw"
   },
   {
     "title": "El paladin",
@@ -1761,7 +1790,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "d55oUOQo9QI"
   },
   {
     "title": "Lo mismo que antes",
@@ -1775,7 +1805,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "DOvkG73ACjw"
   },
   {
     "title": "Noche de carnaval (Otra vez carnaval)",
@@ -1789,7 +1820,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "dKg2oGY7TAo"
   },
   {
     "title": "Entre pitada y pitada",
@@ -1803,7 +1835,8 @@
     "genre": "Milonga",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "81zahXTqXSE"
   },
   {
     "title": "No esta",
@@ -1832,7 +1865,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "ShN0R2Bsbuc"
   },
   {
     "title": "Alzame en tus brazos",
@@ -1861,7 +1895,8 @@
     "genre": "Milonga",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "od0CNbFW9Bs"
   },
   {
     "title": "Sombras del puerto",
@@ -1875,7 +1910,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "bQsBfTMC6qI"
   },
   {
     "title": "Cuidado con los 50",
@@ -1889,7 +1925,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "bxAlJDwI_1A"
   },
   {
     "title": "El amanecer",
@@ -1963,7 +2000,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "YWpcjuBDzZc"
   },
   {
     "title": "Tarareando",
@@ -1992,7 +2030,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "9EBKx8NR_X0"
   },
   {
     "title": "Julian Centeya",
@@ -2020,7 +2059,8 @@
     "genre": "Vals",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "Q6J4Tq6M1J8"
   },
   {
     "title": "La cumparsita",
@@ -2034,7 +2074,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "aAPw6YlPsb4"
   },
   {
     "title": "Va a cantar un ruisenor",
@@ -2093,7 +2134,8 @@
     "genre": "Vals",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "aA2Xw26ZdDU"
   },
   {
     "title": "Volver a vernos",
@@ -2167,7 +2209,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "2OEqAY-4YaE"
   },
   {
     "title": "Canta pajarito",
@@ -2196,7 +2239,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "lZiMw_Vg7pk"
   },
   {
     "title": "Bar Exposicion",
@@ -2210,7 +2254,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "eB5Qsh5BES0"
   },
   {
     "title": "Nueve puntos (9 puntos)",
@@ -2224,7 +2269,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "8t0m8ymcMhs"
   },
   {
     "title": "Si tu quisieras",
@@ -2238,7 +2284,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "_WwBMNXmqRg"
   },
   {
     "title": "Don Jose Maria",
@@ -2252,7 +2299,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "OA5D4KBqnik"
   },
   {
     "title": "Anselmo Acuna el resero",
@@ -2296,7 +2344,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "X16TIB1FxvA"
   },
   {
     "title": "Navegante (Vito Dumas)",
@@ -2310,7 +2359,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "EdoWrWQlxqk"
   },
   {
     "title": "Ensuenos",
@@ -2369,7 +2419,8 @@
     "genre": "Milonga",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "OaGrTkZ2Dnc"
   },
   {
     "title": "A mi me llaman Juan Tango",
@@ -2383,7 +2434,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "WWBD7GAPEUg"
   },
   {
     "title": "El jaguel",
@@ -2397,7 +2449,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "yXVoC3zHb3I"
   },
   {
     "title": "Los munequitos (San Fernando)",
@@ -2411,7 +2464,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "k6WJhIsbXHI"
   },
   {
     "title": "Todo",
@@ -2425,7 +2479,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "NQi3Yqxv1ZM"
   },
   {
     "title": "Boedo y San Juan",
@@ -2439,7 +2494,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Rufino"
+    "singer": "Roberto Rufino",
+    "youtube_id": "WHOLKV8zIhE"
   },
   {
     "title": "Esta noche de luna",
@@ -2483,7 +2539,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "eSXV5hfQTU8"
   },
   {
     "title": "Cero al as",
@@ -2557,7 +2614,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "7SnI6u03L94"
   },
   {
     "title": "Vamos (Vamos...!)",
@@ -2571,7 +2629,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "8Ojqpz270CY"
   },
   {
     "title": "La capilla blanca",
@@ -2600,7 +2659,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Ka-4G7lwneM"
   },
   {
     "title": "Champagne tango",
@@ -2614,7 +2674,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "8IteSkuLJQI"
   },
   {
     "title": "Motivo sentimental",
@@ -2643,7 +2704,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "ZD2faMdg5PQ"
   },
   {
     "title": "Royal Pigall (Que has hecho de mi carino)",
@@ -2657,7 +2719,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "lZd0NQzMLAQ"
   },
   {
     "title": "Tu, el cielo y tu (Tu!... el cielo y tu!)",
@@ -2671,7 +2734,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "-kQPrrrgzLs"
   },
   {
     "title": "Un lamento",
@@ -2715,7 +2779,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "gCekXX8RO7s"
   },
   {
     "title": "El ingeniero",
@@ -2729,7 +2794,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "JfhjTTRCzCI"
   },
   {
     "title": "Porteno y bailarin",
@@ -2788,7 +2854,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "rIs12H9kj9U"
   },
   {
     "title": "Vea vea (Vea, vea)",
@@ -2802,7 +2869,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "RoD-z3r_O0o"
   },
   {
     "title": "Barba de choclo",
@@ -2846,7 +2914,8 @@
     "genre": "Milonga",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "BEQM0W9r2y0"
   },
   {
     "title": "Ojos negros",
@@ -2860,7 +2929,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "8NhoSkMVOcw"
   },
   {
     "title": "Un tango y nada mas",
@@ -2904,7 +2974,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "9Hkv2RGAwVk"
   },
   {
     "title": "Siete palabras",
@@ -2933,7 +3004,8 @@
     "genre": "Vals",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "5FYdUye_BM8"
   },
   {
     "title": "Yo",
@@ -2962,7 +3034,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "zGjzKDP3eqc"
   },
   {
     "title": "Tu intimo secreto",
@@ -3064,7 +3137,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "B2UEajOQK_8"
   },
   {
     "title": "Para que te quiero tanto",
@@ -3093,7 +3167,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "7BCSnKGeZrk"
   },
   {
     "title": "Clavel del aire",
@@ -3137,7 +3212,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "I6GPfc4pKvE"
   },
   {
     "title": "No esperaba verte mas",
@@ -3166,7 +3242,8 @@
     "genre": "Vals",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "ml4EQdSKJUU"
   },
   {
     "title": "Gracias",
@@ -3195,7 +3272,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "HJAXh4-kYnI"
   },
   {
     "title": "El Once (A divertirse) (en vivo)",
@@ -3209,7 +3287,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "v7h6a9dC2qI"
   },
   {
     "title": "La vida me engano",
@@ -3253,7 +3332,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "0gWtxYKvusQ"
   },
   {
     "title": "Otra vez carnaval (Noche de carnaval)",
@@ -3297,7 +3377,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "7koiTLU3h8w"
   },
   {
     "title": "Por el camino",
@@ -3326,7 +3407,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "0LtK1W0T25c"
   },
   {
     "title": "La racha",
@@ -3340,7 +3422,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "JiqZSVdvLpE"
   },
   {
     "title": "La cancion mas triste",
@@ -3354,7 +3437,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "r2cvrNvrjsk"
   },
   {
     "title": "Soy aquel viajero",
@@ -3368,7 +3452,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "Ft1IyGNd3L4"
   },
   {
     "title": "De vuelta",
@@ -3382,7 +3467,8 @@
     "genre": "Vals",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "sLbbSeBH1qw"
   },
   {
     "title": "Dinero, dinero (Dinero... Dinero...)",
@@ -3396,7 +3482,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Alberto Podesta"
+    "singer": "Alberto Podesta",
+    "youtube_id": "NARcUgFQMhM"
   },
   {
     "title": "La novia del mar",
@@ -3410,7 +3497,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "Pq5VXGCa0yA"
   },
   {
     "title": "Los 33 orientales",
@@ -3438,8 +3526,7 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental",
-    "youtube_id": "6xoEoLorTFw"
+    "singer": "Instrumental"
   },
   {
     "title": "El incendio",
@@ -3453,7 +3540,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Wd7_MxH9zI0"
   },
   {
     "title": "El opio",
@@ -3467,7 +3555,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "f0Jo1fWCsiE"
   },
   {
     "title": "Germaine",
@@ -3481,7 +3570,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "EK-tVhg-ZjE"
   },
   {
     "title": "Como los nardos en flor",
@@ -3510,7 +3600,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "egrBg1Z8zJQ"
   },
   {
     "title": "La cumparsita",
@@ -3524,7 +3615,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "bPfblvTKhK8"
   },
   {
     "title": "Nido gaucho",
@@ -3538,7 +3630,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "9U5ExnJq95k"
   },
   {
     "title": "Comme il faut",
@@ -3552,7 +3645,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "7zFdCRSoeWY"
   },
   {
     "title": "El amanecer",
@@ -3566,7 +3660,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "vtEcIj6dioI"
   },
   {
     "title": "La morocha",
@@ -3580,7 +3675,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "8SGmVtvwqgA"
   },
   {
     "title": "Milonguero viejo",
@@ -3594,7 +3690,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "7hNMJ1r5G7E"
   },
   {
     "title": "Didi (Di di)",
@@ -3608,7 +3705,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "i0V37AcGz64"
   },
   {
     "title": "El Once (A divertirse)",
@@ -3622,7 +3720,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "r96g7Ytm12Q"
   },
   {
     "title": "El recodo",
@@ -3636,7 +3735,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "NYFpGtsumus"
   },
   {
     "title": "Organito de la tarde",
@@ -3650,7 +3750,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "igyl-vC_IH0"
   },
   {
     "title": "Don Juan",
@@ -3664,7 +3765,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "RP7Hqn0nMOE"
   },
   {
     "title": "El cabure",
@@ -3678,7 +3780,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "G3B0sTDoiSI"
   },
   {
     "title": "El pollito",
@@ -3692,7 +3795,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "gPNwTR05Org"
   },
   {
     "title": "Don Juan",
@@ -3706,7 +3810,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "CPrj4K5J1aQ"
   },
   {
     "title": "El cabure",
@@ -3763,7 +3868,8 @@
     "genre": "Tango",
     "rating": 50,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "coVy25CcPzA"
   },
   {
     "title": "Tangueando te quiero (en vivo)",
@@ -3777,7 +3883,8 @@
     "genre": "Tango",
     "rating": 30,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "0SFBBupvAck"
   },
   {
     "title": "Domani",
@@ -3806,7 +3913,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "l78cLyOnW08"
   },
   {
     "title": "Rodriguez Pena",
@@ -3820,7 +3928,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "E77X4LfxGjU"
   },
   {
     "title": "Un momento",
@@ -3849,7 +3958,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "5dozACHvywA"
   },
   {
     "title": "Cuatro vidas",
@@ -3878,7 +3988,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "q2n5TFyGoec"
   },
   {
     "title": "Los 33 orientales",
@@ -3907,7 +4018,8 @@
     "genre": "Vals",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "E2qn7yryqLg"
   },
   {
     "title": "El ingeniero",
@@ -3921,7 +4033,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "rKjVoSHV07g"
   },
   {
     "title": "Por el camino",
@@ -3935,7 +4048,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "0xAFIsCHG3o"
   },
   {
     "title": "Portena y nada mas",
@@ -3993,7 +4107,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "ePhvHkSluro"
   },
   {
     "title": "Barba de choclo",
@@ -4007,7 +4122,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "izw5YUXrD7Q"
   },
   {
     "title": "Cara sucia",
@@ -4021,7 +4137,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "bnhaHLg3IYU"
   },
   {
     "title": "Bar Exposicion",
@@ -4035,7 +4152,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "8KkSQnnlPfk"
   },
   {
     "title": "Champagne tango",
@@ -4049,7 +4167,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "x0MYP2MtWro"
   },
   {
     "title": "Mi refugio",
@@ -4063,7 +4182,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "7M9WGWBe-aU"
   },
   {
     "title": "Pimienta",
@@ -4092,7 +4212,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "8TdgKPuBcTk"
   },
   {
     "title": "Don Jose Maria",
@@ -4106,7 +4227,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "LrXgOpwm1Ho"
   },
   {
     "title": "La viruta",
@@ -4120,7 +4242,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "_xuSP9WWPtk"
   },
   {
     "title": "Marianito",
@@ -4134,7 +4257,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "1xnE47v0AFQ"
   },
   {
     "title": "Con alma y vida",
@@ -4148,7 +4272,8 @@
     "genre": "Milonga",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "2gcWgJ1YYoY"
   },
   {
     "title": "No me pregunten por que (No me pregunten porque)",
@@ -4162,7 +4287,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "jl2GVWxV-ZU"
   },
   {
     "title": "Se muere de amor",
@@ -4265,7 +4391,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "1VGh1TbkaOc"
   },
   {
     "title": "La capilla blanca",
@@ -4279,7 +4406,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "bCqkqaMS9tA"
   },
   {
     "title": "Tu palida voz",
@@ -4308,7 +4436,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "9vxraGQRshI"
   },
   {
     "title": "Dejame hablar",
@@ -4337,7 +4466,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "CsaytQURCKw"
   },
   {
     "title": "El jaguel",
@@ -4351,7 +4481,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "HRCyh_VixK4"
   },
   {
     "title": "Re fa si",
@@ -4395,7 +4526,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "Vrp1Ut2wrug"
   },
   {
     "title": "Quejas de bandoneon",
@@ -4424,7 +4556,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "vwTaRFUVeeE"
   },
   {
     "title": "Al compas del corazon (Late un corazon)",
@@ -4438,7 +4571,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "41ANmHe72zU"
   },
   {
     "title": "Duelo criollo",
@@ -4452,7 +4586,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "0r9aKSuZaVs"
   },
   {
     "title": "Fulgor",
@@ -4466,7 +4601,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "B5IM4bryeys"
   },
   {
     "title": "La novia del mar",
@@ -4480,7 +4616,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "ra4RvzsB-FM"
   },
   {
     "title": "La cancion mas triste",
@@ -4494,7 +4631,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "XVRei_BwQ1k"
   },
   {
     "title": "La misma tarde",
@@ -4508,7 +4646,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "EGBrK7_6czg"
   },
   {
     "title": "Royal Pigall (Que has hecho de mi carino)",
@@ -4522,7 +4661,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "KCyS69LEXWk"
   },
   {
     "title": "El Cachafaz",
@@ -4551,7 +4691,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "BCO6346oqsE"
   },
   {
     "title": "Tinta verde",
@@ -4580,7 +4721,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "6zyRuDK0wtQ"
   },
   {
     "title": "Chimentos",
@@ -4624,7 +4766,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "Ws-NuzhGxCc"
   },
   {
     "title": "Tengo un amigo",
@@ -4653,7 +4796,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "ZnBjgCsZ4Qg"
   },
   {
     "title": "Del barrio de las latas",
@@ -4682,7 +4826,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "6D2EN-bTBZQ"
   },
   {
     "title": "Una fija (Glorias de ayer)",
@@ -4725,7 +4870,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "EDxJnrkKLZc"
   },
   {
     "title": "No me pregunten por que con palabras de Carlos Di Sarli (No me pregunten porque)",
@@ -4767,7 +4913,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "VXpF2PApmvM"
   },
   {
     "title": "Bien frappe",
@@ -4781,7 +4928,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "V57nNL-bjSQ"
   },
   {
     "title": "El amanecer",
@@ -4795,7 +4943,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "RFmsszPiN6Q"
   },
   {
     "title": "Organito de la tarde",
@@ -4809,7 +4958,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "LAN0TKncNvc"
   },
   {
     "title": "Un desolado corazon",
@@ -4823,7 +4973,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "wR5-v2aPlvU"
   },
   {
     "title": "Don Jose Maria",
@@ -4837,7 +4988,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "IdX5-AX2Suc"
   },
   {
     "title": "Pobre buzon",
@@ -4851,7 +5003,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "pO9Y-xbpAAE"
   },
   {
     "title": "Tormenta",
@@ -4865,7 +5018,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "0fBqZGHjrLA"
   },
   {
     "title": "Cuidao con los cincuenta (Cuidado con los 50)",
@@ -4893,7 +5047,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "hO6FQ2SHqd0"
   },
   {
     "title": "Tus palabras y la noche",
@@ -4907,7 +5062,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "v0nF0pQLjGA"
   },
   {
     "title": "La morocha",
@@ -4921,7 +5077,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "B3x7rOM3Ov8"
   },
   {
     "title": "Sin ti",
@@ -4935,7 +5092,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "NLUUhV7Sal8"
   },
   {
     "title": "Bar Exposicion",
@@ -4949,7 +5107,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "EMK5ZAKz2zI"
   },
   {
     "title": "El Once (A divertirse)",
@@ -4977,7 +5136,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "7QJeM2KQ6Mk"
   },
   {
     "title": "No mataras",
@@ -4991,7 +5151,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "czNWy6Bk-Qg"
   },
   {
     "title": "Juan Porteno",
@@ -5005,7 +5166,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "KJhcLpkpGwA"
   },
   {
     "title": "Noche de locura",
@@ -5019,7 +5181,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "9v4u9x_P3ec"
   },
   {
     "title": "Don Juan",
@@ -5033,7 +5196,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "UFLeCBgpkLI"
   },
   {
     "title": "El ingeniero",
@@ -5047,7 +5211,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "EaUR_AErE-o"
   },
   {
     "title": "Corazon",
@@ -5061,7 +5226,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "mzvAQPkFNTY"
   },
   {
     "title": "Sin ella",
@@ -5075,7 +5241,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "PjCFcANDeO4"
   },
   {
     "title": "La cumparsita",
@@ -5089,7 +5256,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "5VTgfMg064U"
   },
   {
     "title": "Mi madre tierra",
@@ -5103,7 +5271,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "5tK_gcATM00"
   },
   {
     "title": "Milonguero viejo",
@@ -5117,7 +5286,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "INdN42OaLhc"
   },
   {
     "title": "Tenia que suceder",
@@ -5161,7 +5331,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Z4qtFenX4_c"
   },
   {
     "title": "Flor de amigo",
@@ -5175,7 +5346,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "t-LjR9P-3GA"
   },
   {
     "title": "Germaine",
@@ -5189,7 +5361,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Uw5pC9s57j4"
   },
   {
     "title": "Los 33 orientales",
@@ -5217,7 +5390,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "G9U2Qk1Ro-E"
   },
   {
     "title": "Nido gaucho",
@@ -5231,7 +5405,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Mario Pomar"
+    "singer": "Mario Pomar",
+    "youtube_id": "-cn2_0YSO-8"
   },
   {
     "title": "Verdemar",
@@ -5245,7 +5420,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Oscar Serpa"
+    "singer": "Oscar Serpa",
+    "youtube_id": "dhRY2QsU8N8"
   },
   {
     "title": "Fumando espero",
@@ -5259,7 +5435,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Argentino Ledesma"
+    "singer": "Argentino Ledesma",
+    "youtube_id": "eR76lemOuEc"
   },
   {
     "title": "Noche de locura",
@@ -5273,7 +5450,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Rodolfo Gale"
+    "singer": "Rodolfo Gale",
+    "youtube_id": "tP-JPb3fPnA"
   },
   {
     "title": "Noche de locura",
@@ -5301,7 +5479,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "BegZApGet3c"
   },
   {
     "title": "Rodriguez Pena",
@@ -5315,7 +5494,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "fKkc5ZKt3z0"
   },
   {
     "title": "De que podemos hablar",
@@ -5329,7 +5509,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Argentino Ledesma"
+    "singer": "Argentino Ledesma",
+    "youtube_id": "4L_jutbYLBM"
   },
   {
     "title": "Mala yerba",
@@ -5343,7 +5524,8 @@
     "genre": "Vals",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Rodolfo Gale"
+    "singer": "Rodolfo Gale",
+    "youtube_id": "VcxCEnbEBq0"
   },
   {
     "title": "Novia provinciana",
@@ -5357,7 +5539,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Argentino Ledesma"
+    "singer": "Argentino Ledesma",
+    "youtube_id": "2LBTbJTvJ80"
   },
   {
     "title": "Nueve puntos (9 puntos)",
@@ -5371,7 +5554,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Yfuk1G1YsaU"
   },
   {
     "title": "Fogon de huella",
@@ -5385,7 +5569,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "x8DQPsQy078"
   },
   {
     "title": "Porque regresas tu",
@@ -5399,7 +5584,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "GUnbBq7Yrs0"
   },
   {
     "title": "Buenos Aires",
@@ -5413,7 +5599,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "XK2iXizfYJ0"
   },
   {
     "title": "Fumando espero",
@@ -5427,7 +5614,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "9qCAFYc_KyQ"
   },
   {
     "title": "No me pregunten por que (No me pregunten porque)",
@@ -5441,7 +5629,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "OmLReU9pbiQ"
   },
   {
     "title": "A la luz del candil",
@@ -5455,7 +5644,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "GdP02pPLu_0"
   },
   {
     "title": "Derrotado (Tenes razon)",
@@ -5469,7 +5659,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "q_8TmPKT75Y"
   },
   {
     "title": "Sonatina",
@@ -5483,7 +5674,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "hL0HjO7oCvk"
   },
   {
     "title": "Y todavia te quiero",
@@ -5497,7 +5689,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "ICSNTMkwBa0"
   },
   {
     "title": "Cantemos corazon",
@@ -5511,7 +5704,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "ssu5vJHuOZM"
   },
   {
     "title": "Cuando muere una esperanza",
@@ -5525,7 +5719,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "Og9UDuUS1AE"
   },
   {
     "title": "Muriendome de amor",
@@ -5539,7 +5734,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "kXm7SPm0sHE"
   },
   {
     "title": "Pobre buzon",
@@ -5553,7 +5749,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "9t9jiWDZitw"
   },
   {
     "title": "Calla",
@@ -5567,7 +5764,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "ZzsKhaawJQU"
   },
   {
     "title": "Duele mas",
@@ -5581,7 +5779,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "OnvJ6LtLNik"
   },
   {
     "title": "Quien sino tu",
@@ -5595,7 +5794,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio y Jorge Duran"
+    "singer": "Roberto Florio y Jorge Duran",
+    "youtube_id": "KjZUC0LvSkc"
   },
   {
     "title": "Viviani",
@@ -5609,7 +5809,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "dpG85uk0h5Y"
   },
   {
     "title": "Lo que me hablaron de vos",
@@ -5623,7 +5824,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "o8J72DhSt6k"
   },
   {
     "title": "Sonemos",
@@ -5637,7 +5839,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "iq6YWFcFf9Q"
   },
   {
     "title": "De que podemos hablar",
@@ -5651,7 +5854,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "Iuax-bufMcQ"
   },
   {
     "title": "Nuestra noche",
@@ -5665,7 +5869,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "GEUCy-bLFis"
   },
   {
     "title": "Cara sucia",
@@ -5679,7 +5884,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "wnoBSwoBE68"
   },
   {
     "title": "Destino de flor",
@@ -5693,7 +5899,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "_rmYXQrNxi8"
   },
   {
     "title": "Cuanta angustia",
@@ -5707,7 +5914,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "dys-3RkpYfg"
   },
   {
     "title": "No me hablen de ella",
@@ -5721,7 +5929,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "xhG6syTBQcE"
   },
   {
     "title": "Por un te quiero",
@@ -5735,7 +5944,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "NUiuQDKAdFQ"
   },
   {
     "title": "Whisky",
@@ -5749,7 +5959,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "LGbmwHencgM"
   },
   {
     "title": "Bahia Blanca",
@@ -5763,8 +5974,7 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental",
-    "youtube_id": "JzcVokAVPiU"
+    "singer": "Instrumental"
   },
   {
     "title": "Serenata mia",
@@ -5778,7 +5988,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio y Jorge Duran"
+    "singer": "Roberto Florio y Jorge Duran",
+    "youtube_id": "22VEAtythZ0"
   },
   {
     "title": "Adios corazon",
@@ -5792,7 +6003,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Roberto Florio"
+    "singer": "Roberto Florio",
+    "youtube_id": "vAM9c_Sz4bo"
   },
   {
     "title": "Buenas noches Buenos Aires",
@@ -5806,7 +6018,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "JJLZ0Lf9cuI"
   },
   {
     "title": "Donde estas?",
@@ -5820,7 +6033,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "mTEzUkQ_95w"
   },
   {
     "title": "Bahia Blanca",
@@ -5834,7 +6048,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "WR2VIOwYW-o"
   },
   {
     "title": "Champagne tango",
@@ -5862,7 +6077,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "CYW7Poi9LEU"
   },
   {
     "title": "Duerme mi amor",
@@ -5876,7 +6092,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Horacio Casares"
+    "singer": "Horacio Casares",
+    "youtube_id": "pdhez0_n2dY"
   },
   {
     "title": "El abrojo",
@@ -5904,7 +6121,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Horacio Casares"
+    "singer": "Horacio Casares",
+    "youtube_id": "2Odda2t9xQ0"
   },
   {
     "title": "Indio manso",
@@ -5918,7 +6136,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "uzluN2MFX3s"
   },
   {
     "title": "Llamame amor mio",
@@ -5932,7 +6151,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Horacio Casares"
+    "singer": "Horacio Casares",
+    "youtube_id": "ZxzkgXUbkyg"
   },
   {
     "title": "No la maldigas por Dios",
@@ -5946,7 +6166,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "kn3UtTs92Go"
   },
   {
     "title": "No me supiste amar",
@@ -5960,7 +6181,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Horacio Casares"
+    "singer": "Horacio Casares",
+    "youtube_id": "MyXUjqIJetM"
   },
   {
     "title": "Nubes de humo (Fume compadre)",
@@ -5974,7 +6196,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "WmObXRcsP6g"
   },
   {
     "title": "Por quererla asi",
@@ -5988,7 +6211,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "ewsXhz5Cvg8"
   },
   {
     "title": "Si nos queremos todavia",
@@ -6002,7 +6226,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Jorge Duran"
+    "singer": "Jorge Duran",
+    "youtube_id": "wTfQn4Nm_Dc"
   },
   {
     "title": "Una fija (Glorias de ayer)",
@@ -6016,7 +6241,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Fyj2MW7BC8w"
   },
   {
     "title": "Donde estas? (playback)",
@@ -6030,7 +6256,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Edmundo Rivero"
+    "singer": "Edmundo Rivero",
+    "youtube_id": "RFob69CsBSw"
   },
   {
     "title": "Nubes de humo (playback)",
@@ -6044,7 +6271,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Edmundo Rivero"
+    "singer": "Edmundo Rivero",
+    "youtube_id": "-8EXjCPbyWE"
   },
   {
     "title": "Por quererla asi (playback)",
@@ -6058,7 +6286,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Edmundo Rivero"
+    "singer": "Edmundo Rivero",
+    "youtube_id": "09I6dp_X_2o"
   },
   {
     "title": "Si nos queremos todavia (playback)",
@@ -6072,6 +6301,7 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
-    "singer": "Edmundo Rivero"
+    "singer": "Edmundo Rivero",
+    "youtube_id": "WekSSgwd_Gs"
   }
 ]

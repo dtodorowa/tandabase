@@ -141,9 +141,9 @@
       title: rec.title,
       singer: rec.singer === 'Instrumental' || rec.singer === '-' ? null : rec.singer,
       year: rec.recording_date ? parseInt(rec.recording_date) || null : null,
-      video_id: '',
-      video_title: '',
-      thumbnail: '',
+      video_id: rec.youtube_id || '',
+      video_title: rec.youtube_id ? rec.title : '',
+      thumbnail: rec.youtube_id ? `https://img.youtube.com/vi/${rec.youtube_id}/mqdefault.jpg` : '',
     };
     if (rec.duration) durationMap.set(song.id, rec.duration);
     selectedSongs = [...selectedSongs, song];
