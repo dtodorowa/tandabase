@@ -10,7 +10,7 @@
   } from '$lib/utils/discography';
   import { searchYouTube, extractVideoId, getVideoById, type YTResult } from '$lib/utils/youtube';
   import type { Song, Genre } from '$lib/types';
-  import { X, Search, ArrowLeft, Music, Plus, Check, ChevronDown, Trash2 } from 'lucide-svelte';
+  import { X, Search, ArrowLeft, Music, Plus, Check, ChevronDown, Trash2, GripVertical } from 'lucide-svelte';
 
   let {
     slotIndex,
@@ -44,6 +44,10 @@
   let availableSingers = $state<string[]>([]);
   let availableGenres = $state<string[]>([]);
   let genreFilter = $state('');
+  let sortOrder = $state<'relevance' | 'date-asc' | 'date-desc'>('relevance');
+
+  // Description
+  let tandaDescription = $state('');
 
   // Selected songs for this tanda
   let selectedSongs = $state<Song[]>([]);
@@ -57,6 +61,17 @@
   let ytUrlLoading = $state(false);
   let ytError = $state('');
 
+  // Mobile tab state for 2-pane view
+  type MobileTab = 'search' | 'selected';
+  let mobileTab = $state<MobileTab>('search');
+
+  // Recently added song ID for highlight animation
+  let recentlyAddedId = $state<string | null>(null);
+  let addAnimTimeout: ReturnType<typeof setTimeout>;
+
+  // Duration map: songId -> duration string (populated when selecting from discography)
+  const durationMap = new Map<string, string>();
+
   // Current tanda data
   const tanda = $derived(editor.tandas[slotIndex]);
 
@@ -68,12 +83,20 @@
   );
 
   // Filtered recordings from discography
-  const filteredRecordings = $derived(
-    searchRecordings(recordings, songQuery, {
+  const filteredRecordings = $derived.by(() => {
+    let results = searchRecordings(recordings, songQuery, {
       genre: genreFilter || undefined,
       singer: singerFilter || undefined,
-    }, 2000)
-  );
+    }, 2000);
+
+    if (sortOrder === 'date-asc') {
+      results = [...results].sort((a, b) => (a.recording_date || '').localeCompare(b.recording_date || ''));
+    } else if (sortOrder === 'date-desc') {
+      results = [...results].sort((a, b) => (b.recording_date || '').localeCompare(a.recording_date || ''));
+    }
+
+    return results;
+  });
 
   // Initialize from existing tanda data if editing (run once on mount)
   let initialized = false;
@@ -83,6 +106,7 @@
     if (tanda && tanda.orchestra) {
       selectedOrchestra = tanda.orchestra;
       selectedGenre = tanda.genre;
+      tandaDescription = tanda.description || '';
       selectedSongs = [...tanda.songs];
       if (ORCHESTRA_NAMES.some(o => o.toLowerCase() === selectedOrchestra.toLowerCase())) {
         const matchedKey = ORCHESTRA_NAMES.find(o => o.toLowerCase() === selectedOrchestra.toLowerCase()) || selectedOrchestra;
@@ -121,7 +145,15 @@
       video_title: '',
       thumbnail: '',
     };
+    if (rec.duration) durationMap.set(song.id, rec.duration);
     selectedSongs = [...selectedSongs, song];
+    triggerAddHighlight(song.id);
+  }
+
+  function triggerAddHighlight(songId: string) {
+    clearTimeout(addAnimTimeout);
+    recentlyAddedId = songId;
+    addAnimTimeout = setTimeout(() => { recentlyAddedId = null; }, 800);
   }
 
   function removeSong(songId: string) {
@@ -139,6 +171,7 @@
       thumbnail: r.thumbnail || `https://img.youtube.com/vi/${r.video_id}/mqdefault.jpg`,
     };
     selectedSongs = [...selectedSongs, song];
+    triggerAddHighlight(song.id);
     step = 'songs';
   }
 
@@ -179,6 +212,7 @@
     editor.updateTanda(tanda.id, {
       orchestra: selectedOrchestra,
       genre: selectedGenre,
+      description: tandaDescription.trim() || '',
     });
     // Replace all songs
     const currentSongIds = tanda.songs.map(s => s.id);
@@ -214,7 +248,6 @@
   function formatRecordingDate(dateStr: string | undefined | null): string {
     if (!dateStr) return '';
     const trimmed = dateStr.trim();
-    // Full date: YYYY-MM-DD
     const fullMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (fullMatch) {
       const [, y, m, d] = fullMatch;
@@ -222,14 +255,12 @@
       const month = MONTHS[parseInt(m) - 1] || m;
       return `${day} ${month} ${y}`;
     }
-    // Year-month: YYYY-MM
     const ymMatch = trimmed.match(/^(\d{4})-(\d{2})$/);
     if (ymMatch) {
       const [, y, m] = ymMatch;
       const month = MONTHS[parseInt(m) - 1] || m;
       return `${month} ${y}`;
     }
-    // Year only or anything else
     return trimmed;
   }
 
@@ -258,22 +289,32 @@
   }
 </script>
 
+<style>
+  @keyframes flash-highlight {
+    0% { background-color: rgba(74, 222, 128, 0.25); }
+    100% { background-color: transparent; }
+  }
+  .song-just-added {
+    animation: flash-highlight 0.8s ease-out;
+  }
+</style>
+
 <!-- Backdrop -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div
-  class="fixed inset-0 bg-black/10 z-40 transition-opacity duration-500"
-  onclick={onclose}
-></div>
+  class="fixed inset-0 bg-black/30 dark:bg-black/50 z-40 transition-opacity duration-300 flex items-center justify-center p-4"
+  onclick={(e: MouseEvent) => { if (e.target === e.currentTarget) onclose(); }}
+>
 
-<!-- Panel -->
-<div class="fixed right-0 top-0 bottom-0 w-full md:w-[480px] bg-white dark:bg-card z-50 shadow-2xl flex flex-col border-l border-black/10 dark:border-white/5 transition-transform duration-500">
+<!-- Dialog — wider for 2-pane layout on songs step -->
+<div class="relative w-full {step === 'songs' ? 'max-w-5xl' : 'max-w-2xl'} max-h-[85vh] bg-white dark:bg-card z-50 shadow-2xl flex flex-col rounded-2xl border border-black/10 dark:border-white/5 overflow-hidden transition-all duration-300">
 
   <!-- Header -->
-  <div class="p-6 border-b border-black/5 dark:border-white/5 flex justify-between items-center bg-surface/50 dark:bg-background/50 shrink-0">
+  <div class="px-6 py-4 border-b border-black/5 dark:border-white/5 flex justify-between items-center bg-surface/50 dark:bg-background/50 shrink-0">
     <div>
       <span class="font-mono text-[10px] text-ink-muted uppercase tracking-widest">Tanda {String((slotIndex + 1)).padStart(2, '0')}</span>
-      <h3 class="font-serif text-3xl text-ink mt-1">
+      <h3 class="font-serif text-2xl text-ink mt-0.5">
         {#if selectedOrchestra}
           {selectedOrchestra}
         {:else}
@@ -285,16 +326,17 @@
       {#if step !== 'orchestra'}
         <button
           onclick={() => step = 'orchestra'}
-          class="w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
-          title="Back to orchestras"
+          class="h-9 px-3 rounded-full hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-1.5 transition-colors cursor-pointer bg-transparent border-none text-ink-muted hover:text-ink"
+          title="Back to orchestras — add tandas from other orchestras"
         >
-          <ArrowLeft class="w-5 h-5 text-ink-muted" />
+          <ArrowLeft class="w-4 h-4" />
+          <span class="text-xs font-medium hidden sm:inline">Back to set</span>
         </button>
       {/if}
       {#if ondelete}
         <button
           onclick={() => showDeleteConfirm = true}
-          class="w-10 h-10 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
+          class="w-9 h-9 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
           title="Delete this tanda"
         >
           <Trash2 class="w-4 h-4 text-ink-muted hover:text-red-500 transition-colors" />
@@ -302,14 +344,14 @@
       {/if}
       <button
         onclick={onclose}
-        class="w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
+        class="w-9 h-9 rounded-full hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
       >
         <X class="w-5 h-5 text-ink" />
       </button>
     </div>
   </div>
 
-  <!-- STEP: Orchestra Selection -->
+  <!-- STEP: Orchestra Selection (unchanged layout) -->
   {#if step === 'orchestra'}
     <div class="flex flex-col grow overflow-hidden">
       <div class="p-6 overflow-y-auto grow">
@@ -385,55 +427,116 @@
     </div>
   {/if}
 
-  <!-- STEP: Song Selection from Discography -->
+  <!-- STEP: Song Selection — 2-pane layout (desktop) / tabbed (mobile) -->
   {#if step === 'songs'}
-    <div class="flex flex-col grow overflow-hidden">
-      <!-- Selected songs summary (sticky top, scrollable) -->
-      <div class="bg-white dark:bg-card border-b border-black/5 dark:border-white/5 shrink-0 flex flex-col max-h-[40vh]">
-        <div class="flex justify-between items-center p-4 pb-2">
-          <h4 class="font-serif text-lg text-ink">
-            {selectedOrchestra}
-            <span class="text-ink-muted text-sm italic ml-1">{selectedGenre}</span>
-          </h4>
-          <span class="font-mono text-xs font-bold text-ink">{selectedSongs.length} tracks</span>
+    <!-- Mobile tab switcher (visible only on small screens) -->
+    <div class="flex md:hidden border-b border-black/5 dark:border-white/5 shrink-0">
+      <button
+        onclick={() => mobileTab = 'search'}
+        class="flex-1 py-2.5 text-sm font-medium text-center transition-colors cursor-pointer bg-transparent border-none font-sans
+          {mobileTab === 'search'
+            ? 'text-ink border-b-2 border-ink dark:border-white'
+            : 'text-ink-muted hover:text-ink'}"
+      >
+        Search
+      </button>
+      <button
+        onclick={() => mobileTab = 'selected'}
+        class="flex-1 py-2.5 text-sm font-medium text-center transition-colors cursor-pointer bg-transparent border-none font-sans
+          {mobileTab === 'selected'
+            ? 'text-ink border-b-2 border-ink dark:border-white'
+            : 'text-ink-muted hover:text-ink'}"
+      >
+        Selected ({selectedSongs.length})
+      </button>
+    </div>
+
+    <!-- 2-pane content area -->
+    <div class="flex grow overflow-hidden min-h-0">
+
+      <!-- ═══ LEFT PANE: Selected tracks ═══ -->
+      <div class="
+        {mobileTab === 'selected' ? 'flex' : 'hidden'} md:flex
+        flex-col w-full md:w-[40%] border-r-0 md:border-r border-black/5 dark:border-white/5 bg-surface/30 dark:bg-background/30 overflow-hidden
+      ">
+        <!-- Description input (top) -->
+        <div class="px-4 pt-4 pb-2 shrink-0">
+          <input
+            type="text"
+            placeholder="Add a note for this tanda (optional)..."
+            bind:value={tandaDescription}
+            class="w-full bg-white dark:bg-card border border-black/5 dark:border-white/5 rounded-lg px-3 py-2 text-xs text-ink outline-none focus:border-ink dark:focus:border-white transition-colors font-sans placeholder:text-ink-faint"
+          />
         </div>
 
-        <!-- Track list (scrollable) -->
-        <div class="overflow-y-auto px-4 pb-4 space-y-1.5">
-          {#each selectedSongs as song, si}
-            <div class="w-full py-2 px-3 border border-black/10 dark:border-white/10 bg-surface dark:bg-background rounded-lg flex items-center gap-3">
-              <span class="text-[10px] font-mono text-ink-muted font-bold">{String(si + 1).padStart(2, '0')}</span>
-              <span class="text-sm text-ink font-medium flex-1 truncate">{song.title}</span>
-              {#if song.singer}
-                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 {getSingerColor(song.singer)}">{song.singer}</span>
-              {/if}
-              {#if song.year}
-                <span class="text-[10px] font-mono text-ink-faint shrink-0">{song.year}</span>
-              {/if}
-              <!-- YouTube status indicator -->
-              {#if song.video_id}
-                <span class="text-vals text-xs shrink-0" title="YouTube linked: {song.video_title}">&#9658;</span>
+        <!-- Header row with actions -->
+        <div class="flex justify-between items-center px-4 py-2 shrink-0">
+          <h4 class="text-xs font-medium text-ink uppercase tracking-widest">
+            Selected <span class="text-ink-muted">({selectedSongs.length})</span>
+          </h4>
+          <div class="flex items-center gap-1.5">
+            <button
+              onclick={selectAllFiltered}
+              class="text-[10px] font-medium px-2 py-1 rounded-md hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent border-none font-sans text-ink-muted hover:text-ink"
+              title="Add all currently filtered results"
+            >
+              + All
+            </button>
+            {#if selectedSongs.length > 0}
+              <button
+                onclick={clearAllSongs}
+                class="text-[10px] font-medium px-2 py-1 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer bg-transparent border-none font-sans text-red-400 hover:text-red-500"
+              >
+                Clear
+              </button>
+            {/if}
+          </div>
+        </div>
+
+        <!-- Selected track list (scrollable) -->
+        <div class="overflow-y-auto flex-1 px-4 pb-4 space-y-1">
+          {#each selectedSongs as song, si (song.id)}
+            <div class="group/track w-full py-1.5 px-2 border border-black/8 dark:border-white/8 bg-white dark:bg-card rounded-lg flex items-center gap-1.5 {recentlyAddedId === song.id ? 'song-just-added' : ''}">
+              <!-- Drag handle -->
+              <div class="shrink-0 opacity-0 group-hover/track:opacity-40 transition-opacity cursor-grab">
+                <GripVertical class="w-3.5 h-3.5 text-ink-muted" />
+              </div>
+              <Music class="w-3.5 h-3.5 text-ink-faint/50 shrink-0" />
+              <div class="flex-1 min-w-0">
+                <p class="text-[13px] text-ink font-medium truncate">{song.title}</p>
+                <p class="text-[10px] text-ink-muted truncate">
+                  {selectedOrchestra}{#if song.singer} · {song.singer}{/if}
+                </p>
+              </div>
+              {#if durationMap.get(song.id)}
+                <span class="text-[11px] font-mono text-ink-faint shrink-0">{durationMap.get(song.id)}</span>
               {/if}
               <button
                 onclick={() => removeSong(song.id)}
-                class="text-ink-faint hover:text-tango transition-colors cursor-pointer bg-transparent border-none p-0 font-sans text-sm"
-              >×</button>
+                class="text-ink-faint hover:text-tango transition-colors cursor-pointer bg-transparent border-none p-0.5 font-sans text-xs leading-none shrink-0"
+              >&times;</button>
             </div>
           {/each}
+
           {#if selectedSongs.length === 0}
-            <div class="w-full py-3 px-3 border border-dashed border-black/15 dark:border-white/15 rounded-lg flex items-center gap-3">
-              <span class="text-[10px] font-mono text-ink-faint font-bold">01</span>
-              <span class="text-sm text-ink-faint italic">Pick your first track...</span>
+            <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <Music class="w-8 h-8 text-ink-faint/40 mb-3" />
+              <p class="text-sm text-ink-faint">No tracks yet</p>
+              <p class="text-xs text-ink-faint/60 mt-1">Start adding from the right</p>
             </div>
           {/if}
         </div>
       </div>
 
-      <!-- Song search area -->
-      <div class="p-4 overflow-y-auto grow">
+      <!-- ═══ RIGHT PANE: Search & Browse ═══ -->
+      <div class="
+        {mobileTab === 'search' ? 'flex' : 'hidden'} md:flex
+        flex-col w-full md:w-[60%] overflow-hidden
+      ">
         {#if recordings.length > 0}
-          <!-- Search + filters -->
-          <div class="sticky top-0 bg-white dark:bg-card pb-3 z-10 space-y-2">
+          <!-- Sticky search + filters -->
+          <div class="sticky top-0 bg-white dark:bg-card px-4 pt-4 pb-3 z-10 space-y-2 border-b border-black/5 dark:border-white/5 shrink-0">
+            <h4 class="text-xs font-medium text-ink uppercase tracking-widest hidden md:block">Search &amp; Browse</h4>
             <div class="relative">
               <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint" />
               <input
@@ -443,7 +546,7 @@
                 class="w-full pl-10 pr-4 py-2.5 bg-surface dark:bg-background border border-black/5 dark:border-white/5 rounded-lg text-sm text-ink outline-none focus:border-ink dark:focus:border-white transition-colors font-sans"
               />
             </div>
-            <div class="flex gap-2 flex-wrap">
+            <div class="flex gap-2 flex-wrap items-center">
               {#if availableSingers.length > 0}
                 <select
                   bind:value={singerFilter}
@@ -466,96 +569,118 @@
                   {/each}
                 </select>
               {/if}
-            </div>
-            <!-- Select All / Clear buttons -->
-            <div class="flex items-center gap-2 mt-2">
-              <button
-                onclick={selectAllFiltered}
-                class="text-[10px] font-medium px-2.5 py-1 rounded-lg border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent font-sans text-ink-muted hover:text-ink"
+              <select
+                bind:value={sortOrder}
+                class="text-xs bg-surface dark:bg-background border border-black/5 dark:border-white/5 rounded-lg px-3 py-1.5 text-ink-muted font-sans outline-none"
               >
-                + Add all {filteredRecordings.length} shown
-              </button>
-              {#if selectedSongs.length > 0}
-                <button
-                  onclick={clearAllSongs}
-                  class="text-[10px] font-medium px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-800/30 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer bg-transparent font-sans text-red-400 hover:text-red-500"
-                >
-                  Clear all
-                </button>
-              {/if}
+                <option value="relevance">Relevance</option>
+                <option value="date-asc">Date &#8593; oldest</option>
+                <option value="date-desc">Date &#8595; newest</option>
+              </select>
               <span class="text-[10px] text-ink-faint ml-auto">{filteredRecordings.length} results</span>
             </div>
           </div>
 
-          <!-- Recording results -->
-          <div class="space-y-1.5 mt-2">
-            {#each filteredRecordings as rec}
-              {@const alreadyPicked = isAlreadySelected(rec)}
-              <button
-                onclick={() => !alreadyPicked && selectRecording(rec)}
-                disabled={alreadyPicked}
-                class="group flex justify-between items-center p-3 rounded-xl border w-full text-left cursor-pointer transition-all font-sans
-                  {alreadyPicked
-                    ? 'border-black/5 dark:border-white/5 bg-surface dark:bg-background opacity-50 cursor-default'
-                    : 'border-black/5 dark:border-white/5 hover:border-ink dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 bg-white dark:bg-card'}"
-              >
-                <div class="min-w-0 flex-1">
-                  <p class="text-sm font-medium text-ink truncate">{rec.title}</p>
-                  <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                    {#if rec.singer && rec.singer !== 'Instrumental' && rec.singer !== '-'}
-                      <span class="text-[10px] font-medium px-1.5 py-0.5 rounded-full {getSingerColor(rec.singer)}">{rec.singer}</span>
-                    {:else}
-                      <span class="text-[10px] font-medium px-1.5 py-0.5 rounded-full {getSingerColor(null)}">Instrumental</span>
+          <!-- Recording results (scrollable) -->
+          <div class="overflow-y-auto flex-1">
+            <div class="space-y-1 px-4 py-3">
+              {#each filteredRecordings as rec}
+                {@const alreadyPicked = isAlreadySelected(rec)}
+                <button
+                  onclick={() => !alreadyPicked && selectRecording(rec)}
+                  disabled={alreadyPicked}
+                  class="group flex justify-between items-center p-2.5 rounded-xl border w-full text-left cursor-pointer transition-all font-sans
+                    {alreadyPicked
+                      ? 'border-black/5 dark:border-white/5 bg-surface dark:bg-background opacity-50 cursor-default'
+                      : 'border-black/5 dark:border-white/5 hover:border-ink dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 bg-white dark:bg-card'}"
+                >
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-medium text-ink truncate">{rec.title}</p>
+                    <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                      {#if rec.singer && rec.singer !== 'Instrumental' && rec.singer !== '-'}
+                        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded-full {getSingerColor(rec.singer)}">{rec.singer}</span>
+                      {:else}
+                        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded-full {getSingerColor(null)}">Instrumental</span>
+                      {/if}
+                      {#if rec.recording_date}
+                        <span class="text-[10px] text-ink-faint font-mono">{formatRecordingDate(rec.recording_date)}</span>
+                      {/if}
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 shrink-0 ml-3">
+                    {#if rec.duration}
+                      <span class="text-[11px] font-mono text-ink-faint">{rec.duration}</span>
                     {/if}
-                    {#if rec.recording_date}
-                      <span class="text-[10px] text-ink-faint font-mono">{formatRecordingDate(rec.recording_date)}</span>
+                    {#if alreadyPicked}
+                      <div class="w-6 h-6 rounded-full bg-vals/20 flex items-center justify-center">
+                        <Check class="w-3.5 h-3.5 text-vals" />
+                      </div>
+                    {:else}
+                      <div class="w-6 h-6 rounded-full border border-black/10 dark:border-white/10 group-hover:bg-ink dark:group-hover:bg-white group-hover:border-ink dark:group-hover:border-white flex items-center justify-center transition-colors">
+                        <Plus class="w-4 h-4 text-white dark:text-ink opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
                     {/if}
                   </div>
-                </div>
-                <div class="flex items-center gap-2 shrink-0 ml-3">
-                  {#if alreadyPicked}
-                    <Check class="w-4 h-4 text-vals" />
-                  {:else}
-                    <div class="w-6 h-6 rounded-full border border-black/10 dark:border-white/10 group-hover:bg-ink dark:group-hover:bg-white group-hover:border-ink dark:group-hover:border-white flex items-center justify-center transition-colors">
-                      <Plus class="w-4 h-4 text-white dark:text-ink opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  {/if}
-                </div>
+                </button>
+              {/each}
+              {#if filteredRecordings.length === 0 && songQuery.trim()}
+                <p class="text-sm text-ink-muted py-4 text-center">No recordings match "{songQuery}"</p>
+              {/if}
+            </div>
+
+            <!-- YouTube fallback button -->
+            <div class="px-4 pb-4 pt-2 border-t border-black/5 dark:border-white/5 mt-2">
+              <button
+                onclick={() => step = 'youtube'}
+                class="w-full flex items-center justify-center gap-2 p-3 border border-dashed border-black/15 dark:border-white/15 rounded-xl text-sm text-ink-muted hover:text-ink hover:border-ink dark:hover:border-white cursor-pointer transition-all font-sans bg-transparent"
+              >
+                <Search class="w-4 h-4" />
+                Can't find it? Search YouTube instead
               </button>
-            {/each}
-            {#if filteredRecordings.length === 0 && songQuery.trim()}
-              <p class="text-sm text-ink-muted py-4 text-center">No recordings match "{songQuery}"</p>
-            {/if}
+            </div>
           </div>
         {:else}
-          <p class="text-sm text-ink-muted py-4 text-center">
-            No discography data for "{selectedOrchestra}". Use YouTube search to find songs.
-          </p>
+          <div class="flex-1 flex flex-col items-center justify-center p-8">
+            <p class="text-sm text-ink-muted text-center">
+              No discography data for "{selectedOrchestra}".
+            </p>
+            <button
+              onclick={() => step = 'youtube'}
+              class="mt-4 flex items-center gap-2 px-4 py-2.5 border border-dashed border-black/15 dark:border-white/15 rounded-xl text-sm text-ink-muted hover:text-ink hover:border-ink dark:hover:border-white cursor-pointer transition-all font-sans bg-transparent"
+            >
+              <Search class="w-4 h-4" />
+              Search YouTube instead
+            </button>
+          </div>
         {/if}
+      </div>
+    </div>
 
-        <!-- YouTube fallback button -->
-        <div class="mt-6 pt-4 border-t border-black/5 dark:border-white/5">
-          <button
-            onclick={() => step = 'youtube'}
-            class="w-full flex items-center justify-center gap-2 p-3 border border-dashed border-black/15 dark:border-white/15 rounded-xl text-sm text-ink-muted hover:text-ink hover:border-ink dark:hover:border-white cursor-pointer transition-all font-sans bg-transparent"
-          >
-            <Search class="w-4 h-4" />
-            Can't find it? Search YouTube instead
-          </button>
+    <!-- Footer: summary pills + save button -->
+    <div class="p-4 border-t border-black/5 dark:border-white/5 bg-surface/50 dark:bg-background/50 shrink-0 space-y-3">
+      <!-- Selected tracks summary pill bar -->
+      {#if selectedSongs.length > 0}
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xs font-medium text-ink">{selectedSongs.length} tracks selected</span>
+          <Check class="w-3.5 h-3.5 text-vals" />
+          <div class="flex items-center gap-1 flex-wrap">
+            {#each selectedSongs.slice(0, 3) as song (song.id)}
+              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/5 text-ink-muted truncate max-w-[100px]">{song.title}</span>
+            {/each}
+            {#if selectedSongs.length > 3}
+              <span class="text-[10px] text-ink-faint">+{selectedSongs.length - 3} more</span>
+            {/if}
+          </div>
         </div>
-      </div>
-
-      <!-- Save button -->
-      <div class="p-4 border-t border-black/5 dark:border-white/5 bg-surface/50 dark:bg-background/50 shrink-0">
-        <button
-          onclick={saveTanda}
-          disabled={selectedSongs.length === 0}
-          class="w-full py-3 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all cursor-pointer border-none font-sans shadow-lg disabled:opacity-30 disabled:cursor-default flex items-center justify-center gap-2"
-        >
-          <Check class="w-4 h-4" />
-          Save Tanda ({selectedSongs.length} tracks)
-        </button>
-      </div>
+      {/if}
+      <button
+        onclick={saveTanda}
+        disabled={selectedSongs.length === 0}
+        class="w-full py-3 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all cursor-pointer border-none font-sans shadow-lg disabled:opacity-30 disabled:cursor-default flex items-center justify-center gap-2"
+      >
+        <Check class="w-4 h-4" />
+        Save Tanda ({selectedSongs.length} tracks)
+      </button>
     </div>
   {/if}
 
@@ -663,4 +788,5 @@
       </div>
     </div>
   {/if}
+</div>
 </div>

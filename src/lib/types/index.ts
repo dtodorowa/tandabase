@@ -16,6 +16,7 @@ export interface Tanda {
   num: number;
   orchestra: string;
   genre: Genre;
+  description?: string;
   songs: Song[];
 }
 

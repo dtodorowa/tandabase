@@ -153,10 +153,10 @@
 
   <!-- NOT a DJ tool -->
   <section class="w-full bg-ink-muted text-surface py-32 px-6 text-center my-32">
-    <h2 class="font-serif text-5xl md:text-7xl tracking-tighter mb-8 text-surface">This is <span class="italic text-surface/50">NOT</span> a DJ tool.</h2>
+    <h2 class="font-serif text-5xl md:text-7xl tracking-tighter mb-8 text-surface">This is <span class="italic text-surface/50">NOT</span> a DJing app</h2>
     <p class="font-light text-xl text-surface/70 max-w-2xl mx-auto leading-relaxed">
-      No autoplay. No cortina gaps. Just YouTube embeds for studying.<br><br>
-      If you want to DJ a milonga, buy the music and support the labels preserving this history.
+      It's a learning tool. There is no autoplay or cortina gaps (on purpose). Just YouTube embeds for studying.<br><br>
+      If you want to DJ a milonga, buy the music and support the people who are working hard to preserve tango recordings.
     </p>
   </section>
 

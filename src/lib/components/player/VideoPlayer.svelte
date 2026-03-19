@@ -142,8 +142,8 @@
   <div class="video-wrapper">
     {#if song?.video_id}
       <iframe
-        src="https://www.youtube.com/embed/{song.video_id}?rel=0"
-        allow="encrypted-media"
+        src="https://www.youtube.com/embed/{song.video_id}?rel=0&autoplay=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
         title={song.title}
       ></iframe>

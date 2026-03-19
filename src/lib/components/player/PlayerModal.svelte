@@ -4,9 +4,12 @@
   import { authState } from '$lib/stores/auth.svelte';
   import { replaceSongVideo, createFlag } from '$lib/firebase/db';
   import { searchYouTube, extractVideoId, getVideoById, type YTResult } from '$lib/utils/youtube';
-  import { X, SkipBack, SkipForward, Play, Pause } from 'lucide-svelte';
+  import { Square, X, SkipBack, SkipForward, Play, Pause } from 'lucide-svelte';
 
   let animateIn = $state(false);
+  let sidebarEl = $state<HTMLElement | null>(null);
+  let isStopped = $state(false);
+  let videoIframe = $state<HTMLIFrameElement | null>(null);
 
   $effect(() => {
     if (playerModal.open) {
@@ -20,6 +23,49 @@
       animateIn = false;
     }
   });
+
+  // Auto-scroll sidebar to active tanda whenever it changes
+  $effect(() => {
+    const ti = player.currentTandaIndex;
+    if (sidebarEl && playerModal.open) {
+      // Small delay to let DOM settle after animation
+      setTimeout(() => {
+        const tandaEls = sidebarEl?.querySelectorAll('[data-tanda-index]');
+        if (tandaEls && tandaEls[ti]) {
+          tandaEls[ti].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  });
+
+  // Reset stopped state when song changes
+  $effect(() => {
+    // Access currentSong to track changes
+    player.currentSong;
+    isStopped = false;
+  });
+
+  function stopVideo() {
+    if (videoIframe?.contentWindow) {
+      videoIframe.contentWindow.postMessage(JSON.stringify({
+        event: 'command',
+        func: 'pauseVideo',
+        args: []
+      }), '*');
+      isStopped = true;
+    }
+  }
+
+  function resumeVideo() {
+    if (videoIframe?.contentWindow) {
+      videoIframe.contentWindow.postMessage(JSON.stringify({
+        event: 'command',
+        func: 'playVideo',
+        args: []
+      }), '*');
+      isStopped = false;
+    }
+  }
 
   function close() {
     animateIn = false;
@@ -206,8 +252,9 @@
           <div class="w-full max-w-lg aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.15)] bg-ink relative group">
             {#if player.currentSong?.video_id}
               <iframe
+                bind:this={videoIframe}
                 class="w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                src="https://www.youtube.com/embed/{player.currentSong.video_id}?rel=0"
+                src="https://www.youtube.com/embed/{player.currentSong.video_id}?rel=0&autoplay=1&enablejsapi=1"
                 title="YouTube player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -232,8 +279,8 @@
               {#if player.currentSong?.year} · {player.currentSong.year}{/if}
             </p>
 
-            <!-- Prev / Next controls -->
-            <div class="mt-4 md:mt-8 flex justify-center gap-6 items-center">
+            <!-- Prev / Stop / Next controls -->
+            <div class="mt-4 md:mt-8 flex justify-center gap-4 items-center">
               <button
                 onclick={() => player.prev()}
                 disabled={player.isFirst}
@@ -241,6 +288,25 @@
               >
                 <SkipBack class="w-5 h-5" />
               </button>
+
+              {#if isStopped}
+                <button
+                  onclick={resumeVideo}
+                  class="w-14 h-14 rounded-full border-2 border-black/15 dark:border-white/15 flex items-center justify-center text-ink hover:bg-ink hover:text-white dark:hover:bg-white dark:hover:text-ink transition-colors cursor-pointer bg-transparent"
+                  title="Resume"
+                >
+                  <Play class="w-6 h-6" />
+                </button>
+              {:else}
+                <button
+                  onclick={stopVideo}
+                  disabled={!player.currentSong?.video_id}
+                  class="w-14 h-14 rounded-full border-2 border-black/15 dark:border-white/15 flex items-center justify-center text-ink hover:bg-ink hover:text-white dark:hover:bg-white dark:hover:text-ink transition-colors cursor-pointer bg-transparent disabled:opacity-30 disabled:cursor-default"
+                  title="Stop"
+                >
+                  <Square class="w-5 h-5" />
+                </button>
+              {/if}
 
               <button
                 onclick={() => player.next()}
@@ -340,13 +406,13 @@
         </div>
 
         <!-- Right: Track sidebar -->
-        <div class="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-black/5 dark:border-white/5 overflow-y-auto no-scrollbar relative p-4 md:p-12 grow min-h-0">
+        <div bind:this={sidebarEl} class="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-black/5 dark:border-white/5 overflow-y-auto no-scrollbar relative p-4 md:p-12 grow min-h-0">
 
           {#each player.tandas as tanda, ti (tanda.id)}
             {@const isActiveTanda = ti === player.currentTandaIndex}
             {@const yr = getYearRange(tanda)}
 
-            <div class="mb-10">
+            <div class="mb-10" data-tanda-index={ti}>
               <div class="flex items-baseline gap-4 mb-6">
                 <span class="text-xs font-medium tracking-widest uppercase {isActiveTanda ? 'text-ink' : 'text-ink-faint'}">
                   Tanda {String(tanda.num).padStart(2, '0')}

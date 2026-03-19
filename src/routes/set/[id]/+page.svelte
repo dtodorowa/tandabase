@@ -4,7 +4,7 @@
   import { playerModal } from '$lib/stores/playerModal.svelte';
   import { authState } from '$lib/stores/auth.svelte';
   import type { PracticaSet, Comment, Tanda } from '$lib/types';
-  import { FileDown, MessageCircle, Send, Trash2, ChevronDown } from 'lucide-svelte';
+  import { FileDown, MessageCircle, Send, Trash2, ChevronDown, Pencil } from 'lucide-svelte';
 
   import seedData from '$lib/data/seed.json';
 
@@ -237,13 +237,24 @@
           <a href="/browse" class="text-ink-muted hover:text-ink text-xs uppercase tracking-[0.15em] font-medium flex items-center gap-2 transition-colors no-underline">
             ← Back to Archive
           </a>
-          <button
-            onclick={exportPDF}
-            class="flex items-center gap-2 px-5 py-2.5 rounded-full border border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5 transition-all cursor-pointer bg-transparent font-sans text-sm font-medium text-ink-muted hover:text-ink"
-          >
-            <FileDown class="w-4 h-4" />
-            Export PDF
-          </button>
+          <div class="flex items-center gap-2">
+            {#if authState.isLoggedIn && authState.user?.uid === practicaSet.authorId}
+              <a
+                href="/create?edit={practicaSet.id}"
+                class="flex items-center justify-center w-10 h-10 rounded-full border border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-ink-muted hover:text-ink no-underline"
+                title="Edit set"
+              >
+                <Pencil class="w-4 h-4" />
+              </a>
+            {/if}
+            <button
+              onclick={exportPDF}
+              class="flex items-center gap-2 px-5 py-2.5 rounded-full border border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5 transition-all cursor-pointer bg-transparent font-sans text-sm font-medium text-ink-muted hover:text-ink"
+            >
+              <FileDown class="w-4 h-4" />
+              Export PDF
+            </button>
+          </div>
         </div>
 
         <h1 class="font-serif text-5xl md:text-6xl font-bold text-ink mb-6 tracking-tight leading-tight">
@@ -282,11 +293,22 @@
                 <span class="font-serif text-4xl italic text-ink-faint">{String(tanda.num).padStart(2, '0')}</span>
                 <div>
                   <h2 class="font-medium text-2xl text-ink mb-1">{tanda.orchestra}</h2>
-                  <span class="text-xs font-medium text-ink-muted tracking-widest uppercase">
-                    {tanda.songs.length} tracks
-                    {#if singers} &bull; {singers}{/if}
-                    {#if yr} &bull; {yr}{/if}
-                  </span>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest
+                      {tanda.genre === 'Tango' ? 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
+                       tanda.genre === 'Milonga' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' :
+                       'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'}">
+                      {tanda.genre}
+                    </span>
+                    <span class="text-xs font-medium text-ink-muted tracking-widest uppercase">
+                      {tanda.songs.length} tracks
+                      {#if singers} &bull; {singers}{/if}
+                      {#if yr} &bull; {yr}{/if}
+                    </span>
+                  </div>
+                  {#if tanda.description}
+                    <p class="text-xs text-ink-faint italic mt-1">{tanda.description}</p>
+                  {/if}
                 </div>
               </div>
 
@@ -305,10 +327,12 @@
                   <span class="text-ink/80 dark:text-ink-muted">{si + 1}. {song.title}</span>
                   <div class="flex items-center gap-3 shrink-0">
                     {#if song.singer}
-                      <span class="text-ink-faint text-xs italic">{song.singer}</span>
+                      <span class="text-ink-muted text-xs italic">{song.singer}</span>
+                    {:else}
+                      <span class="text-ink-faint text-[10px] italic">Instr.</span>
                     {/if}
                     {#if song.year}
-                      <span class="text-ink-faint text-xs font-mono">{song.year}</span>
+                      <span class="text-ink-faint text-xs font-mono tabular-nums">{song.year}</span>
                     {/if}
                   </div>
                 </div>

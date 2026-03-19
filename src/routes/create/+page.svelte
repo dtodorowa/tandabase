@@ -5,7 +5,7 @@
   import { page } from '$app/state';
   import { getSet } from '$lib/firebase/db';
   import TandaBuilderPanel from '$lib/components/editor/TandaBuilderPanel.svelte';
-  import { Plus, Minus, Save, Eye, EyeOff, Trash2, X, CheckSquare } from 'lucide-svelte';
+  import { Plus, Minus, Save, Eye, EyeOff, Trash2, X, CheckSquare, GripVertical } from 'lucide-svelte';
   import type { Genre } from '$lib/types';
   import { untrack } from 'svelte';
 
@@ -25,6 +25,83 @@
   let hoveredIndex = $state<number | null>(null);
   let hoverTimer: ReturnType<typeof setTimeout> | null = null;
   let popoverPosition = $state<{ x: number; y: number } | null>(null);
+
+  // ── Drag-and-drop state ──
+  let dragIndex = $state<number | null>(null);
+  let dragOverIndex = $state<number | null>(null);
+  let dragOverPosition = $state<'before' | 'after'>('before');
+  let dragOverBin = $state(false);
+
+  function handleDragStart(index: number, event: DragEvent) {
+    if (selectionMode) { event.preventDefault(); return; }
+    dragIndex = index;
+    dragOverIndex = null;
+    dragOverBin = false;
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', String(index));
+    }
+    // Dismiss any hover popover
+    handleTandaMouseLeave();
+  }
+
+  function handleDragOver(index: number, event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    dragOverBin = false;
+
+    // Determine if cursor is in left or right half of the card
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const midX = rect.left + rect.width / 2;
+    dragOverPosition = event.clientX < midX ? 'before' : 'after';
+    dragOverIndex = index;
+  }
+
+  function handleDrop(index: number, event: DragEvent) {
+    event.preventDefault();
+    if (dragIndex !== null && dragIndex !== index) {
+      // Calculate the actual target index based on before/after position
+      let targetIndex = dragOverPosition === 'after' ? index + 1 : index;
+      // Adjust if dragging from before the target
+      if (dragIndex < targetIndex) targetIndex--;
+      if (targetIndex !== dragIndex) {
+        editor.reorderTandas(dragIndex, targetIndex);
+      }
+    }
+    dragIndex = null;
+    dragOverIndex = null;
+  }
+
+  function handleDragEnd() {
+    if (dragIndex !== null && dragOverBin) {
+      // Dropped on the bin — delete
+      const tanda = editor.tandas[dragIndex];
+      if (tanda) {
+        editor.removeTanda(tanda.id);
+        tandaCount = editor.tandas.length;
+      }
+    }
+    dragIndex = null;
+    dragOverIndex = null;
+    dragOverBin = false;
+  }
+
+  function handleBinDragOver(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    dragOverBin = true;
+    dragOverIndex = null;
+  }
+
+  function handleBinDragLeave() {
+    dragOverBin = false;
+  }
+
+  function handleBinDrop(event: DragEvent) {
+    event.preventDefault();
+    // deletion handled in handleDragEnd via dragOverBin flag
+  }
 
   function handleTandaMouseEnter(index: number, event: MouseEvent) {
     const target = event.currentTarget as HTMLElement;
@@ -100,14 +177,56 @@
     syncTandaCount();
   }
 
-  function getSlotSummary(index: number): { orchestra: string; genre: Genre; songCount: number; filled: boolean } {
+  function getSlotSummary(index: number): {
+    orchestra: string; genre: Genre; songCount: number; filled: boolean;
+    description: string; singerDisplay: string; yearRange: string; isInstrumental: boolean;
+  } {
     const tanda = editor.tandas[index];
-    if (!tanda) return { orchestra: '', genre: 'Tango', songCount: 0, filled: false };
+    if (!tanda) return { orchestra: '', genre: 'Tango', songCount: 0, filled: false, description: '', singerDisplay: '', yearRange: '', isInstrumental: false };
+
+    // Collect unique singers and count instrumentals
+    const singers = [...new Set(tanda.songs.map(s => s.singer).filter((s): s is string => !!s && s !== 'Instrumental' && s !== '-'))];
+    const instrumentalCount = tanda.songs.filter(s => !s.singer || s.singer === 'Instrumental' || s.singer === '-').length;
+    const hasInstrumentals = instrumentalCount > 0;
+    const isInstrumental = singers.length === 0 && tanda.songs.length > 0;
+    let singerDisplay = '';
+    if (isInstrumental) {
+      singerDisplay = 'Instrumental';
+    } else if (hasInstrumentals && singers.length > 0) {
+      // Mixed: some instrumental + some singers
+      if (singers.length === 1) {
+        singerDisplay = `Instr. + ${singers[0]}`;
+      } else if (singers.length === 2) {
+        singerDisplay = `Instr. + ${singers[0]} & ${singers[1]}`;
+      } else {
+        singerDisplay = `Instr. + ${singers[0]} & ${singers.length - 1} others`;
+      }
+    } else if (singers.length === 1) {
+      singerDisplay = singers[0];
+    } else if (singers.length === 2) {
+      singerDisplay = `${singers[0]} & ${singers[1]}`;
+    } else if (singers.length > 2) {
+      singerDisplay = `${singers[0]} & ${singers.length - 1} others`;
+    }
+
+    // Year range
+    const years = tanda.songs.map(s => s.year).filter((y): y is number => y !== null && y !== undefined);
+    let yearRange = '';
+    if (years.length > 0) {
+      const minYear = Math.min(...years);
+      const maxYear = Math.max(...years);
+      yearRange = minYear === maxYear ? String(minYear) : `${minYear}–${maxYear}`;
+    }
+
     return {
       orchestra: tanda.orchestra || '',
       genre: tanda.genre,
       songCount: tanda.songs.length,
       filled: tanda.songs.length > 0,
+      description: tanda.description || '',
+      singerDisplay,
+      yearRange,
+      isInstrumental,
     };
   }
 
@@ -254,35 +373,6 @@
             {/if}
           </div>
 
-          <div>
-            <div class="flex justify-between items-center mb-4">
-              <span class="text-xs font-medium text-ink uppercase tracking-widest">Number of Tandas</span>
-              <span class="font-mono text-sm text-ink-muted">{tandaCount}</span>
-            </div>
-            <div class="flex items-center gap-4">
-              <button
-                onclick={() => adjustCount(-1)}
-                disabled={tandaCount <= 1}
-                class="w-10 h-10 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent disabled:opacity-30 disabled:cursor-default"
-              >
-                <Minus class="w-4 h-4" />
-              </button>
-              <div class="flex-1 h-1 bg-black/5 dark:bg-white/5 rounded-full relative">
-                <div
-                  class="h-full bg-ink dark:bg-white rounded-full transition-all"
-                  style="width: {Math.min((tandaCount / 20) * 100, 100)}%"
-                ></div>
-              </div>
-              <button
-                onclick={() => adjustCount(1)}
-                disabled={tandaCount >= 999}
-                class="w-10 h-10 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer bg-transparent disabled:opacity-30 disabled:cursor-default"
-              >
-                <Plus class="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
           <!-- Visibility toggle -->
           <div>
             <button
@@ -411,16 +501,35 @@
               <!-- svelte-ignore a11y_no_static_element_interactions -->
               <!-- svelte-ignore a11y_click_events_have_key_events -->
               <div
+                draggable={!selectionMode}
                 onclick={(e) => handleTandaClick(i, e)}
+                ondragstart={(e) => handleDragStart(i, e)}
+                ondragover={(e) => handleDragOver(i, e)}
+                ondrop={(e) => handleDrop(i, e)}
+                ondragend={handleDragEnd}
                 onmouseenter={(e) => summary.filled && handleTandaMouseEnter(i, e)}
                 onmouseleave={handleTandaMouseLeave}
-                class="group relative rounded-xl p-5 cursor-pointer transition-all border-2
+                class="group relative rounded-xl p-5 cursor-grab active:cursor-grabbing transition-all border-2 select-none
+                  {dragIndex === i ? 'opacity-40 scale-95' : ''}
                   {isSelected
                     ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500 dark:border-blue-400 shadow-md ring-2 ring-blue-200 dark:ring-blue-800'
                     : summary.filled
                       ? 'bg-white dark:bg-card border-black/10 dark:border-white/10 hover:border-ink dark:hover:border-white shadow-sm hover:shadow-md'
                       : 'bg-surface dark:bg-background border-dashed border-black/15 dark:border-white/15 hover:bg-white dark:hover:bg-card hover:border-ink/50 dark:hover:border-white/50 hover:shadow-md'}"
               >
+                <!-- Drop indicator lines -->
+                {#if dragOverIndex === i && dragIndex !== null && dragIndex !== i}
+                  {#if dragOverPosition === 'before'}
+                    <div class="absolute left-0 top-1 bottom-1 w-[3px] bg-blue-500 rounded-full -translate-x-[calc(50%+8px)] z-10"></div>
+                    <div class="absolute left-0 top-0 w-2 h-2 bg-blue-500 rounded-full -translate-x-[calc(50%+8px)] -translate-y-0 z-10"></div>
+                    <div class="absolute left-0 bottom-0 w-2 h-2 bg-blue-500 rounded-full -translate-x-[calc(50%+8px)] translate-y-0 z-10"></div>
+                  {:else}
+                    <div class="absolute right-0 top-1 bottom-1 w-[3px] bg-blue-500 rounded-full translate-x-[calc(50%+8px)] z-10"></div>
+                    <div class="absolute right-0 top-0 w-2 h-2 bg-blue-500 rounded-full translate-x-[calc(50%+8px)] -translate-y-0 z-10"></div>
+                    <div class="absolute right-0 bottom-0 w-2 h-2 bg-blue-500 rounded-full translate-x-[calc(50%+8px)] translate-y-0 z-10"></div>
+                  {/if}
+                {/if}
+
                 <!-- Selection checkbox indicator -->
                 {#if selectionMode}
                   <div class="absolute top-2 right-2 w-5 h-5 rounded border-2 flex items-center justify-center transition-all
@@ -435,17 +544,44 @@
                   </div>
                 {/if}
 
+                <!-- Drag grip -->
+                {#if !selectionMode}
+                  <div class="absolute top-2 left-2 opacity-0 group-hover:opacity-40 transition-opacity">
+                    <GripVertical class="w-4 h-4 text-ink-muted" />
+                  </div>
+                {/if}
+
                 <span class="font-mono text-[10px] font-bold text-ink-muted">#{String(i + 1).padStart(2, '0')}</span>
 
                 {#if summary.filled}
-                  <h4 class="font-serif text-xl text-ink mt-2 leading-tight">{summary.orchestra}</h4>
-                  <div class="flex items-center gap-2 mt-2">
+                  <h4 class="font-serif text-xl text-ink mt-2 leading-tight truncate" title={summary.orchestra}>{summary.orchestra}</h4>
+
+                  <!-- Singer display -->
+                  {#if summary.singerDisplay}
+                    <p class="text-[11px] text-ink-muted mt-1 truncate" title={summary.singerDisplay}>
+                      {#if summary.isInstrumental}
+                        <span class="italic">{summary.singerDisplay}</span>
+                      {:else}
+                        {summary.singerDisplay}
+                      {/if}
+                    </p>
+                  {/if}
+
+                  <!-- Description -->
+                  {#if summary.description}
+                    <p class="text-[10px] text-ink-faint mt-1 truncate italic" title={summary.description}>{summary.description}</p>
+                  {/if}
+
+                  <div class="flex items-center gap-2 mt-2 flex-wrap">
                     <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest
                       {summary.genre === 'Tango' ? 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
                        summary.genre === 'Milonga' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' :
                        'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'}">
                       {summary.genre}
                     </span>
+                    {#if summary.yearRange}
+                      <span class="text-[10px] font-mono text-ink-faint">{summary.yearRange}</span>
+                    {/if}
                     <span class="text-xs text-ink-muted">{summary.songCount} tracks</span>
                   </div>
                 {:else}
@@ -469,6 +605,25 @@
             {/if}
           </div>
 
+          <!-- Drag-to-bin zone (visible while dragging) -->
+          {#if dragIndex !== null}
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <div
+              ondragover={handleBinDragOver}
+              ondragleave={handleBinDragLeave}
+              ondrop={handleBinDrop}
+              class="mt-4 flex items-center justify-center gap-3 p-6 rounded-2xl border-2 border-dashed transition-all duration-200
+                {dragOverBin
+                  ? 'border-red-400 bg-red-50 dark:bg-red-900/20 scale-[1.02]'
+                  : 'border-black/15 dark:border-white/15 bg-surface/50 dark:bg-background/50'}"
+            >
+              <Trash2 class="w-5 h-5 transition-colors {dragOverBin ? 'text-red-500' : 'text-ink-faint'}" />
+              <span class="text-sm font-medium transition-colors {dragOverBin ? 'text-red-500' : 'text-ink-muted'}">
+                Drop here to delete
+              </span>
+            </div>
+          {/if}
+
           {#if selectionMode}
             <p class="text-xs text-ink-muted mt-4">
               Click to select individual tandas. Hold <kbd class="px-1.5 py-0.5 rounded bg-surface dark:bg-background border border-black/10 dark:border-white/10 font-mono text-[10px]">Shift</kbd> and click to select a range.
@@ -482,14 +637,15 @@
   <!-- Song popover on hover -->
   {#if hoveredIndex !== null && popoverPosition && editor.tandas[hoveredIndex]?.songs.length > 0}
     {@const hTanda = editor.tandas[hoveredIndex]}
+    {@const hSummary = getSlotSummary(hoveredIndex)}
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
       class="fixed z-50 pointer-events-none"
       style="left: {popoverPosition.x}px; top: {popoverPosition.y}px; transform: translate(-50%, -100%);"
     >
-      <div class="bg-white dark:bg-card border border-black/10 dark:border-white/10 rounded-xl shadow-xl p-3 mb-2 min-w-[220px] max-w-[320px]">
-        <div class="flex items-center justify-between mb-2">
+      <div class="bg-white dark:bg-card border border-black/10 dark:border-white/10 rounded-xl shadow-xl p-3 mb-2 min-w-[240px] max-w-[340px]">
+        <div class="flex items-center justify-between mb-1">
           <span class="font-serif text-sm font-medium text-ink">{hTanda.orchestra}</span>
           <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-widest
             {hTanda.genre === 'Tango' ? 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
@@ -498,6 +654,21 @@
             {hTanda.genre}
           </span>
         </div>
+        <!-- Subtitle info: singer + year range -->
+        <div class="flex items-center gap-2 mb-2 text-[10px] text-ink-muted">
+          {#if hSummary.singerDisplay}
+            <span class={hSummary.isInstrumental ? 'italic' : ''}>{hSummary.singerDisplay}</span>
+          {/if}
+          {#if hSummary.singerDisplay && hSummary.yearRange}
+            <span>·</span>
+          {/if}
+          {#if hSummary.yearRange}
+            <span class="font-mono">{hSummary.yearRange}</span>
+          {/if}
+        </div>
+        {#if hTanda.description}
+          <p class="text-[10px] text-ink-faint italic mb-2 truncate">{hTanda.description}</p>
+        {/if}
         <div class="space-y-1">
           {#each hTanda.songs as song, si}
             <div class="flex items-center gap-2 text-xs">
@@ -505,6 +676,8 @@
               <span class="text-ink truncate flex-1">{song.title}</span>
               {#if song.singer}
                 <span class="text-ink-muted text-[10px] shrink-0">{song.singer}</span>
+              {:else}
+                <span class="text-ink-faint text-[10px] shrink-0 italic">Instr.</span>
               {/if}
               {#if song.year}
                 <span class="font-mono text-[10px] text-ink-faint shrink-0">{song.year}</span>

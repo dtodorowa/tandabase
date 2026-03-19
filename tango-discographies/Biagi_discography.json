@@ -183,7 +183,7 @@
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Teofilo Ibanez",
-    "youtube_id": "-AhlwBGxKII"
+    "youtube_id": "zjfZsvzXSl8"
   },
   {
     "title": "El trece (El 13)",
@@ -212,7 +212,8 @@
     "genre": "Vals",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Teofilo Ibanez"
+    "singer": "Teofilo Ibanez",
+    "youtube_id": "-MbqwJYdq80"
   },
   {
     "title": "Lejos de ti",
@@ -226,7 +227,8 @@
     "genre": "Vals",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Teofilo Ibanez"
+    "singer": "Teofilo Ibanez",
+    "youtube_id": "Y99jr2WCHXU"
   },
   {
     "title": "Una pena",
@@ -285,7 +287,8 @@
     "genre": "Milonga",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Teofilo Ibanez"
+    "singer": "Teofilo Ibanez",
+    "youtube_id": "cw6QV9d9uN4"
   },
   {
     "title": "La novena",
@@ -375,7 +378,7 @@
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Andres Falgas",
-    "youtube_id": "zHgXEhZO5JY"
+    "youtube_id": "9pUjfiqedoU"
   },
   {
     "title": "Son cosas del bandoneon",
@@ -569,7 +572,8 @@
     "genre": "Milonga",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "0iNqey3_4AE"
   },
   {
     "title": "Pinta orillera",
@@ -643,7 +647,8 @@
     "genre": "Vals",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "MsHN9z4seEg"
   },
   {
     "title": "Marcas...!",
@@ -840,20 +845,6 @@
     "youtube_id": "M3fWsO0RM0E"
   },
   {
-    "title": "Lagrimas y sonrisas (*C*)",
-    "artist": "Orquesta Rodolfo Biagi",
-    "recording_date": "1941-03-26",
-    "composer": "Pascual De Gullo",
-    "author": "Francisco Gullo (Pascual De Gullo)",
-    "lyrics": "",
-    "lyrics_credit": "",
-    "duration": "2:42",
-    "genre": "Vals",
-    "rating": 100,
-    "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
-  },
-  {
     "title": "Romantico bulincito",
     "artist": "Orquesta Rodolfo Biagi con Jorge Ortiz",
     "recording_date": "1941-03-26",
@@ -896,7 +887,7 @@
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Jorge Ortiz",
-    "youtube_id": "gdsb7b8G4iQ"
+    "youtube_id": "kqllRgeLQG0"
   },
   {
     "title": "Ya lo ves...",
@@ -911,7 +902,7 @@
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Jorge Ortiz",
-    "youtube_id": "4vVHEg-oyNc"
+    "youtube_id": "mpWjH7gcMcw"
   },
   {
     "title": "Ahora no me conoces (Ahora... No me conoces)",
@@ -925,7 +916,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "aBUtTfTaSUs"
   },
   {
     "title": "Carrillon de la Merced (Carillon de la Merced)",
@@ -939,7 +931,8 @@
     "genre": "Tango",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "2ugAKfeKZno"
   },
   {
     "title": "Pajaro herido",
@@ -953,7 +946,8 @@
     "genre": "Vals",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Vy0ZUoaG6_g"
   },
   {
     "title": "Quejas de bandoneon",
@@ -968,7 +962,7 @@
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Instrumental",
-    "youtube_id": "cugM5W9jVbU"
+    "youtube_id": "l7RM7lNKIJo"
   },
   {
     "title": "Didi (Di di)",
@@ -982,7 +976,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "7jFnby-InOg"
   },
   {
     "title": "Picante",
@@ -997,7 +992,7 @@
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Instrumental",
-    "youtube_id": "UkCZ7huHVHE"
+    "youtube_id": "Pu8sWL-2bMg"
   },
   {
     "title": "Marcheta (Marquitta)",
@@ -1011,7 +1006,8 @@
     "genre": "Vals",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "P11DSC4r-LE"
   },
   {
     "title": "No puede ser",
@@ -1025,7 +1021,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Lago"
+    "singer": "Alberto Lago",
+    "youtube_id": "Ct9Ht_bulyQ"
   },
   {
     "title": "Arrebato",
@@ -1039,7 +1036,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Lago"
+    "singer": "Alberto Lago",
+    "youtube_id": "bZh8BwQs4RA"
   },
   {
     "title": "Belgica",
@@ -1083,7 +1081,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Lago"
+    "singer": "Alberto Lago",
+    "youtube_id": "RRBreGXduPg"
   },
   {
     "title": "Calla corazon",
@@ -1098,7 +1097,7 @@
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Jorge Ortiz",
-    "youtube_id": "wK8HIbfHSNI"
+    "youtube_id": "TQYgw8iyY-0"
   },
   {
     "title": "La cumparsita",
@@ -1113,7 +1112,7 @@
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Jorge Ortiz",
-    "youtube_id": "KesjRl8bdEs"
+    "youtube_id": "sk0BzCncDTw"
   },
   {
     "title": "Amor y vals",
@@ -1127,7 +1126,8 @@
     "genre": "Vals",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Lago"
+    "singer": "Alberto Lago",
+    "youtube_id": "qc8Yb26Z5yw"
   },
   {
     "title": "Metido (Enamorado)",
@@ -1141,7 +1141,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Lago"
+    "singer": "Alberto Lago",
+    "youtube_id": "9euYMe8Exww"
   },
   {
     "title": "Catorce primaveras",
@@ -1156,7 +1157,7 @@
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Jorge Ortiz",
-    "youtube_id": "uQqvxcN5eTw"
+    "youtube_id": "L95POIVZGOk"
   },
   {
     "title": "Oyendo tu voz (Escuchando tu voz)",
@@ -1170,7 +1171,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "0iGBpjxI7XA"
   },
   {
     "title": "Indiferencia",
@@ -1213,7 +1215,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "kc8pznQ2jxM"
   },
   {
     "title": "Pueblito de provincia",
@@ -1228,7 +1231,7 @@
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Jorge Ortiz",
-    "youtube_id": "6lcSDkZMS-I"
+    "youtube_id": "K_DjBHibpcg"
   },
   {
     "title": "Senor! Senor!",
@@ -1243,7 +1246,7 @@
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Jorge Ortiz",
-    "youtube_id": "RGGtq1WD2f4"
+    "youtube_id": "dL9t7rQlfxk"
   },
   {
     "title": "A la luz del candil",
@@ -1273,7 +1276,7 @@
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Alberto Amor",
-    "youtube_id": "824slRCSJ2U"
+    "youtube_id": "CZ_x1sgsDaA"
   },
   {
     "title": "Por algo sera",
@@ -1288,7 +1291,7 @@
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Alberto Amor",
-    "youtube_id": "J7cfm7di_64"
+    "youtube_id": "qleyXBHTg0E"
   },
   {
     "title": "Yo tengo un punal",
@@ -1318,7 +1321,7 @@
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Carlos Acuna",
-    "youtube_id": "7hePXQAQQww"
+    "youtube_id": "7rQcNPgK5iM"
   },
   {
     "title": "Cancion de rango (Pa' que se callen)",
@@ -1332,7 +1335,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "L2oTzpgkADs"
   },
   {
     "title": "Soy del noventa (Soy del 90)",
@@ -1346,7 +1350,8 @@
     "genre": "Milonga",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "TQbz0QaZ8XE"
   },
   {
     "title": "Tres horas",
@@ -1361,7 +1366,7 @@
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Alberto Amor",
-    "youtube_id": "39tbrCU9s3Y"
+    "youtube_id": "FnuSms9nJuw"
   },
   {
     "title": "Adios, te vas....! (Adios te vas)",
@@ -1375,7 +1380,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "REDuFK_n1UI"
   },
   {
     "title": "Prisionero",
@@ -1389,7 +1395,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "y7ZjzvYebiQ"
   },
   {
     "title": "Lonjazos",
@@ -1404,7 +1411,7 @@
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Carlos Acuna",
-    "youtube_id": "3r4zVDYBTMU"
+    "youtube_id": "gYdRfElBguw"
   },
   {
     "title": "Si la llegaran a ver",
@@ -1418,7 +1425,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "j23WtroZVrQ"
   },
   {
     "title": "Lison",
@@ -1432,7 +1440,8 @@
     "genre": "Tango",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "Kud98jOUCAI"
   },
   {
     "title": "Sueno de juventud",
@@ -1446,7 +1455,8 @@
     "genre": "Vals",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "eDvaFL8mpuE"
   },
   {
     "title": "Uno",
@@ -1460,7 +1470,8 @@
     "genre": "Tango",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Acuna"
+    "singer": "Carlos Acuna",
+    "youtube_id": "IcSVNJL6hmk"
   },
   {
     "title": "Nada",
@@ -1629,7 +1640,8 @@
     "genre": "Vals",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "3hqlm_9uBYg"
   },
   {
     "title": "Equipaje",
@@ -1686,7 +1698,8 @@
     "genre": "Vals",
     "rating": 70,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Jorge Ortiz"
+    "singer": "Jorge Ortiz",
+    "youtube_id": "5tp3ujY-1BI"
   },
   {
     "title": "Cafe de los Angelitos",
@@ -1784,7 +1797,8 @@
     "genre": "Milonga",
     "rating": 100,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "0Ix5VNYe2kY"
   },
   {
     "title": "Hoy te quiero mucho mas",
@@ -1813,7 +1827,7 @@
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
     "singer": "Alberto Amor",
-    "youtube_id": "39tbrCU9s3Y"
+    "youtube_id": "r2WmyYwWOks"
   },
   {
     "title": "Pudo ser una vida",
@@ -1953,7 +1967,8 @@
     "genre": "Milonga",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "CtHJjX_Ioms"
   },
   {
     "title": "Lucienne",
@@ -2052,7 +2067,8 @@
     "genre": "Vals",
     "rating": 90,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Alberto Amor"
+    "singer": "Alberto Amor",
+    "youtube_id": "bni9Wk3LH98"
   },
   {
     "title": "Margot",
@@ -2108,7 +2124,8 @@
     "genre": "Milonga",
     "rating": 80,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Saavedra"
+    "singer": "Carlos Saavedra",
+    "youtube_id": "ZL9Sjd7kF9M"
   },
   {
     "title": "A la gran muneca",
@@ -2903,7 +2920,8 @@
     "genre": "Milonga",
     "rating": 60,
     "orchestra": "Orquesta Rodolfo Biagi",
-    "singer": "Carlos Almagro"
+    "singer": "Carlos Almagro",
+    "youtube_id": "cw6QV9d9uN4"
   },
   {
     "title": "Canaro (tomas radial)",
@@ -3197,6 +3215,7 @@
     "genre": "Tango",
     "rating": 20,
     "orchestra": "Orquesta Simbolo Rodolfo Biagi dir. por Oscar de la Fuente",
-    "singer": "Hugo Duval"
+    "singer": "Hugo Duval",
+    "youtube_id": "hxSAxnwINsI"
   }
 ]

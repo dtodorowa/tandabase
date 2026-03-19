@@ -5,6 +5,18 @@ function generateId(): string {
   return crypto.randomUUID();
 }
 
+function stripUndefined(obj: unknown): unknown {
+  if (Array.isArray(obj)) return obj.map(stripUndefined);
+  if (obj !== null && typeof obj === 'object') {
+    return Object.fromEntries(
+      Object.entries(obj as Record<string, unknown>)
+        .filter(([, v]) => v !== undefined)
+        .map(([k, v]) => [k, stripUndefined(v)])
+    );
+  }
+  return obj;
+}
+
 function createEmptyTanda(num: number): Tanda {
   return { id: generateId(), num, orchestra: '', genre: 'Tango', songs: [] };
 }
@@ -121,11 +133,13 @@ class EditorState {
         tandas: this.tandas,
       } satisfies Omit<PracticaSet, 'id' | 'created_at' | 'updated_at'>;
 
+      const cleanData = stripUndefined(data) as typeof data;
+
       if (this.setId) {
-        await updateSet(this.setId, data);
+        await updateSet(this.setId, cleanData);
         return this.setId;
       } else {
-        const id = await createSet(data);
+        const id = await createSet(cleanData);
         this.setId = id;
         return id;
       }

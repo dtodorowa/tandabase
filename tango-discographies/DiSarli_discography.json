@@ -82,7 +82,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "Df1rSgv4J8M"
   },
   {
     "title": "Arlequin",
@@ -97,7 +98,7 @@
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
     "singer": "Instrumental",
-    "youtube_id": "-bD9edCqX60"
+    "youtube_id": "ON1pCKxc3RE"
   },
   {
     "title": "Ufa que secante (Ufa... Que secante)",
@@ -111,7 +112,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "5XSW-ah-1IE"
   },
   {
     "title": "Cuando bronca el temporal",
@@ -125,7 +127,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "FeW6B-jRRes"
   },
   {
     "title": "Soy un arlequin",
@@ -139,7 +142,8 @@
     "genre": "Tango",
     "rating": 70,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "9z50m_h7AWM"
   },
   {
     "title": "Carnaval de antano",
@@ -153,7 +157,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "bLzKMrSFzj0"
   },
   {
     "title": "Un lamento",
@@ -167,7 +172,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "_2_s0QE6u70"
   },
   {
     "title": "El paladin",
@@ -181,7 +187,8 @@
     "genre": "Tango",
     "rating": 60,
     "orchestra": "Sexteto Carlos Di Sarli",
-    "singer": "Instrumental"
+    "singer": "Instrumental",
+    "youtube_id": "PJS-Xc6kkg8"
   },
   {
     "title": "El paladin 2° version",
@@ -6066,19 +6073,5 @@
     "rating": 70,
     "orchestra": "Orquesta Carlos Di Sarli",
     "singer": "Edmundo Rivero"
-  },
-  {
-    "title": "Organito de la tarde",
-    "artist": "Orquesta Escuela de Tango dir. Emilio Balcarce y arr. Carlos Di Sarli para su orquesta",
-    "recording_date": "2003-10",
-    "composer": "Castillo Catulo (Ovidio Catulo Castillo Gonzalez)",
-    "author": "Jose Gonzalez Castillo (Juan de Leon)",
-    "lyrics": "",
-    "lyrics_credit": "",
-    "duration": "3:05",
-    "genre": "Tango Nuevo",
-    "rating": 60,
-    "orchestra": "Orquesta Escuela de Tango dir. Emilio Balcarce y arr. Carlos Di Sarli para su orquesta",
-    "singer": "Instrumental"
   }
 ]
