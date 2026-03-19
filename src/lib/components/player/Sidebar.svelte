@@ -11,7 +11,7 @@
     const el = tandaElements[idx];
     if (el) {
       requestAnimationFrame(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
     }
   });

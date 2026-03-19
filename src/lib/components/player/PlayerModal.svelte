@@ -24,17 +24,17 @@
     }
   });
 
-  // Auto-scroll sidebar to active tanda whenever it changes
+  // Auto-scroll sidebar to the active song whenever tanda or song changes
   $effect(() => {
     const ti = player.currentTandaIndex;
+    const si = player.currentSongIndex;
     if (sidebarEl && playerModal.open) {
-      // Small delay to let DOM settle after animation
-      setTimeout(() => {
-        const tandaEls = sidebarEl?.querySelectorAll('[data-tanda-index]');
-        if (tandaEls && tandaEls[ti]) {
-          tandaEls[ti].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      requestAnimationFrame(() => {
+        const songEl = sidebarEl?.querySelector(`[data-song-key="${ti}-${si}"]`);
+        if (songEl) {
+          songEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-      }, 100);
+      });
     }
   });
 
@@ -223,7 +223,7 @@
     ></div>
 
     <!-- Panel -->
-    <div class="glass w-full h-[90vh] md:h-[85vh] rounded-t-[2.5rem] shadow-2xl relative transition-transform duration-700 ease-spring flex flex-col overflow-hidden border-t border-white/40 dark:border-white/10 {animateIn ? 'translate-y-0' : 'translate-y-full'}">
+    <div class="glass w-full md:h-[85vh] rounded-t-[2.5rem] shadow-2xl relative transition-transform duration-700 ease-spring flex flex-col overflow-hidden border-t border-white/40 dark:border-white/10 {animateIn ? 'translate-y-0' : 'translate-y-full'}">
 
       <!-- Close button -->
       <button
@@ -254,7 +254,7 @@
               <iframe
                 bind:this={videoIframe}
                 class="w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                src="https://www.youtube.com/embed/{player.currentSong.video_id}?rel=0&autoplay=1&enablejsapi=1"
+                src="https://www.youtube.com/embed/{player.currentSong.video_id}?rel=0&autoplay=1&enablejsapi=1&playsinline=1"
                 title="YouTube player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -269,7 +269,7 @@
 
           <!-- Now Playing info -->
           <div class="w-full mt-4 md:mt-10 text-center">
-            <span class="text-[10px] font-medium px-3 py-1 rounded-full bg-ink/5 dark:bg-white/5 text-ink-muted mb-2 md:mb-4 inline-block tracking-[0.2em] uppercase">Now Playing</span>
+            <!-- <span class="text-[10px] font-medium px-3 py-1 rounded-full bg-ink/5 dark:bg-white/5 text-ink-muted mb-2 md:mb-4 inline-block tracking-[0.2em] uppercase">Now Playing</span> -->
             <h3 class="font-serif text-xl md:text-3xl text-ink mb-1 md:mb-2">
               {player.currentSong?.title ?? 'Select a track'}
             </h3>
@@ -429,6 +429,7 @@
                 {#each tanda.songs as song, si}
                   {@const isPlaying = isActiveTanda && si === player.currentSongIndex}
                   <button
+                    data-song-key="{ti}-{si}"
                     onclick={() => { player.selectTanda(ti); player.selectSong(si); }}
                     class="group relative flex items-center justify-between p-4 rounded-xl w-full text-left cursor-pointer transition-all border font-sans bg-transparent
                       {isPlaying

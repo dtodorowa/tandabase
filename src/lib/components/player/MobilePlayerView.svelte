@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { player } from '$lib/stores/player.svelte';
   import GenreBadge from '$lib/components/shared/GenreBadge.svelte';
   import TandaComments from '$lib/components/player/TandaComments.svelte';
@@ -17,30 +18,82 @@
 
   let songElements: HTMLElement[] = [];
   let tandaElements: HTMLElement[] = [];
+  let scrollAreaEl: HTMLElement | undefined;
+  let ytContainerEl: HTMLElement | undefined;
 
   const tanda = $derived(player.currentTanda);
   const song = $derived(player.currentSong);
 
-  // Scroll current song to the top of the list area
+  // ── YouTube IFrame API ──
+  let ytPlayer: any = null;
+  let ytReady = $state(false);
+  let lastLoadedId = '';
+
+  function loadYTAPI(): Promise<void> {
+    return new Promise((resolve) => {
+      if ((window as any).YT?.Player) { resolve(); return; }
+      const prev = (window as any).onYouTubeIframeAPIReady;
+      (window as any).onYouTubeIframeAPIReady = () => { prev?.(); resolve(); };
+      if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+        const s = document.createElement('script');
+        s.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(s);
+      }
+    });
+  }
+
+  function createPlayer() {
+    if (!ytContainerEl || ytPlayer) return;
+    const el = document.createElement('div');
+    ytContainerEl.appendChild(el);
+    ytPlayer = new (window as any).YT.Player(el, {
+      width: '100%',
+      height: '100%',
+      playerVars: { autoplay: 1, playsinline: 1, rel: 0, modestbranding: 1 },
+      events: { onReady: () => { ytReady = true; } }
+    });
+  }
+
+  onMount(() => {
+    loadYTAPI().then(() => createPlayer());
+    return () => {
+      ytPlayer?.destroy();
+      ytPlayer = null;
+      ytReady = false;
+    };
+  });
+
+  // Load new video when song changes (or when player becomes ready)
   $effect(() => {
-    const idx = player.currentSongIndex;
-    const el = songElements[idx];
-    if (el) {
-      requestAnimationFrame(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+    const videoId = song?.video_id;
+    if (videoId && ytReady && ytPlayer && videoId !== lastLoadedId) {
+      ytPlayer.loadVideoById(videoId);
+      lastLoadedId = videoId;
     }
   });
 
-  // Scroll current tanda to the top of the list area
+  // Scroll current song into view within the scroll-area container
+  $effect(() => {
+    const _ti = player.currentTandaIndex;
+    const si = player.currentSongIndex;
+    requestAnimationFrame(() => {
+      const el = songElements[si];
+      if (el && scrollAreaEl) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  });
+
+  // Scroll current tanda into view — also re-trigger when switching to list view
   $effect(() => {
     const idx = player.currentTandaIndex;
-    const el = tandaElements[idx];
-    if (el) {
-      requestAnimationFrame(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
+    const _v = view;
+    requestAnimationFrame(() => {
+      const el = tandaElements[idx];
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
   });
 
   function selectTanda(i: number) {
@@ -79,134 +132,127 @@
     <button class:active={view === 'list'} onclick={() => view = 'list'}>Tandas</button>
   </div>
 
-  <!-- Content -->
-  {#if view === 'player'}
-    <div class="player-content">
-      <!-- Video -->
-      <div class="video-wrap">
-        {#if song?.video_id}
-          <iframe
-            src="https://www.youtube.com/embed/{song.video_id}?rel=0&autoplay=1&playsinline=1"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            title={song.title}
-          ></iframe>
-        {:else}
-          <div class="no-video">
-            <span>No video</span>
-          </div>
-        {/if}
-      </div>
-
-      <!-- Tanda info + nav arrows -->
-      {#if tanda}
-        <div class="tanda-info">
-          <div class="tanda-info-left">
-            <div class="tanda-meta-row">
-              <span class="tanda-num">TANDA {String(tanda.num ?? (player.currentTandaIndex + 1)).padStart(2, '0')}</span>
-              <GenreBadge genre={tanda.genre} size="sm" />
-            </div>
-            <h2 class="tanda-orchestra">{tanda.orchestra}</h2>
-            <p class="tanda-sub">{tanda.songs.length} songs</p>
-          </div>
-          <div class="tanda-actions">
-            <button class="share-trigger" onclick={() => shareOpen = !shareOpen} aria-label="Share">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
-              </svg>
-            </button>
-            <button class="nav-arrow" disabled={player.currentTandaIndex === 0} onclick={() => selectTanda(player.currentTandaIndex - 1)}>&#8249;</button>
-            <button class="nav-arrow" disabled={player.currentTandaIndex === player.tandas.length - 1} onclick={() => selectTanda(player.currentTandaIndex + 1)}>&#8250;</button>
-          </div>
+  <!-- Player View -->
+  <div class="player-content" class:view-hidden={view !== 'player'}>
+    <!-- Video -->
+    <div class="video-wrap">
+      <div bind:this={ytContainerEl} class="yt-container"></div>
+      {#if !song?.video_id}
+        <div class="no-video">
+          <span>No video</span>
         </div>
-
-        <!-- Share popup -->
-        {#if shareOpen}
-          <!-- svelte-ignore a11y_no_static_element_interactions -->
-          <div class="share-backdrop" onclick={() => shareOpen = false} onkeydown={() => shareOpen = false}></div>
-          <div class="share-popup">
-            <div class="share-header">
-              <span>Share this set</span>
-              <button class="share-close" onclick={() => shareOpen = false}>&#10005;</button>
-            </div>
-            <button class="share-option" onclick={copyLink}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-              <span>{linkCopied ? 'Copied!' : 'Copy link'}</span>
-            </button>
-            <button class="share-option" onclick={shareToWhatsApp}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              <span>WhatsApp</span>
-            </button>
-            <button class="share-option" onclick={shareToFacebook}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-              <span>Facebook</span>
-            </button>
-            <button class="share-option" onclick={shareToTwitter}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              <span>X / Twitter</span>
-            </button>
-          </div>
-        {/if}
-
-        <!-- Song list -->
-        <div class="song-list">
-          {#each tanda.songs as s, i (s.id ?? i)}
-            {@const active = i === player.currentSongIndex}
-            <button bind:this={songElements[i]} class="song-row" class:active onclick={() => player.selectSong(i)}>
-              <div class="song-idx" class:active>
-                {#if active}
-                  <span class="eq"><span></span><span></span><span></span></span>
-                {:else}
-                  {i + 1}
-                {/if}
-              </div>
-              <div class="song-info">
-                <div class="song-title">{s.title}</div>
-                {#if s.singer}
-                  <div class="song-singer">{s.singer}</div>
-                {/if}
-              </div>
-              {#if s.year}
-                <span class="song-year">{s.year}</span>
-              {/if}
-            </button>
-          {/each}
-        </div>
-
-        <!-- Comments -->
-        {#if setId}
-          <div class="comments-section">
-            <TandaComments
-              {comments}
-              {setId}
-              tandaIndex={player.currentTandaIndex}
-              oncommentadded={() => oncommentadded?.()}
-            />
-          </div>
-        {/if}
       {/if}
     </div>
 
-  {:else}
-    <!-- Tandas List -->
-    <div class="tandas-list">
-      {#each player.tandas as t, i (t.id ?? i)}
-        {@const active = i === player.currentTandaIndex}
-        <button bind:this={tandaElements[i]} class="tanda-item" class:active onclick={() => selectTanda(i)}>
-          <div class="tanda-item-num" class:active>
-            {String(t.num ?? i + 1).padStart(2, '0')}
+    <!-- Tanda info + nav arrows -->
+    {#if tanda}
+      <div class="tanda-info">
+        <div class="tanda-info-left">
+          <div class="tanda-meta-row">
+            <span class="tanda-num">TANDA {String(tanda.num ?? (player.currentTandaIndex + 1)).padStart(2, '0')}</span>
+            <GenreBadge genre={tanda.genre} size="sm" />
           </div>
-          <div class="tanda-item-info">
-            <div class="tanda-item-name">{t.orchestra}</div>
-            <div class="tanda-item-meta">
-              <GenreBadge genre={t.genre} size="sm" />
-              <span class="tanda-item-count">{t.songs.length} songs</span>
+          <h2 class="tanda-orchestra">{tanda.orchestra}</h2>
+          <p class="tanda-sub">{tanda.songs.length} songs</p>
+        </div>
+        <div class="tanda-actions">
+          <button class="share-trigger" onclick={() => shareOpen = !shareOpen} aria-label="Share">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+          </button>
+          <button class="nav-arrow" disabled={player.currentTandaIndex === 0} onclick={() => selectTanda(player.currentTandaIndex - 1)}>&#8249;</button>
+          <button class="nav-arrow" disabled={player.currentTandaIndex === player.tandas.length - 1} onclick={() => selectTanda(player.currentTandaIndex + 1)}>&#8250;</button>
+        </div>
+      </div>
+
+      <!-- Share popup -->
+      {#if shareOpen}
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <div class="share-backdrop" onclick={() => shareOpen = false} onkeydown={() => shareOpen = false}></div>
+        <div class="share-popup">
+          <div class="share-header">
+            <span>Share this set</span>
+            <button class="share-close" onclick={() => shareOpen = false}>&#10005;</button>
+          </div>
+          <button class="share-option" onclick={copyLink}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            <span>{linkCopied ? 'Copied!' : 'Copy link'}</span>
+          </button>
+          <button class="share-option" onclick={shareToWhatsApp}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <span>WhatsApp</span>
+          </button>
+          <button class="share-option" onclick={shareToFacebook}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Facebook</span>
+          </button>
+          <button class="share-option" onclick={shareToTwitter}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <span>X / Twitter</span>
+          </button>
+        </div>
+      {/if}
+
+      <div class="scroll-area" bind:this={scrollAreaEl}>
+      <!-- Song list -->
+      <div class="song-list">
+        {#each tanda.songs as s, i (s.id ?? i)}
+          {@const active = i === player.currentSongIndex}
+          <button bind:this={songElements[i]} class="song-row" class:active onclick={() => player.selectSong(i)}>
+            <div class="song-idx" class:active>
+              {#if active}
+                <span class="eq"><span></span><span></span><span></span></span>
+              {:else}
+                {i + 1}
+              {/if}
             </div>
+            <div class="song-info">
+              <div class="song-title">{s.title}</div>
+              {#if s.singer}
+                <div class="song-singer">{s.singer}</div>
+              {/if}
+            </div>
+            {#if s.year}
+              <span class="song-year">{s.year}</span>
+            {/if}
+          </button>
+        {/each}
+      </div>
+
+      <!-- Comments -->
+      {#if setId}
+        <div class="comments-section">
+          <TandaComments
+            {comments}
+            {setId}
+            tandaIndex={player.currentTandaIndex}
+            oncommentadded={() => oncommentadded?.()}
+          />
+        </div>
+      {/if}
+      </div>
+    {/if}
+  </div>
+
+  <!-- Tandas List -->
+  <div class="tandas-list" class:view-hidden={view !== 'list'}>
+    {#each player.tandas as t, i (t.id ?? i)}
+      {@const active = i === player.currentTandaIndex}
+      <button bind:this={tandaElements[i]} class="tanda-item" class:active onclick={() => selectTanda(i)}>
+        <div class="tanda-item-num" class:active>
+          {String(t.num ?? i + 1).padStart(2, '0')}
+        </div>
+        <div class="tanda-item-info">
+          <div class="tanda-item-name">{t.orchestra}</div>
+          <div class="tanda-item-meta">
+            <GenreBadge genre={t.genre} size="sm" />
+            <span class="tanda-item-count">{t.songs.length} songs</span>
           </div>
-        </button>
-      {/each}
-    </div>
-  {/if}
+        </div>
+      </button>
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -243,34 +289,46 @@
     color: var(--accent);
   }
 
+  /* ── View toggle ── */
+  .view-hidden {
+    display: none !important;
+  }
+
   /* ── Player Content ── */
   .player-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
   }
 
   /* Video */
   .video-wrap {
+    position: relative;
     width: 100%;
     aspect-ratio: 16/9;
     background: #000;
     flex-shrink: 0;
   }
-  .video-wrap iframe {
+  .yt-container {
+    width: 100%;
+    height: 100%;
+  }
+  .yt-container :global(iframe) {
     width: 100%;
     height: 100%;
     border: none;
   }
   .no-video {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
     color: var(--text-dim);
     font-size: var(--fs-xs);
+    background: #000;
+    z-index: 1;
   }
 
   /* Tanda Info */
@@ -427,9 +485,14 @@
   .nav-arrow:disabled { opacity: 0.2; cursor: default; }
 
   /* Song List */
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
+  }
   .song-list {
     padding: 0.6rem 0.75rem;
-    flex: 1;
   }
   .song-row {
     display: flex;

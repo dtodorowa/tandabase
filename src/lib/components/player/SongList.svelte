@@ -7,14 +7,15 @@
   let songElements: HTMLElement[] = [];
 
   $effect(() => {
+    const _ti = player.currentTandaIndex;
     const idx = player.currentSongIndex;
-    const el = songElements[idx];
-    if (el) {
-      // Small delay so the DOM settles before scrolling
-      requestAnimationFrame(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
+    // Small delay so the DOM settles before scrolling
+    requestAnimationFrame(() => {
+      const el = songElements[idx];
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
   });
 </script>
 

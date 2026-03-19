@@ -5,7 +5,7 @@
   import { page } from '$app/state';
   import { getSet } from '$lib/firebase/db';
   import TandaBuilderPanel from '$lib/components/editor/TandaBuilderPanel.svelte';
-  import { Plus, Minus, Save, Eye, EyeOff, Trash2, X, CheckSquare, GripVertical } from 'lucide-svelte';
+  import { Plus, Minus, Save, Eye, EyeOff, Trash2, X, CheckSquare, GripVertical, LogIn, FileDown, ArrowLeft } from 'lucide-svelte';
   import type { Genre } from '$lib/types';
   import { untrack } from 'svelte';
 
@@ -125,11 +125,8 @@
     popoverPosition = null;
   }
 
-  $effect(() => {
-    if (!authState.loading && !authState.isLoggedIn) {
-      goto('/');
-    }
-  });
+  // Auth guard removed — anyone can build a set.
+  // Login is prompted at save time via signInWithPopup (no redirect, no data loss).
 
   $effect(() => {
     const editId = page.url.searchParams.get('edit');
@@ -301,7 +298,18 @@
     editor.updateTandas(selectedTandas, { genre });
   }
 
+  let showSaveDialog = $state(false);
+
   async function handleSave() {
+    // If not logged in, show the friendly dialog instead of saving directly
+    if (!authState.user) {
+      showSaveDialog = true;
+      return;
+    }
+    await doSave();
+  }
+
+  async function doSave() {
     if (!authState.user) return;
     const id = await editor.save(
       authState.user.uid,
@@ -309,17 +317,81 @@
     );
     goto(`/set/${id}`);
   }
+
+  async function handleSignInAndSave() {
+    try {
+      await authState.signInWithGoogle();
+    } catch (e) {
+      console.error('Sign-in cancelled or failed:', e);
+      return;
+    }
+    if (!authState.user) return;
+    showSaveDialog = false;
+    await doSave();
+  }
+
+  function handleExportPDF() {
+    showSaveDialog = false;
+    const title = editor.title || 'Untitled Set';
+    const tandas = editor.tandas;
+    const w = window.open('', '_blank');
+    if (!w) return;
+
+    let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px; color: #111; max-width: 800px; margin: 0 auto; }
+      h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+      .meta { font-size: 12px; color: #737373; margin-bottom: 32px; }
+      .tanda { margin-bottom: 28px; page-break-inside: avoid; }
+      .tanda-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+      .tanda-num { font-size: 14px; color: #ccc; font-style: italic; }
+      .tanda-name { font-size: 18px; font-weight: 600; }
+      .tanda-meta { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.1em; }
+      table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #999; padding: 4px 0; border-bottom: 1px solid #eee; }
+      td { padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
+      td.num { color: #ccc; width: 30px; }
+      td.year { color: #999; text-align: right; font-variant-numeric: tabular-nums; width: 50px; }
+      td.singer { color: #737373; font-style: italic; width: 140px; }
+      .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #ccc; text-align: center; }
+      @media print { body { padding: 20px; } }
+    </style></head><body>`;
+    html += `<h1>${title}</h1>`;
+    html += `<p class="meta">${tandas.length} tandas · ${tandas.reduce((s, t) => s + t.songs.length, 0)} songs</p>`;
+
+    for (const tanda of tandas) {
+      if (!tanda.orchestra && tanda.songs.length === 0) continue;
+      html += `<div class="tanda">`;
+      html += `<div class="tanda-header">
+        <span class="tanda-num">${String(tanda.num).padStart(2, '0')}</span>
+        <span class="tanda-name">${tanda.orchestra || 'Untitled'}</span>
+        <span class="tanda-meta">${tanda.genre}</span>
+      </div>`;
+      html += `<table><thead><tr><th>#</th><th>Title</th><th>Singer</th><th style="text-align:right">Year</th></tr></thead><tbody>`;
+      tanda.songs.forEach((song, si) => {
+        html += `<tr><td class="num">${si + 1}</td><td>${song.title}</td><td class="singer">${song.singer || ''}</td><td class="year">${song.year || ''}</td></tr>`;
+      });
+      html += `</tbody></table></div>`;
+    }
+
+    html += `<div class="footer">Exported from tandabase · ${new Date().toLocaleDateString()}</div>`;
+    html += `</body></html>`;
+    w.document.write(html);
+    w.document.close();
+    setTimeout(() => w.print(), 300);
+  }
 </script>
 
 <svelte:head>
   <title>{editor.setId ? 'Edit Set' : 'Create Set'} - Tandabase</title>
 </svelte:head>
 
-{#if authState.loading || loading}
+{#if loading}
   <div class="flex items-center justify-center min-h-[60vh] pt-28">
     <p class="text-ink-muted text-sm font-light">Loading...</p>
   </div>
-{:else if authState.isLoggedIn}
+{:else}
   <div class="pt-28 md:pt-36 pb-16 bg-surface dark:bg-background text-ink min-h-screen">
     <div class="max-w-[1400px] mx-auto px-6 md:px-16 w-full">
 
@@ -391,14 +463,22 @@
             </button>
           </div>
 
-          <!-- Save button -->
+          <!-- Save button — prompts sign-in if needed -->
           <button
             onclick={handleSave}
             disabled={editor.saving || !editor.title.trim()}
             class="w-full py-3.5 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all cursor-pointer border-none font-sans shadow-lg disabled:opacity-30 disabled:cursor-default flex items-center justify-center gap-2"
           >
             <Save class="w-4 h-4" />
-            {editor.saving ? 'Saving...' : (editor.setId ? 'Update Set' : 'Save Set')}
+            {#if editor.saving}
+              Saving...
+            {:else if !authState.isLoggedIn}
+              Sign in & Save
+            {:else if editor.setId}
+              Update Set
+            {:else}
+              Save Set
+            {/if}
           </button>
 
           <div class="text-center">
@@ -708,5 +788,67 @@
         openSlotIndex = null;
       }}
     />
+  {/if}
+
+  <!-- Save dialog for anonymous users -->
+  {#if showSaveDialog}
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onclick={() => showSaveDialog = false}
+    >
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <div
+        class="relative bg-card rounded-2xl shadow-2xl border border-black/10 dark:border-white/10 w-full max-w-md overflow-hidden"
+        onclick={(e) => e.stopPropagation()}
+      >
+        <!-- Header -->
+        <div class="px-8 pt-8 pb-2">
+          <h2 class="font-serif text-2xl text-ink mb-2">Almost there!</h2>
+          <p class="text-sm text-ink-muted font-light leading-relaxed">
+            To keep your set saved to your account, you'll need to sign in first. It only takes a second — your work stays exactly as you left it.
+          </p>
+        </div>
+
+        <!-- Options -->
+        <div class="px-8 py-6 space-y-3">
+          <button
+            onclick={handleSignInAndSave}
+            class="w-full flex items-center gap-4 p-4 rounded-xl bg-ink dark:bg-white text-white dark:text-ink font-medium text-sm cursor-pointer border-none font-sans shadow-lg hover:opacity-90 transition-all active:scale-[0.98]"
+          >
+            <LogIn class="w-5 h-5 shrink-0" />
+            <div class="text-left">
+              <div>Sign in with Google</div>
+              <div class="text-xs font-light opacity-70 mt-0.5">Your set gets saved to your account</div>
+            </div>
+          </button>
+
+          <button
+            onclick={handleExportPDF}
+            class="w-full flex items-center gap-4 p-4 rounded-xl border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 text-ink text-sm cursor-pointer bg-transparent font-sans transition-all active:scale-[0.98]"
+          >
+            <FileDown class="w-5 h-5 shrink-0 text-ink-muted" />
+            <div class="text-left">
+              <div class="font-medium">Export as PDF instead</div>
+              <div class="text-xs text-ink-muted font-light mt-0.5">Download a copy you can keep</div>
+            </div>
+          </button>
+
+          <button
+            onclick={() => showSaveDialog = false}
+            class="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 text-ink-muted text-sm cursor-pointer bg-transparent border-none font-sans transition-all"
+          >
+            <ArrowLeft class="w-5 h-5 shrink-0" />
+            <div class="text-left">
+              <div class="font-medium">Go back and keep editing</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
   {/if}
 {/if}

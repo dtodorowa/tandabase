@@ -4,7 +4,7 @@
   import { playerModal } from '$lib/stores/playerModal.svelte';
   import { authState } from '$lib/stores/auth.svelte';
   import type { PracticaSet, Comment, Tanda } from '$lib/types';
-  import { FileDown, MessageCircle, Send, Trash2, ChevronDown, Pencil } from 'lucide-svelte';
+  import { FileDown, MessageCircle, Send, Trash2, ChevronDown, Pencil, Play } from 'lucide-svelte';
 
   import seedData from '$lib/data/seed.json';
 
@@ -257,9 +257,20 @@
           </div>
         </div>
 
-        <h1 class="font-serif text-5xl md:text-6xl font-bold text-ink mb-6 tracking-tight leading-tight">
-          {practicaSet.title}
-        </h1>
+        <div class="flex items-start justify-between gap-6">
+          <h1 class="font-serif text-5xl md:text-6xl font-bold text-ink mb-6 tracking-tight leading-tight">
+            {practicaSet.title}
+          </h1>
+
+          <!-- Big Play Button -->
+          <button
+            onclick={() => openPlayer(0)}
+            class="play-all-btn shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-ink flex items-center justify-center cursor-pointer border-none shadow-xl shadow-black/15 hover:shadow-2xl hover:shadow-black/25 transition-all hover:scale-105 active:scale-95 mt-1 md:mt-2"
+            title="Play from the beginning"
+          >
+            <Play class="w-7 h-7 md:w-9 md:h-9 text-white ml-0.5" fill="white" />
+          </button>
+        </div>
 
         <div class="flex flex-col md:flex-row md:items-center gap-6 justify-between">
           {#if practicaSet.description}

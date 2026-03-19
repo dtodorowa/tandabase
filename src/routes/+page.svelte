@@ -47,30 +47,29 @@
 <main class="grow pt-24 md:pt-32 bg-surface dark:bg-background text-ink selection:bg-ink selection:text-white dark:selection:bg-white dark:selection:text-black">
 
   <!-- Hero Section -->
-  <section class="w-full min-h-[70vh] flex flex-col items-center justify-center relative px-6 text-center">
-    <p class="text-ink-muted text-xs font-medium tracking-[0.25em] uppercase mb-8">v1.0 (Beta)</p>
+  <section class="w-full min-h-[80vh] flex flex-col items-center justify-center relative px-6 text-center">
+    <p class="z-3 text-ink-muted text-xs font-medium tracking-[0.25em] uppercase mb-8">v1.0 (Beta)</p>
 
-    <h1 class="font-serif text-5xl md:text-[7rem] leading-[0.9] tracking-tighter max-w-5xl text-ink">
+    
+    <h1 class="z-2 font-serif text-5xl md:text-[7rem] leading-[0.9] tracking-tighter max-w-5xl text-ink">
       A digital archive<br>
       <span class="italic text-ink-muted">for active listening.</span>
     </h1>
 
-    <p class="mt-8 text-lg text-ink-muted max-w-xl font-light leading-relaxed">
-      Turn your flat playlists into structured tandas. Share your sets with the community and explore others' collections.
-    </p>
+    <p class="z-3 mt-8 text-lg text-ink-muted max-w-xl font-light leading-relaxed">
+      Turn your flat playlists into structured tandas. Share your sets with the community and discuss ideas.
+    </p> 
 
-    <div class="mt-16 flex gap-4 flex-wrap justify-center">
+   
+
+    <div class="mt-12 flex gap-4 flex-wrap justify-center">
       <a href="/browse" class="group relative inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-primary-foreground bg-primary rounded-full overflow-hidden transition-transform active:scale-95 shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 duration-300 no-underline">
-        <span class="relative">Explore the Archive</span>
+        <span class="relative">Browse Sets</span>
       </a>
-      {#if !authState.isLoggedIn}
-        <button
-          class="inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-ink border border-black/10 dark:border-white/10 rounded-full transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 cursor-pointer bg-transparent font-sans"
-          onclick={() => authState.signInWithGoogle()}
-        >
-          Sign in
-        </button>
-      {/if}
+
+      <a href="/create" class="inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-ink border border-black/10 dark:border-white/10 rounded-full transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 no-underline">
+        Create Your Own
+      </a>
     </div>
   </section>
 
@@ -125,7 +124,7 @@
   </section>
 
   <!-- How to use section -->
-  <section class="w-full max-w-7xl mx-auto px-6 md:px-16 py-24 border-t border-black/5 dark:border-white/5 mb-24">
+  <!-- <section class="w-full max-w-7xl mx-auto px-6 md:px-16 py-24 border-t border-black/5 dark:border-white/5 mb-24">
     <h2 class="font-serif text-4xl md:text-5xl font-bold mb-16 text-center">How to use <span class="italic text-ink-muted">tandabase</span></h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12">
 
@@ -148,7 +147,7 @@
       </div>
 
     </div>
-  </section>
+  </section> -->
 
 
   <!-- NOT a DJ tool -->
@@ -171,6 +170,14 @@
     {#if randomSet}
       <div class="w-full max-w-3xl bg-card rounded-3xl border border-black/10 dark:border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.08)] overflow-hidden">
         <div class="p-8 md:p-12 flex flex-col sm:flex-row gap-10 items-center">
+
+               <!-- Spinning Vinyl Record -->
+    <!-- <div class="vinyl-wrapper">
+      <div class="vinyl">
+      </div>
+      <div class="vinyl-glow"></div>
+    </div>
+     -->
 
           <!-- Vinyl disc -->
           <div class="w-48 h-48 rounded-full bg-ink flex items-center justify-center shrink-0 relative shadow-2xl">
@@ -341,3 +348,105 @@
     </div>
   </footer>
 </main>
+
+<style>
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.18; }
+    50% { opacity: 0.35; }
+  }
+  .vinyl-wrapper {
+    position:relative;
+    z-index: 1;
+    width: 220px;
+    height: 220px;
+    margin: 3rem auto 0;
+  }
+  @media (min-width: 768px) {
+    .vinyl-wrapper { width: 280px; height: 280px; }
+  }
+  .vinyl {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at center, #111 3%, transparent 3.5%),
+      radial-gradient(circle at center, #c0392b 0%, #e74c3c 8%, #d63031 14%, #b71c1c 18%, transparent 18.5%),
+      radial-gradient(circle at center,
+        transparent 19%,
+        rgba(40,40,40,0.9) 19.5%,
+        rgba(30,30,30,1) 22%,
+        rgba(50,50,50,0.7) 24%,
+        rgba(25,25,25,1) 26%,
+        rgba(45,45,45,0.8) 28%,
+        rgba(20,20,20,1) 30%,
+        rgba(50,50,50,0.6) 33%,
+        rgba(25,25,25,1) 36%,
+        rgba(40,40,40,0.8) 39%,
+        rgba(20,20,20,1) 42%,
+        rgba(55,55,55,0.6) 45%,
+        rgba(22,22,22,1) 48%,
+        rgba(18,18,18,1) 50%
+      );
+    background-color: #181818;
+    animation: spin 12s linear infinite;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 2px 20px rgba(0,0,0,0.15),
+      0 8px 40px rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .vinyl::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(255,255,255,0.08) 40deg,
+      rgba(255,255,255,0.15) 55deg,
+      transparent 80deg,
+      transparent 180deg,
+      rgba(255,255,255,0.05) 220deg,
+      rgba(255,255,255,0.1) 235deg,
+      transparent 260deg,
+      transparent 360deg
+    );
+    animation: shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .vinyl-label-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36%;
+    height: 36%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .vinyl-label-text span {
+    font-family: 'Inter', sans-serif;
+    font-size: 7px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+  }
+  .vinyl-glow {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 20px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+</style>
