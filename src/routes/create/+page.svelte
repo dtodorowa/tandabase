@@ -5,7 +5,9 @@
   import { page } from '$app/state';
   import { getSet } from '$lib/firebase/db';
   import TandaBuilderPanel from '$lib/components/editor/TandaBuilderPanel.svelte';
-  import { Plus, Minus, Save, Eye, EyeOff, Trash2, X, CheckSquare, GripVertical, LogIn, FileDown, ArrowLeft } from 'lucide-svelte';
+  import ImportDialog from '$lib/components/editor/ImportDialog.svelte';
+  import { Plus, Minus, Save, Eye, EyeOff, Trash2, X, CheckSquare, GripVertical, LogIn, FileDown, ArrowLeft, Upload } from 'lucide-svelte';
+  import type { Tanda } from '$lib/types';
   import type { Genre } from '$lib/types';
   import { untrack } from 'svelte';
 
@@ -299,6 +301,16 @@
   }
 
   let showSaveDialog = $state(false);
+  let showImportDialog = $state(false);
+
+  function handleImport(tandas: Tanda[], title: string) {
+    // Replace current editor content with imported tandas
+    editor.tandas = tandas;
+    tandaCount = tandas.length;
+    if (title && !editor.title) {
+      editor.title = title;
+    }
+  }
 
   async function handleSave() {
     // If not logged in, show the friendly dialog instead of saving directly
@@ -401,9 +413,18 @@
         <h1 class="font-serif text-5xl md:text-6xl font-bold text-ink tracking-tight leading-tight">
           {editor.setId ? 'Edit Set' : 'New Set'}
         </h1>
-        <p class="text-lg text-ink-muted font-light max-w-xl mt-4">
-          Define the structure, pick orchestras, and fill each tanda from the discography.
-        </p>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mt-6">
+          <p class="text-lg text-ink-muted font-light max-w-xl">
+            Build from scratch or import an existing set.
+          </p>
+          <button
+            onclick={() => showImportDialog = true}
+            class="sm:ml-auto shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full border border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/5 dark:hover:bg-white/5 transition-all cursor-pointer bg-transparent font-sans text-sm font-medium text-ink-muted hover:text-ink"
+          >
+            <Upload class="w-4 h-4" />
+            Import Set
+          </button>
+        </div>
       </div>
 
       <div class="flex flex-col lg:flex-row gap-12 items-start">
@@ -467,7 +488,7 @@
           <button
             onclick={handleSave}
             disabled={editor.saving || !editor.title.trim()}
-            class="w-full py-3.5 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all cursor-pointer border-none font-sans shadow-lg disabled:opacity-30 disabled:cursor-default flex items-center justify-center gap-2"
+            class="w-full py-3.5 bg-ink text-surface rounded-xl text-sm font-medium hover:opacity-80 transition-all cursor-pointer border-none font-sans shadow-lg disabled:opacity-30 disabled:cursor-default flex items-center justify-center gap-2"
           >
             <Save class="w-4 h-4" />
             {#if editor.saving}
@@ -818,7 +839,7 @@
         <div class="px-8 py-6 space-y-3">
           <button
             onclick={handleSignInAndSave}
-            class="w-full flex items-center gap-4 p-4 rounded-xl bg-ink dark:bg-white text-white dark:text-ink font-medium text-sm cursor-pointer border-none font-sans shadow-lg hover:opacity-90 transition-all active:scale-[0.98]"
+            class="w-full flex items-center gap-4 p-4 rounded-xl bg-ink text-surface font-medium text-sm cursor-pointer border-none font-sans shadow-lg hover:opacity-90 transition-all active:scale-[0.98]"
           >
             <LogIn class="w-5 h-5 shrink-0" />
             <div class="text-left">
@@ -851,4 +872,10 @@
       </div>
     </div>
   {/if}
+
+  <ImportDialog
+    open={showImportDialog}
+    onclose={() => showImportDialog = false}
+    onimport={handleImport}
+  />
 {/if}

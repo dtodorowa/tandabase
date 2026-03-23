@@ -340,8 +340,8 @@
             {#if showReplace && isOwner}
               <div class="mt-4 w-full max-w-sm mx-auto flex flex-col gap-2 text-left">
                 <div class="flex gap-1 justify-center">
-                  <button class="px-3 py-1 text-xs rounded-full border cursor-pointer font-sans {replaceMode === 'search' ? 'bg-ink text-white border-ink' : 'bg-transparent text-ink-muted border-black/10 dark:border-white/10 hover:text-ink'}" onclick={() => replaceMode = 'search'}>Search</button>
-                  <button class="px-3 py-1 text-xs rounded-full border cursor-pointer font-sans {replaceMode === 'url' ? 'bg-ink text-white border-ink' : 'bg-transparent text-ink-muted border-black/10 dark:border-white/10 hover:text-ink'}" onclick={() => replaceMode = 'url'}>Paste URL</button>
+                  <button class="px-3 py-1 text-xs rounded-full border cursor-pointer font-sans {replaceMode === 'search' ? 'bg-ink text-surface border-ink' : 'bg-transparent text-ink-muted border-black/10 dark:border-white/10 hover:text-ink'}" onclick={() => replaceMode = 'search'}>Search</button>
+                  <button class="px-3 py-1 text-xs rounded-full border cursor-pointer font-sans {replaceMode === 'url' ? 'bg-ink text-surface border-ink' : 'bg-transparent text-ink-muted border-black/10 dark:border-white/10 hover:text-ink'}" onclick={() => replaceMode = 'url'}>Paste URL</button>
                 </div>
                 {#if replaceMode === 'search'}
                   <input
@@ -372,7 +372,7 @@
                       bind:value={replaceUrlInput}
                       onkeydown={(e: KeyboardEvent) => e.key === 'Enter' && handleReplaceUrl()}
                     />
-                    <button class="px-4 py-2 bg-ink text-white rounded-lg text-xs font-medium cursor-pointer border-none" onclick={handleReplaceUrl} disabled={replaceLoading || !replaceUrlInput.trim()}>
+                    <button class="px-4 py-2 bg-ink text-surface rounded-lg text-xs font-medium cursor-pointer border-none" onclick={handleReplaceUrl} disabled={replaceLoading || !replaceUrlInput.trim()}>
                       {replaceLoading ? '...' : 'Use'}
                     </button>
                   </div>

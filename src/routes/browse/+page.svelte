@@ -95,7 +95,7 @@
             onclick={() => filter = f}
             class="px-4 py-2 rounded-xl text-xs font-medium uppercase tracking-widest transition-colors cursor-pointer border font-sans
               {filter === f
-                ? 'bg-ink dark:bg-white text-white dark:text-ink border-ink dark:border-white'
+                ? 'bg-ink text-surface border-ink'
                 : 'bg-white dark:bg-card text-ink-muted border-black/5 dark:border-white/5 hover:border-ink/30 dark:hover:border-white/30 hover:text-ink'}"
           >
             {f}

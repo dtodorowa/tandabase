@@ -75,12 +75,24 @@ export function getSingers(recordings: Recording[]): string[] {
   return [...singers].sort();
 }
 
-// Extract unique years from a discography
+// Extract unique full recording dates from a discography
 export function getYears(recordings: Recording[]): string[] {
   const years = new Set<string>();
   for (const r of recordings) {
     if (r.recording_date) {
       years.add(r.recording_date);
+    }
+  }
+  return [...years].sort();
+}
+
+// Extract unique years (4-digit) from a discography
+export function getUniqueYears(recordings: Recording[]): string[] {
+  const years = new Set<string>();
+  for (const r of recordings) {
+    if (r.recording_date) {
+      const y = r.recording_date.substring(0, 4);
+      if (y.length === 4) years.add(y);
     }
   }
   return [...years].sort();
@@ -101,7 +113,7 @@ export function getGenres(recordings: Recording[]): string[] {
 export function searchRecordings(
   recordings: Recording[],
   query: string,
-  filters?: { genre?: string; singer?: string; year?: string },
+  filters?: { genre?: string; singer?: string; year?: string; yearFrom?: string; yearTo?: string },
   maxResults = 100,
 ): Recording[] {
   let filtered = recordings;
@@ -114,6 +126,12 @@ export function searchRecordings(
   }
   if (filters?.year) {
     filtered = filtered.filter(r => r.recording_date === filters.year);
+  }
+  if (filters?.yearFrom) {
+    filtered = filtered.filter(r => r.recording_date && r.recording_date >= filters.yearFrom!);
+  }
+  if (filters?.yearTo) {
+    filtered = filtered.filter(r => r.recording_date && r.recording_date <= filters.yearTo! + '-99');
   }
 
   if (!query.trim()) {

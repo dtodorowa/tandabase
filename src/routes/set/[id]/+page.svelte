@@ -268,7 +268,7 @@
             class="play-all-btn shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-ink flex items-center justify-center cursor-pointer border-none shadow-xl shadow-black/15 hover:shadow-2xl hover:shadow-black/25 transition-all hover:scale-105 active:scale-95 mt-1 md:mt-2"
             title="Play from the beginning"
           >
-            <Play class="w-7 h-7 md:w-9 md:h-9 text-white ml-0.5" fill="white" />
+            <Play class="w-7 h-7 md:w-9 md:h-9 text-surface ml-0.5" fill="currentColor" />
           </button>
         </div>
 

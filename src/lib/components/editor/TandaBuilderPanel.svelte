@@ -6,6 +6,7 @@
     searchRecordings,
     getSingers,
     getGenres,
+    getUniqueYears,
     type Recording
   } from '$lib/utils/discography';
   import { searchYouTube, extractVideoId, getVideoById, type YTResult } from '$lib/utils/youtube';
@@ -43,7 +44,10 @@
   let singerFilter = $state('');
   let availableSingers = $state<string[]>([]);
   let availableGenres = $state<string[]>([]);
+  let availableYears = $state<string[]>([]);
   let genreFilter = $state('');
+  let yearFrom = $state('');
+  let yearTo = $state('');
   let sortOrder = $state<'relevance' | 'date-asc' | 'date-desc'>('relevance');
 
   // Description
@@ -87,6 +91,8 @@
     let results = searchRecordings(recordings, songQuery, {
       genre: genreFilter || undefined,
       singer: singerFilter || undefined,
+      yearFrom: yearFrom || undefined,
+      yearTo: yearTo || undefined,
     }, 2000);
 
     if (sortOrder === 'date-asc') {
@@ -124,6 +130,7 @@
       recordings = await loadDiscography(name);
       availableSingers = getSingers(recordings);
       availableGenres = getGenres(recordings);
+      availableYears = getUniqueYears(recordings);
       if (!skipStepChange) step = 'songs';
       else step = 'songs';
     } catch (e) {
@@ -364,7 +371,7 @@
                 onclick={() => selectedGenre = g}
                 class="px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer border font-sans
                   {selectedGenre === g
-                    ? 'bg-ink text-white border-ink dark:bg-white dark:text-ink dark:border-white'
+                    ? 'bg-ink text-surface border-ink'
                     : 'bg-transparent text-ink-muted border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30'}"
               >
                 {g}
@@ -579,6 +586,30 @@
               </select>
               <span class="text-[10px] text-ink-faint ml-auto">{filteredRecordings.length} results</span>
             </div>
+            {#if availableYears.length > 0}
+              <div class="flex gap-2 items-center">
+                <span class="text-[10px] text-ink-faint whitespace-nowrap">Year range</span>
+                <select
+                  bind:value={yearFrom}
+                  class="text-xs bg-surface dark:bg-background border border-black/5 dark:border-white/5 rounded-lg px-3 py-1.5 text-ink-muted font-sans outline-none"
+                >
+                  <option value="">From</option>
+                  {#each availableYears as y}
+                    <option value={y}>{y}</option>
+                  {/each}
+                </select>
+                <span class="text-[10px] text-ink-faint">–</span>
+                <select
+                  bind:value={yearTo}
+                  class="text-xs bg-surface dark:bg-background border border-black/5 dark:border-white/5 rounded-lg px-3 py-1.5 text-ink-muted font-sans outline-none"
+                >
+                  <option value="">To</option>
+                  {#each availableYears as y}
+                    <option value={y}>{y}</option>
+                  {/each}
+                </select>
+              </div>
+            {/if}
           </div>
 
           <!-- Recording results (scrollable) -->
@@ -676,7 +707,7 @@
       <button
         onclick={saveTanda}
         disabled={selectedSongs.length === 0}
-        class="w-full py-3 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all cursor-pointer border-none font-sans shadow-lg disabled:opacity-30 disabled:cursor-default flex items-center justify-center gap-2"
+        class="w-full py-3 bg-ink text-surface rounded-xl text-sm font-medium hover:opacity-80 transition-all cursor-pointer border-none font-sans shadow-lg disabled:opacity-30 disabled:cursor-default flex items-center justify-center gap-2"
       >
         <Check class="w-4 h-4" />
         Save Tanda ({selectedSongs.length} tracks)
@@ -711,7 +742,7 @@
             <button
               onclick={handleYTUrl}
               disabled={ytUrlLoading || !ytUrlInput.trim()}
-              class="px-4 py-2 bg-ink dark:bg-white text-white dark:text-ink rounded-lg text-xs font-medium cursor-pointer border-none font-sans disabled:opacity-30 disabled:cursor-default"
+              class="px-4 py-2 bg-ink text-surface rounded-lg text-xs font-medium cursor-pointer border-none font-sans disabled:opacity-30 disabled:cursor-default"
             >
               {ytUrlLoading ? '...' : 'Add'}
             </button>

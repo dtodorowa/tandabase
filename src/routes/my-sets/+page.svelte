@@ -112,7 +112,7 @@
           </div>
           <a
             href="/create"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all no-underline shadow-lg"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-ink text-surface rounded-xl text-sm font-medium hover:opacity-80 transition-all no-underline shadow-lg"
           >
             <Plus class="w-4 h-4" />
             New Set
@@ -138,7 +138,7 @@
           <p class="text-sm text-ink-muted mb-6 max-w-xs">Create your first practica set to start building your milonga playlist.</p>
           <a
             href="/create"
-            class="inline-flex items-center gap-2 px-6 py-3 bg-ink dark:bg-white text-white dark:text-ink rounded-xl text-sm font-medium hover:opacity-80 transition-all no-underline shadow-lg"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-ink text-surface rounded-xl text-sm font-medium hover:opacity-80 transition-all no-underline shadow-lg"
           >
             <Plus class="w-4 h-4" />
             Create your first set
