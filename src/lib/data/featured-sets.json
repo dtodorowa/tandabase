@@ -1,0 +1,449 @@
+[
+  {
+    "id": "featured-di-sarli",
+    "title": "Di Sarli — Señorial",
+    "description": "The elegant sound of Carlos Di Sarli, spanning his golden years.",
+    "cover_image": "album-covers/di-sarli.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Vals"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "ds-t1",
+        "num": 1,
+        "orchestra": "Carlos Di Sarli",
+        "genre": "Tango",
+        "songs": [
+          { "id": "ds1", "title": "Bahía Blanca", "singer": "Instrumental", "year": 1957, "video_id": "dqFWz9_uqe0", "video_title": "Di Sarli - Bahía Blanca", "thumbnail": "" },
+          { "id": "ds2", "title": "A la gran muñeca", "singer": "Instrumental", "year": 1951, "video_id": "dQw4w9WgXcQ", "video_title": "Di Sarli - A la gran muñeca", "thumbnail": "" },
+          { "id": "ds3", "title": "El ingeniero", "singer": "Instrumental", "year": 1955, "video_id": "dQw4w9WgXcQ", "video_title": "Di Sarli - El ingeniero", "thumbnail": "" },
+          { "id": "ds4", "title": "Milonguero viejo", "singer": "Instrumental", "year": 1956, "video_id": "dQw4w9WgXcQ", "video_title": "Di Sarli - Milonguero viejo", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "ds-v1",
+        "num": 2,
+        "orchestra": "Carlos Di Sarli",
+        "genre": "Vals",
+        "songs": [
+          { "id": "ds5", "title": "Corazón", "singer": "Roberto Rufino", "year": 1939, "video_id": "dQw4w9WgXcQ", "video_title": "Di Sarli - Corazón", "thumbnail": "" },
+          { "id": "ds6", "title": "Ausencia", "singer": "Instrumental", "year": 1953, "video_id": "dQw4w9WgXcQ", "video_title": "Di Sarli - Ausencia", "thumbnail": "" },
+          { "id": "ds7", "title": "Estampa de varón", "singer": "Instrumental", "year": 1954, "video_id": "dQw4w9WgXcQ", "video_title": "Di Sarli - Estampa de varón", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-pugliese",
+    "title": "Pugliese — Dramático",
+    "description": "The dramatic, powerful sound of Osvaldo Pugliese.",
+    "cover_image": "album-covers/pugliese.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango"],
+    "tanda_count": 2,
+    "song_count": 8,
+    "tandas": [
+      {
+        "id": "op-t1",
+        "num": 1,
+        "orchestra": "Osvaldo Pugliese",
+        "genre": "Tango",
+        "songs": [
+          { "id": "op1", "title": "La yumba", "singer": "Instrumental", "year": 1946, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - La yumba", "thumbnail": "" },
+          { "id": "op2", "title": "Recuerdo", "singer": "Instrumental", "year": 1956, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - Recuerdo", "thumbnail": "" },
+          { "id": "op3", "title": "Negracha", "singer": "Instrumental", "year": 1948, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - Negracha", "thumbnail": "" },
+          { "id": "op4", "title": "Gallo ciego", "singer": "Instrumental", "year": 1959, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - Gallo ciego", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "op-t2",
+        "num": 2,
+        "orchestra": "Osvaldo Pugliese",
+        "genre": "Tango",
+        "songs": [
+          { "id": "op5", "title": "Desde el alma", "singer": "Instrumental", "year": 1954, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - Desde el alma", "thumbnail": "" },
+          { "id": "op6", "title": "Malandraca", "singer": "Instrumental", "year": 1949, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - Malandraca", "thumbnail": "" },
+          { "id": "op7", "title": "A Evaristo Carriego", "singer": "Instrumental", "year": 1969, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - A Evaristo Carriego", "thumbnail": "" },
+          { "id": "op8", "title": "Emancipación", "singer": "Instrumental", "year": 1946, "video_id": "dQw4w9WgXcQ", "video_title": "Pugliese - Emancipación", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-troilo",
+    "title": "Troilo — Pichuco",
+    "description": "The poetic genius of Aníbal Troilo and his orchestra.",
+    "cover_image": "album-covers/troilo.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Vals"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "at-t1",
+        "num": 1,
+        "orchestra": "Aníbal Troilo",
+        "genre": "Tango",
+        "songs": [
+          { "id": "at1", "title": "Quejas de bandoneón", "singer": "Instrumental", "year": 1944, "video_id": "dQw4w9WgXcQ", "video_title": "Troilo - Quejas de bandoneón", "thumbnail": "" },
+          { "id": "at2", "title": "Responso", "singer": "Instrumental", "year": 1951, "video_id": "dQw4w9WgXcQ", "video_title": "Troilo - Responso", "thumbnail": "" },
+          { "id": "at3", "title": "Milongueando en el 40", "singer": "Instrumental", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Troilo - Milongueando en el 40", "thumbnail": "" },
+          { "id": "at4", "title": "La trampera", "singer": "Instrumental", "year": 1948, "video_id": "dQw4w9WgXcQ", "video_title": "Troilo - La trampera", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "at-v1",
+        "num": 2,
+        "orchestra": "Aníbal Troilo",
+        "genre": "Vals",
+        "songs": [
+          { "id": "at5", "title": "Romance de barrio", "singer": "Francisco Fiorentino", "year": 1944, "video_id": "dQw4w9WgXcQ", "video_title": "Troilo - Romance de barrio", "thumbnail": "" },
+          { "id": "at6", "title": "Palomita blanca", "singer": "Francisco Fiorentino", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Troilo - Palomita blanca", "thumbnail": "" },
+          { "id": "at7", "title": "Flor de lino", "singer": "Francisco Fiorentino", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "Troilo - Flor de lino", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-darienzo",
+    "title": "D'Arienzo — El Rey del Compás",
+    "description": "The rhythmic king of tango. Pure energy from Juan D'Arienzo.",
+    "cover_image": "album-covers/di-sarli.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Milonga"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "jd-t1",
+        "num": 1,
+        "orchestra": "Juan D'Arienzo",
+        "genre": "Tango",
+        "songs": [
+          { "id": "jd1", "title": "La cumparsita", "singer": "Instrumental", "year": 1951, "video_id": "dQw4w9WgXcQ", "video_title": "D'Arienzo - La cumparsita", "thumbnail": "" },
+          { "id": "jd2", "title": "El flete", "singer": "Instrumental", "year": 1936, "video_id": "dQw4w9WgXcQ", "video_title": "D'Arienzo - El flete", "thumbnail": "" },
+          { "id": "jd3", "title": "Loca", "singer": "Instrumental", "year": 1937, "video_id": "dQw4w9WgXcQ", "video_title": "D'Arienzo - Loca", "thumbnail": "" },
+          { "id": "jd4", "title": "Don Juan", "singer": "Instrumental", "year": 1938, "video_id": "dQw4w9WgXcQ", "video_title": "D'Arienzo - Don Juan", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "jd-m1",
+        "num": 2,
+        "orchestra": "Juan D'Arienzo",
+        "genre": "Milonga",
+        "songs": [
+          { "id": "jd5", "title": "La puñalada", "singer": "Alberto Echagüe", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "D'Arienzo - La puñalada", "thumbnail": "" },
+          { "id": "jd6", "title": "De pura cepa", "singer": "Instrumental", "year": 1940, "video_id": "dQw4w9WgXcQ", "video_title": "D'Arienzo - De pura cepa", "thumbnail": "" },
+          { "id": "jd7", "title": "Milonga vieja milonga", "singer": "Alberto Echagüe", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "D'Arienzo - Milonga vieja milonga", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-biagi",
+    "title": "Biagi — Manos Brujas",
+    "description": "The brilliant piano-driven tangos of Rodolfo Biagi.",
+    "cover_image": "album-covers/pugliese.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Vals"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "rb-t1",
+        "num": 1,
+        "orchestra": "Rodolfo Biagi",
+        "genre": "Tango",
+        "songs": [
+          { "id": "rb1", "title": "Racing Club", "singer": "Instrumental", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Biagi - Racing Club", "thumbnail": "" },
+          { "id": "rb2", "title": "Campo afuera", "singer": "Jorge Ortiz", "year": 1940, "video_id": "dQw4w9WgXcQ", "video_title": "Biagi - Campo afuera", "thumbnail": "" },
+          { "id": "rb3", "title": "El recodo", "singer": "Instrumental", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "Biagi - El recodo", "thumbnail": "" },
+          { "id": "rb4", "title": "Humillación", "singer": "Jorge Ortiz", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Biagi - Humillación", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "rb-v1",
+        "num": 2,
+        "orchestra": "Rodolfo Biagi",
+        "genre": "Vals",
+        "songs": [
+          { "id": "rb5", "title": "Lágrimas y sonrisas", "singer": "Jorge Ortiz", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Biagi - Lágrimas y sonrisas", "thumbnail": "" },
+          { "id": "rb6", "title": "Amor y vals", "singer": "Andrés Falgás", "year": 1939, "video_id": "dQw4w9WgXcQ", "video_title": "Biagi - Amor y vals", "thumbnail": "" },
+          { "id": "rb7", "title": "Dichas que viví", "singer": "Jorge Ortiz", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Biagi - Dichas que viví", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-canaro",
+    "title": "Canaro — El Patriarca",
+    "description": "Francisco Canaro, the pioneer of recorded tango.",
+    "cover_image": "album-covers/troilo.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Milonga"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "fc-t1",
+        "num": 1,
+        "orchestra": "Francisco Canaro",
+        "genre": "Tango",
+        "songs": [
+          { "id": "fc1", "title": "Poema", "singer": "Roberto Maida", "year": 1935, "video_id": "dQw4w9WgXcQ", "video_title": "Canaro - Poema", "thumbnail": "" },
+          { "id": "fc2", "title": "Sentimiento gaucho", "singer": "Francisco Canaro", "year": 1924, "video_id": "dQw4w9WgXcQ", "video_title": "Canaro - Sentimiento gaucho", "thumbnail": "" },
+          { "id": "fc3", "title": "Nobleza de arrabal", "singer": "Roberto Maida", "year": 1932, "video_id": "dQw4w9WgXcQ", "video_title": "Canaro - Nobleza de arrabal", "thumbnail": "" },
+          { "id": "fc4", "title": "Mano brava", "singer": "Instrumental", "year": 1936, "video_id": "dQw4w9WgXcQ", "video_title": "Canaro - Mano brava", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "fc-m1",
+        "num": 2,
+        "orchestra": "Francisco Canaro",
+        "genre": "Milonga",
+        "songs": [
+          { "id": "fc5", "title": "Milonga sentimental", "singer": "Ernesto Famá", "year": 1933, "video_id": "dQw4w9WgXcQ", "video_title": "Canaro - Milonga sentimental", "thumbnail": "" },
+          { "id": "fc6", "title": "Milonga del 900", "singer": "Instrumental", "year": 1935, "video_id": "dQw4w9WgXcQ", "video_title": "Canaro - Milonga del 900", "thumbnail": "" },
+          { "id": "fc7", "title": "La milonga de Buenos Aires", "singer": "Roberto Maida", "year": 1936, "video_id": "dQw4w9WgXcQ", "video_title": "Canaro - La milonga de Buenos Aires", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-fresedo",
+    "title": "Fresedo — El Pibe de La Paternal",
+    "description": "Osvaldo Fresedo's smooth, romantic style.",
+    "cover_image": "album-covers/di-sarli.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Vals"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "of-t1",
+        "num": 1,
+        "orchestra": "Osvaldo Fresedo",
+        "genre": "Tango",
+        "songs": [
+          { "id": "of1", "title": "Buscándote", "singer": "Roberto Ray", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Fresedo - Buscándote", "thumbnail": "" },
+          { "id": "of2", "title": "Vida mía", "singer": "Roberto Ray", "year": 1933, "video_id": "dQw4w9WgXcQ", "video_title": "Fresedo - Vida mía", "thumbnail": "" },
+          { "id": "of3", "title": "Arrabalero", "singer": "Roberto Ray", "year": 1937, "video_id": "dQw4w9WgXcQ", "video_title": "Fresedo - Arrabalero", "thumbnail": "" },
+          { "id": "of4", "title": "El once", "singer": "Instrumental", "year": 1936, "video_id": "dQw4w9WgXcQ", "video_title": "Fresedo - El once", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "of-v1",
+        "num": 2,
+        "orchestra": "Osvaldo Fresedo",
+        "genre": "Vals",
+        "songs": [
+          { "id": "of5", "title": "Sollozos", "singer": "Roberto Ray", "year": 1937, "video_id": "dQw4w9WgXcQ", "video_title": "Fresedo - Sollozos", "thumbnail": "" },
+          { "id": "of6", "title": "Buscándote (vals)", "singer": "Roberto Ray", "year": 1938, "video_id": "dQw4w9WgXcQ", "video_title": "Fresedo - Buscándote vals", "thumbnail": "" },
+          { "id": "of7", "title": "Isla de Capri", "singer": "Roberto Ray", "year": 1935, "video_id": "dQw4w9WgXcQ", "video_title": "Fresedo - Isla de Capri", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-tanturi",
+    "title": "Tanturi — Castillo & Campos",
+    "description": "Ricardo Tanturi's danceable tangos with his great singers.",
+    "cover_image": "album-covers/pugliese.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango"],
+    "tanda_count": 2,
+    "song_count": 8,
+    "tandas": [
+      {
+        "id": "rt-t1",
+        "num": 1,
+        "orchestra": "Ricardo Tanturi",
+        "genre": "Tango",
+        "songs": [
+          { "id": "rt1", "title": "Noches de Colón", "singer": "Alberto Castillo", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - Noches de Colón", "thumbnail": "" },
+          { "id": "rt2", "title": "Así se baila el tango", "singer": "Alberto Castillo", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - Así se baila el tango", "thumbnail": "" },
+          { "id": "rt3", "title": "Muñeca brava", "singer": "Alberto Castillo", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - Muñeca brava", "thumbnail": "" },
+          { "id": "rt4", "title": "El tango es el tango", "singer": "Alberto Castillo", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - El tango es el tango", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "rt-t2",
+        "num": 2,
+        "orchestra": "Ricardo Tanturi",
+        "genre": "Tango",
+        "songs": [
+          { "id": "rt5", "title": "Una emoción", "singer": "Enrique Campos", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - Una emoción", "thumbnail": "" },
+          { "id": "rt6", "title": "Oigo tu voz", "singer": "Enrique Campos", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - Oigo tu voz", "thumbnail": "" },
+          { "id": "rt7", "title": "Al compás de un tango", "singer": "Enrique Campos", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - Al compás de un tango", "thumbnail": "" },
+          { "id": "rt8", "title": "Ese sos vos", "singer": "Enrique Campos", "year": 1944, "video_id": "dQw4w9WgXcQ", "video_title": "Tanturi - Ese sos vos", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-laurenz",
+    "title": "Laurenz — Arrabal",
+    "description": "Pedro Laurenz's lyrical bandoneon-driven tangos.",
+    "cover_image": "album-covers/troilo.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "pl-t1",
+        "num": 1,
+        "orchestra": "Pedro Laurenz",
+        "genre": "Tango",
+        "songs": [
+          { "id": "pl1", "title": "Milonga de mis amores", "singer": "Instrumental", "year": 1937, "video_id": "dQw4w9WgXcQ", "video_title": "Laurenz - Milonga de mis amores", "thumbnail": "" },
+          { "id": "pl2", "title": "Arrabal", "singer": "Juan Carlos Casas", "year": 1937, "video_id": "dQw4w9WgXcQ", "video_title": "Laurenz - Arrabal", "thumbnail": "" },
+          { "id": "pl3", "title": "Mal de amores", "singer": "Juan Carlos Casas", "year": 1938, "video_id": "dQw4w9WgXcQ", "video_title": "Laurenz - Mal de amores", "thumbnail": "" },
+          { "id": "pl4", "title": "Amurado", "singer": "Juan Carlos Casas", "year": 1938, "video_id": "dQw4w9WgXcQ", "video_title": "Laurenz - Amurado", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "pl-t2",
+        "num": 2,
+        "orchestra": "Pedro Laurenz",
+        "genre": "Tango",
+        "songs": [
+          { "id": "pl5", "title": "Como dos extraños", "singer": "Alberto Podestá", "year": 1940, "video_id": "dQw4w9WgXcQ", "video_title": "Laurenz - Como dos extraños", "thumbnail": "" },
+          { "id": "pl6", "title": "Todo", "singer": "Alberto Podestá", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Laurenz - Todo", "thumbnail": "" },
+          { "id": "pl7", "title": "Recién", "singer": "Alberto Podestá", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "Laurenz - Recién", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-deAngelis",
+    "title": "De Angelis — El Tango Club",
+    "description": "Alfredo De Angelis and his warm, festive style.",
+    "cover_image": "album-covers/di-sarli.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Vals"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "aa-t1",
+        "num": 1,
+        "orchestra": "Alfredo De Angelis",
+        "genre": "Tango",
+        "songs": [
+          { "id": "aa1", "title": "Pavadita", "singer": "Carlos Dante", "year": 1944, "video_id": "dQw4w9WgXcQ", "video_title": "De Angelis - Pavadita", "thumbnail": "" },
+          { "id": "aa2", "title": "Pregonera", "singer": "Carlos Dante", "year": 1945, "video_id": "dQw4w9WgXcQ", "video_title": "De Angelis - Pregonera", "thumbnail": "" },
+          { "id": "aa3", "title": "El pañuelito", "singer": "Carlos Dante", "year": 1945, "video_id": "dQw4w9WgXcQ", "video_title": "De Angelis - El pañuelito", "thumbnail": "" },
+          { "id": "aa4", "title": "Remolino", "singer": "Julio Martel", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "De Angelis - Remolino", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "aa-v1",
+        "num": 2,
+        "orchestra": "Alfredo De Angelis",
+        "genre": "Vals",
+        "songs": [
+          { "id": "aa5", "title": "Soñar y nada más", "singer": "Carlos Dante", "year": 1944, "video_id": "dQw4w9WgXcQ", "video_title": "De Angelis - Soñar y nada más", "thumbnail": "" },
+          { "id": "aa6", "title": "Pobre flor", "singer": "Julio Martel", "year": 1945, "video_id": "dQw4w9WgXcQ", "video_title": "De Angelis - Pobre flor", "thumbnail": "" },
+          { "id": "aa7", "title": "Flores del alma", "singer": "Carlos Dante", "year": 1946, "video_id": "dQw4w9WgXcQ", "video_title": "De Angelis - Flores del alma", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-dagostino",
+    "title": "D'Agostino — Vargas",
+    "description": "Ángel D'Agostino with the unmistakable voice of Ángel Vargas.",
+    "cover_image": "album-covers/pugliese.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango"],
+    "tanda_count": 2,
+    "song_count": 8,
+    "tandas": [
+      {
+        "id": "ad-t1",
+        "num": 1,
+        "orchestra": "Ángel D'Agostino",
+        "genre": "Tango",
+        "songs": [
+          { "id": "ad1", "title": "A pesar de todo", "singer": "Ángel Vargas", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - A pesar de todo", "thumbnail": "" },
+          { "id": "ad2", "title": "Tres esquinas", "singer": "Ángel Vargas", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - Tres esquinas", "thumbnail": "" },
+          { "id": "ad3", "title": "Café domínguez", "singer": "Ángel Vargas", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - Café domínguez", "thumbnail": "" },
+          { "id": "ad4", "title": "Shusheta", "singer": "Ángel Vargas", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - Shusheta", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "ad-t2",
+        "num": 2,
+        "orchestra": "Ángel D'Agostino",
+        "genre": "Tango",
+        "songs": [
+          { "id": "ad5", "title": "Hotel Victoria", "singer": "Ángel Vargas", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - Hotel Victoria", "thumbnail": "" },
+          { "id": "ad6", "title": "El yacaré", "singer": "Ángel Vargas", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - El yacaré", "thumbnail": "" },
+          { "id": "ad7", "title": "Viejo rincón", "singer": "Ángel Vargas", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - Viejo rincón", "thumbnail": "" },
+          { "id": "ad8", "title": "Caricias", "singer": "Ángel Vargas", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "D'Agostino - Caricias", "thumbnail": "" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "featured-calo",
+    "title": "Caló — Berón & Iriarte",
+    "description": "Miguel Caló's elegant orchestra with his star singers.",
+    "cover_image": "album-covers/troilo.jpg",
+    "authorId": "tandabase",
+    "authorName": "tandabase",
+    "visibility": "public",
+    "genre_summary": ["Tango", "Vals"],
+    "tanda_count": 2,
+    "song_count": 7,
+    "tandas": [
+      {
+        "id": "mc-t1",
+        "num": 1,
+        "orchestra": "Miguel Caló",
+        "genre": "Tango",
+        "songs": [
+          { "id": "mc1", "title": "Que te importa que te llore", "singer": "Raúl Berón", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Caló - Que te importa que te llore", "thumbnail": "" },
+          { "id": "mc2", "title": "Al compás del corazón", "singer": "Raúl Berón", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Caló - Al compás del corazón", "thumbnail": "" },
+          { "id": "mc3", "title": "Lejos de Buenos Aires", "singer": "Raúl Iriarte", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Caló - Lejos de Buenos Aires", "thumbnail": "" },
+          { "id": "mc4", "title": "Trasnochando", "singer": "Raúl Berón", "year": 1943, "video_id": "dQw4w9WgXcQ", "video_title": "Caló - Trasnochando", "thumbnail": "" }
+        ]
+      },
+      {
+        "id": "mc-v1",
+        "num": 2,
+        "orchestra": "Miguel Caló",
+        "genre": "Vals",
+        "songs": [
+          { "id": "mc5", "title": "Flor de monserrat", "singer": "Raúl Berón", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Caló - Flor de monserrat", "thumbnail": "" },
+          { "id": "mc6", "title": "Pedacito de cielo", "singer": "Raúl Berón", "year": 1942, "video_id": "dQw4w9WgXcQ", "video_title": "Caló - Pedacito de cielo", "thumbnail": "" },
+          { "id": "mc7", "title": "Bajo un cielo de estrellas", "singer": "Raúl Berón", "year": 1941, "video_id": "dQw4w9WgXcQ", "video_title": "Caló - Bajo un cielo de estrellas", "thumbnail": "" }
+        ]
+      }
+    ]
+  }
+]
