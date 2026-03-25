@@ -46,9 +46,41 @@
 
 <main class="grow pt-24 md:pt-32 bg-surface dark:bg-background text-ink selection:bg-ink selection:text-white dark:selection:bg-white dark:selection:text-black">
 
+ 
+    
   <!-- Hero Section -->
   <section class="w-full min-h-[80vh] flex flex-col items-center justify-center relative px-6 text-center">
-    <p class="z-3 text-ink-muted text-xs font-medium tracking-[0.25em] uppercase mb-8">v1.0 (Beta)</p>
+<p>hover over</p>
+
+          <!-- Vinyl Record Grid -->
+    {#if !loading && sets.length >= 3}
+      <div class="record-grid">
+        {#each sets.slice(0, 3) as set, i}
+          <!-- svelte-ignore a11y_no_static_element_interactions -->
+          <!-- svelte-ignore a11y_click_events_have_key_events -->
+          <div class="album" onclick={() => playerModal.openModal(set)}>
+            <div class="sleeve">
+              <img src={getCover(set, i)} alt={set.title} />
+              <div class="sleeve-info">
+                <span class="sleeve-title">{set.title}</span>
+                <span class="sleeve-author">{set.authorName}</span>
+              </div>
+            </div>
+            <div class="record">
+              <div class="disc">
+                <div class="disc-grooves"></div>
+                <div class="disc-label">
+                  <span class="label-count">{set.tanda_count}</span>
+                  <span class="label-text">tandas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {/each}
+      </div>
+    {/if}
+
+    <!-- <p class="z-3 text-ink-muted text-xs font-medium tracking-[0.25em] uppercase mb-8">v1.0 (Beta)</p>
 
     
     <h1 class="z-2 font-serif text-5xl md:text-[7rem] leading-[0.9] tracking-tighter max-w-5xl text-ink">
@@ -57,10 +89,10 @@
     </h1>
 
     <p class="z-3 mt-8 text-lg text-ink-muted max-w-xl font-light leading-relaxed">
-      Turn your flat playlists into structured tandas. Share your sets with the community and discuss ideas.
-    </p> 
+      Turn your flat playlists into structured tandas. Share your sets with the community and discuss ideas. 
+    </p>
 
-   
+ 
 
     <div class="mt-12 flex gap-4 flex-wrap justify-center">
       <a href="/browse" class="group relative inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-primary-foreground bg-primary rounded-full overflow-hidden transition-transform active:scale-95 shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 duration-300 no-underline">
@@ -70,8 +102,12 @@
       <a href="/create" class="inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-ink border border-black/10 dark:border-white/10 rounded-full transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 no-underline">
         Create Your Own
       </a>
-    </div>
+    </div>  --->
+
+
   </section>
+
+
 
   <!-- Community Sets Carousel -->
   <section class="w-full mb-32">
@@ -350,6 +386,234 @@
 </main>
 
 <style>
+  /* ---- Vinyl Record Grid ---- */
+  .record-grid {
+    display: flex;
+    gap: 64px;
+    justify-content: center;
+    align-items: flex-end;
+    max-width: 1100px;
+    margin: 48px auto 0;
+    z-index: 2;
+    position: relative;
+  }
+
+  .album {
+    width: 220px;
+    height: 220px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .sleeve {
+    width: 200px;
+    height: 200px;
+    background: var(--card, #eee);
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transform: translateY(0);
+    transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.2, 1);
+    position: relative;
+    z-index: 3;
+  }
+
+  .album:hover .sleeve {
+    transform: translateY(-20px);
+  }
+
+  .sleeve img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.3);
+    transition: filter 0.4s ease;
+  }
+
+  .album:hover .sleeve img {
+    filter: grayscale(0);
+  }
+
+  .sleeve-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 10px 10px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sleeve-title {
+    font-family: 'Newsreader', serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sleeve-author {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* The record disc */
+  .record {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    width: 160px;
+    height: 160px;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1), opacity 0.3s ease;
+    z-index: 1;
+  }
+
+  .album:hover .record {
+    opacity: 1;
+    transform: translate(-50%, -115%) scale(1);
+  }
+
+  .disc {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    background-color: #181818;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: spin 8s linear infinite;
+    overflow: hidden;
+  }
+
+  .disc-grooves {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at center,
+        transparent 18%,
+        rgba(40, 40, 40, 0.9) 18.5%,
+        rgba(30, 30, 30, 1) 22%,
+        rgba(50, 50, 50, 0.7) 24%,
+        rgba(25, 25, 25, 1) 26%,
+        rgba(45, 45, 45, 0.8) 28%,
+        rgba(20, 20, 20, 1) 30%,
+        rgba(50, 50, 50, 0.6) 33%,
+        rgba(25, 25, 25, 1) 36%,
+        rgba(40, 40, 40, 0.8) 39%,
+        rgba(20, 20, 20, 1) 42%,
+        rgba(55, 55, 55, 0.6) 45%,
+        rgba(22, 22, 22, 1) 48%,
+        rgba(18, 18, 18, 1) 50%
+      );
+  }
+
+  .disc-grooves::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(255, 255, 255, 0.06) 40deg,
+      rgba(255, 255, 255, 0.12) 55deg,
+      transparent 80deg,
+      transparent 180deg,
+      rgba(255, 255, 255, 0.04) 220deg,
+      rgba(255, 255, 255, 0.08) 235deg,
+      transparent 260deg,
+      transparent 360deg
+    );
+    animation: shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .disc-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #c0392b, #8e2420);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .disc-label::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #111;
+  }
+
+  .label-count {
+    font-family: 'Newsreader', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1;
+  }
+
+  .label-text {
+    font-size: 6px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1;
+    margin-top: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .disc { animation: none !important; }
+    .disc-grooves::after { animation: none !important; }
+  }
+
+  @media (max-width: 900px) {
+    .record-grid { gap: 32px; }
+    .album { width: 180px; height: 180px; }
+    .sleeve { width: 165px; height: 165px; }
+    .record { width: 130px; height: 130px; }
+    .disc-label { width: 40px; height: 40px; }
+    .label-count { font-size: 12px; }
+  }
+
+  @media (max-width: 600px) {
+    .record-grid {
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+    .album { width: 220px; height: 220px; }
+    .sleeve { width: 200px; height: 200px; }
+    .record { width: 160px; height: 160px; }
+  }
+
+  /* ---- Existing animations ---- */
   @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
