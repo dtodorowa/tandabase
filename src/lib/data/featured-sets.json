@@ -1,7 +1,7 @@
 [
   {
     "id": "featured-di-sarli",
-    "title": "Di Sarli — Señorial",
+    "title": "Carlos Di Sarli",
     "description": "The elegant sound of Carlos Di Sarli, spanning his golden years.",
     "cover_image": "album-covers/di-sarli.jpg",
     "authorId": "tandabase",
@@ -76,7 +76,7 @@
   },
   {
     "id": "featured-troilo",
-    "title": "Troilo — Pichuco",
+    "title": "Aníbal Troilo",
     "description": "The poetic genius of Aníbal Troilo and his orchestra.",
     "cover_image": "album-covers/troilo.jpg",
     "authorId": "tandabase",
@@ -113,9 +113,9 @@
   },
   {
     "id": "featured-darienzo",
-    "title": "D'Arienzo — El Rey del Compás",
+    "title": "Juan D'Arienzo",
     "description": "The rhythmic king of tango. Pure energy from Juan D'Arienzo.",
-    "cover_image": "album-covers/di-sarli.jpg",
+    "cover_image": "album-covers/darienzo.jpg",
     "authorId": "tandabase",
     "authorName": "tandabase",
     "visibility": "public",

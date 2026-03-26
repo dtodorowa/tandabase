@@ -315,7 +315,7 @@
 >
 
 <!-- Dialog — wider for 2-pane layout on songs step -->
-<div class="relative w-full {step === 'songs' ? 'max-w-5xl' : 'max-w-2xl'} max-h-[85vh] bg-white dark:bg-card z-50 shadow-2xl flex flex-col rounded-2xl border border-black/10 dark:border-white/5 overflow-hidden transition-all duration-300">
+<div class="relative w-full max-w-5xl max-h-[90vh] bg-white dark:bg-card z-50 shadow-2xl flex flex-col rounded-2xl border border-black/10 dark:border-white/5 overflow-hidden transition-all duration-300">
 
   <!-- Header -->
   <div class="px-6 py-4 border-b border-black/5 dark:border-white/5 flex justify-between items-center bg-surface/50 dark:bg-background/50 shrink-0">
@@ -328,8 +328,18 @@
           {selectedGenre}
         {/if}
       </h3>
+      
+      <!-- Description input (top) -->
+      <div class="ml-[-5px] pt-1 md:pt-3 w-[200px] sm:w-[400px] md:w-[600px] shrink-0">
+        <input
+          type="text"
+          placeholder="Add a note for this tanda (optional)..."
+          bind:value={tandaDescription}
+          class="w-full bg-white dark:bg-card border border-black/5 dark:border-white/5 rounded-lg px-3 py-2 text-xs text-ink outline-none focus:border-ink dark:focus:border-white transition-colors font-sans placeholder:text-ink-faint"
+        />
+      </div>
     </div>
-    <div class="flex items-center gap-1">
+    <div class="flex self-start  items-center gap-1">
       {#if step !== 'orchestra'}
         <button
           onclick={() => step = 'orchestra'}
@@ -337,18 +347,9 @@
           title="Back to orchestras — add tandas from other orchestras"
         >
           <ArrowLeft class="w-4 h-4" />
-          <span class="text-xs font-medium hidden sm:inline">Back to set</span>
         </button>
       {/if}
-      {#if ondelete}
-        <button
-          onclick={() => showDeleteConfirm = true}
-          class="w-9 h-9 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
-          title="Delete this tanda"
-        >
-          <Trash2 class="w-4 h-4 text-ink-muted hover:text-red-500 transition-colors" />
-        </button>
-      {/if}
+
       <button
         onclick={onclose}
         class="w-9 h-9 rounded-full hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center transition-colors cursor-pointer bg-transparent border-none"
@@ -360,29 +361,10 @@
 
   <!-- STEP: Orchestra Selection (unchanged layout) -->
   {#if step === 'orchestra'}
-    <div class="flex flex-col grow overflow-hidden">
+    <div class="flexflex-col grow overflow-hidden">
       <div class="p-6 overflow-y-auto grow">
-        <!-- Genre pills -->
-        <div class="mb-6">
-          <h4 class="text-xs font-medium text-ink uppercase tracking-widest mb-3">Genre</h4>
-          <div class="flex gap-2">
-            {#each genres as g}
-              <button
-                onclick={() => selectedGenre = g}
-                class="px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer border font-sans
-                  {selectedGenre === g
-                    ? 'bg-ink text-surface border-ink'
-                    : 'bg-transparent text-ink-muted border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30'}"
-              >
-                {g}
-              </button>
-            {/each}
-          </div>
-        </div>
-
         <!-- Orchestra search -->
         <div class="mb-4">
-          <h4 class="text-xs font-medium text-ink uppercase tracking-widest border-b border-black/5 dark:border-white/5 pb-2 mb-3">Orchestra</h4>
           <div class="relative">
             <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint" />
             <input
@@ -395,7 +377,7 @@
         </div>
 
         <!-- Orchestra grid -->
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
           {#each filteredOrchestras as orch}
             <button
               onclick={() => loadOrchestra(orch)}
@@ -466,15 +448,7 @@
         {mobileTab === 'selected' ? 'flex' : 'hidden'} md:flex
         flex-col w-full md:w-[40%] border-r-0 md:border-r border-black/5 dark:border-white/5 bg-surface/30 dark:bg-background/30 overflow-hidden
       ">
-        <!-- Description input (top) -->
-        <div class="px-4 pt-4 pb-2 shrink-0">
-          <input
-            type="text"
-            placeholder="Add a note for this tanda (optional)..."
-            bind:value={tandaDescription}
-            class="w-full bg-white dark:bg-card border border-black/5 dark:border-white/5 rounded-lg px-3 py-2 text-xs text-ink outline-none focus:border-ink dark:focus:border-white transition-colors font-sans placeholder:text-ink-faint"
-          />
-        </div>
+ 
 
         <!-- Header row with actions -->
         <div class="flex justify-between items-center px-4 py-2 shrink-0">
@@ -689,21 +663,6 @@
 
     <!-- Footer: summary pills + save button -->
     <div class="p-4 border-t border-black/5 dark:border-white/5 bg-surface/50 dark:bg-background/50 shrink-0 space-y-3">
-      <!-- Selected tracks summary pill bar -->
-      {#if selectedSongs.length > 0}
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="text-xs font-medium text-ink">{selectedSongs.length} tracks selected</span>
-          <Check class="w-3.5 h-3.5 text-vals" />
-          <div class="flex items-center gap-1 flex-wrap">
-            {#each selectedSongs.slice(0, 3) as song (song.id)}
-              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/5 text-ink-muted truncate max-w-[100px]">{song.title}</span>
-            {/each}
-            {#if selectedSongs.length > 3}
-              <span class="text-[10px] text-ink-faint">+{selectedSongs.length - 3} more</span>
-            {/if}
-          </div>
-        </div>
-      {/if}
       <button
         onclick={saveTanda}
         disabled={selectedSongs.length === 0}

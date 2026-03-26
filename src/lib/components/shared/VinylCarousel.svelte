@@ -153,7 +153,6 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <section class="w-full min-h-[80vh] flex flex-col items-center justify-center relative text-center">
   <div class="relative w-full z-2">
-
     {#if sets.length === 0}
       <div class="flex gap-8 overflow-x-hidden px-16 pt-40 pb-10 items-end">
         {#each Array(5) as _, i}
@@ -218,7 +217,9 @@
 
           </div>
         {/each}
+        
       </div>
+
     {/if}
 
   </div>

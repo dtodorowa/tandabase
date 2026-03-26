@@ -27,8 +27,9 @@
   });
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/browse', label: 'Community Sets' },
+    // { href: '/', label: 'Home' },
+    { href: '/browse', label: 'Listen' },
+    { href: '/create', label: 'Create' },
     // { href: '/about', label: 'About' },
   ];
 </script>

@@ -52,6 +52,7 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+
 <main
   class="grow bg-surface dark:bg-background text-ink selection:bg-ink selection:text-white dark:selection:bg-white dark:selection:text-black"
 >
@@ -59,7 +60,7 @@
   <!-- ═══ Hero / Vinyl Carousel ═══ -->
   <VinylCarousel sets={featuredSets} displayCount={12} />
 
-     <div class="flex gap-4 flex-wrap justify-center">
+     <!-- <div class="flex gap-4 flex-wrap justify-center">
       <a href="/browse" class="group relative inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-primary-foreground bg-primary rounded-full overflow-hidden transition-transform active:scale-95 shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 duration-300 no-underline">
         <span class="relative">Browse Community Sets</span>
       </a>
@@ -67,12 +68,12 @@
       <a href="/create" class="inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-ink border border-black/10 dark:border-white/10 rounded-full transition-all hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 no-underline">
         Create Your Own Set
       </a>
-    </div>
+    </div> -->
 
   <!-- ═══ Not a DJ tool ═══ -->
-  <section class="w-full bg-ink-muted text-surface py-32 px-6 text-center my-32">
+  <section class="w-full bg-ink text-surface py-32 px-6 text-center my-32">
     <h2 class="font-serif text-5xl md:text-7xl tracking-tighter mb-8 text-surface">
-      This is <span class="italic text-surface/50">NOT</span> a DJing app
+      Btw: this is <span class="italic text-surface/50">NOT</span> a DJing app
     </h2>
     <p class="font-light text-xl text-surface/70 max-w-2xl mx-auto leading-relaxed">
       It's a learning tool. There is no autoplay or cortina gaps (on purpose). Just YouTube embeds for studying.<br><br>
@@ -132,52 +133,6 @@
   </section>
 
 
-
-
-  <!-- ═══ Tanda Roulette ═══ -->
-  <section class="w-full max-w-6xl mx-auto px-6 md:px-16 mb-32 flex flex-col items-center">
-    <div class="text-center mb-16">
-      <div class="font-mono text-xs text-ink-muted mb-4 uppercase tracking-widest">&gt; Tanda_Roulette</div>
-      <h2 class="font-serif text-5xl md:text-6xl tracking-tight text-ink mb-4">Take it for a spin.</h2>
-      <p class="font-sans text-xl text-ink-muted font-light">Drop the needle on a random set and see how the player works.</p>
-    </div>
-
-    {#if randomSet}
-      <div class="w-full max-w-3xl bg-card rounded-3xl border border-black/10 dark:border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.08)] overflow-hidden">
-        <div class="p-8 md:p-12 flex flex-col sm:flex-row gap-10 items-center">
-          <div class="w-48 h-48 rounded-full bg-ink flex items-center justify-center shrink-0 relative shadow-2xl">
-            <div class="absolute inset-2 border border-white/20 rounded-full"></div>
-            <div class="absolute inset-6 border border-white/20 rounded-full"></div>
-            <div class="absolute inset-10 border border-white/20 rounded-full"></div>
-            <div class="w-16 h-16 bg-surface rounded-full flex items-center justify-center z-10 border border-black/10 dark:border-white/10">
-              <div class="w-2 h-2 bg-ink rounded-full"></div>
-            </div>
-          </div>
-
-          <div class="w-full">
-            <span class="text-[10px] font-medium px-3 py-1 rounded-full bg-surface border border-black/5 dark:border-white/5 text-ink-muted mb-4 inline-block tracking-[0.2em] uppercase">
-              Curated by @{randomSet.authorName}
-            </span>
-            <h3 class="font-serif text-3xl text-ink mb-2">{randomSet.title}</h3>
-            <p class="text-ink-muted text-sm font-light mb-8">{randomSet.tanda_count} tandas &bull; {randomSet.song_count} songs</p>
-            <button
-              onclick={() => playerModal.openModal(randomSet!)}
-              class="w-full sm:w-auto px-8 py-3 bg-ink text-primary-foreground rounded-full text-sm font-medium tracking-wide hover:opacity-80 transition-colors inline-flex items-center justify-center gap-2 shadow-lg cursor-pointer border-none font-sans"
-            >
-              <Play class="w-4 h-4" fill="currentColor" />
-              Launch Player
-            </button>
-          </div>
-        </div>
-      </div>
-    {:else if !communityLoading}
-      <div class="w-full max-w-3xl bg-card rounded-3xl border border-dashed border-black/15 dark:border-white/15 p-12 flex items-center justify-center">
-        <p class="font-mono text-sm text-ink-muted uppercase tracking-widest">No sets available yet</p>
-      </div>
-    {/if}
-  </section>
-
-
   <!-- ═══ Footer ═══ -->
   <footer class="bg-card border-t border-black/5 dark:border-white/5 pt-20 pb-10 px-6 md:px-16 mt-auto">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-20">
@@ -187,7 +142,6 @@
         <p class="text-ink-muted font-light leading-relaxed max-w-sm mb-8">
           An ad-less, open-source player for tango nerds to build, share, and study tandas.
         </p>
-        <div class="font-mono text-xs text-ink/40 uppercase tracking-widest">&gt; System_Status: Online</div>
       </div>
 
       <div>
