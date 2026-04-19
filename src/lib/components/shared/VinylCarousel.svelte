@@ -224,7 +224,7 @@
   </div>
 
   <p class="mt-6 text-sm font-light text-ink-muted/50 italic tracking-wide select-none pointer-events-none">
-    tap a sleeve to spin the records
+    tap a sleeve to listen
   </p>
 </section>
 
