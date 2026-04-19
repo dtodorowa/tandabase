@@ -34,7 +34,7 @@
   ];
 </script>
 
-<nav class="fixed top-0 inset-x-0 w-full z-40 flex justify-between items-center px-6 md:px-16 py-6 md:py-8 bg-surface/80 dark:bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 transition-all duration-300">
+<nav class="fixed top-0 inset-x-0 w-full z-40 flex justify-between items-center px-6 md:px-16 py-4 bg-surface/80 dark:bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 transition-all duration-300">
   <!-- Logo -->
   <a href="/" class="font-serif text-3xl italic tracking-tight text-ink no-underline">
     tandabase
