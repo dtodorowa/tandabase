@@ -159,7 +159,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <section class="w-full min-h-[50vh] sm:min-h-[80vh] flex flex-col items-center justify-center relative text-center">
-  <p class="mt-2 mb-2 sm:mb-0 text-sm font-light text-ink-muted/50 italic tracking-wide select-none pointer-events-none">
+  <p class="mt-26 md:mt-40 mb-2 sm:mb-0 text-sm font-light text-ink-muted/50 italic tracking-wide select-none pointer-events-none">
     tap a sleeve to listen
   </p>
 
@@ -245,7 +245,7 @@
   }
   @media (min-width: 640px) {
     .carousel-row {
-      padding-top: 200px;
+      /* padding-top: 20px; */
     }
   }
 
