@@ -130,6 +130,13 @@
   function pauseAutoScroll() { autoScrollPaused = true; }
   function resumeAutoScroll() { autoScrollPaused = false; }
 
+  // Touch handlers for mobile (mouseenter fires on tap but mouseleave never fires on lift)
+  function handleTouchStart() { autoScrollPaused = true; }
+  function handleTouchEnd() {
+    // Small delay so tap-to-open doesn't immediately resume mid-animation
+    setTimeout(() => { autoScrollPaused = false; }, 2000);
+  }
+
   onMount(() => {
     mounted = true;
     setTimeout(() => { entranceDone = true; }, 1200);
@@ -151,7 +158,11 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<section class="w-full min-h-[80vh] flex flex-col items-center justify-center relative text-center">
+<section class="w-full min-h-[50vh] sm:min-h-[80vh] flex flex-col items-center justify-center relative text-center">
+  <p class="mt-2 mb-2 sm:mb-0 text-sm font-light text-ink-muted/50 italic tracking-wide select-none pointer-events-none">
+    tap a sleeve to listen
+  </p>
+
   <div class="relative w-full z-2">
     {#if sets.length === 0}
       <div class="flex gap-8 overflow-x-hidden px-16 pt-40 pb-10 items-end">
@@ -170,11 +181,13 @@
     {:else if carouselItems.length > 0}
       <div
         class="carousel-row flex gap-18 no-scrollbar px-16 pb-10 items-end"
-        style="padding-top: 200px; scroll-behavior: auto;"
+        style="scroll-behavior: auto;"
         bind:this={scrollContainer}
         onscroll={handleScroll}
         onmouseenter={pauseAutoScroll}
         onmouseleave={resumeAutoScroll}
+        ontouchstart={handleTouchStart}
+        ontouchend={handleTouchEnd}
       >
         {#each carouselItems as set, i}
           {@const realIndex = i % sets.slice(0, displayCount).length}
@@ -222,16 +235,18 @@
     {/if}
 
   </div>
-
-  <p class="mt-6 text-sm font-light text-ink-muted/50 italic tracking-wide select-none pointer-events-none">
-    tap a sleeve to listen
-  </p>
 </section>
 
 <style>
   .carousel-row {
     overflow-x: auto;
     overflow-y: visible;
+    padding-top: 40px;
+  }
+  @media (min-width: 640px) {
+    .carousel-row {
+      padding-top: 200px;
+    }
   }
 
   /* ── Album shell ── */
