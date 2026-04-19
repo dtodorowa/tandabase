@@ -266,12 +266,17 @@
     overflow: visible;
     z-index: 1;
   }
-  /* When row is hovered, dim all albums — desktop only */
+  /* Tapped / active album pops above siblings on all devices */
+  .album:active {
+    transform: translateY(-4px) scale(1.05);
+    z-index: 10;
+  }
+
+  /* Blur + dim on hover — desktop only */
   @media (hover: hover) and (pointer: fine) {
     .carousel-row:hover .album {
       filter: brightness(0.90) blur(2px);
     }
-    /* …except the one being hovered */
     .carousel-row:hover .album:hover,
     .album:active {
       transform: translateY(-4px) scale(1.05);
