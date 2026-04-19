@@ -266,16 +266,18 @@
     overflow: visible;
     z-index: 1;
   }
-  /* When row is hovered, dim all albums… */
-  .carousel-row:hover .album {
-    filter: brightness(0.90) blur(2px);
-  }
-  /* …except the one being hovered */
-  .carousel-row:hover .album:hover,
-  .album:active {
-    transform: translateY(-4px) scale(1.05);
-    z-index: 10;
-    filter: brightness(1) blur(0px);
+  /* When row is hovered, dim all albums — desktop only */
+  @media (hover: hover) and (pointer: fine) {
+    .carousel-row:hover .album {
+      filter: brightness(0.90) blur(2px);
+    }
+    /* …except the one being hovered */
+    .carousel-row:hover .album:hover,
+    .album:active {
+      transform: translateY(-4px) scale(1.05);
+      z-index: 10;
+      filter: brightness(1) blur(0px);
+    }
   }
 
   /* ── Sleeve ── */
