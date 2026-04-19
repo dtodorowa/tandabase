@@ -11,6 +11,12 @@
   let isStopped = $state(false);
   let videoIframe = $state<HTMLIFrameElement | null>(null);
 
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && playerModal.open) {
+      close();
+    }
+  }
+
   $effect(() => {
     if (playerModal.open) {
       // Trigger animation after mount
@@ -19,9 +25,12 @@
           animateIn = true;
         });
       });
+      document.addEventListener('keydown', handleKeydown);
     } else {
       animateIn = false;
+      document.removeEventListener('keydown', handleKeydown);
     }
+    return () => document.removeEventListener('keydown', handleKeydown);
   });
 
   // Auto-scroll sidebar to the active song whenever tanda or song changes

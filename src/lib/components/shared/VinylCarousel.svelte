@@ -103,7 +103,7 @@
     const displaySets = sets.slice(0, displayCount);
     if (displaySets.length === 0) return;
 
-    const itemWidth = 296;
+    const itemWidth = 410;
     const singleSetWidth = displaySets.length * itemWidth;
     const scrollLeft = scrollContainer.scrollLeft;
 
@@ -142,7 +142,7 @@
     if (sets.length > 0 && scrollContainer) {
       requestAnimationFrame(() => {
         const displaySets = sets.slice(0, displayCount);
-        scrollContainer.scrollLeft = displaySets.length * 296;
+        scrollContainer.scrollLeft = displaySets.length * 410;
       });
     }
   });
@@ -169,7 +169,7 @@
 
     {:else if carouselItems.length > 0}
       <div
-        class="carousel-row flex gap-8 no-scrollbar px-16 pb-10 items-end"
+        class="carousel-row flex gap-18 no-scrollbar px-16 pb-10 items-end"
         style="padding-top: 200px; scroll-behavior: auto;"
         bind:this={scrollContainer}
         onscroll={handleScroll}
@@ -217,12 +217,15 @@
 
           </div>
         {/each}
-        
+      
       </div>
-
     {/if}
 
   </div>
+
+  <p class="mt-6 text-sm font-light text-ink-muted/50 italic tracking-wide select-none pointer-events-none">
+    tap a sleeve to spin the records
+  </p>
 </section>
 
 <style>
@@ -241,11 +244,23 @@
     align-items: flex-end;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
+    transition:
+      transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1),
+      filter 0.3s ease,
+      z-index 0s;
     overflow: visible;
+    z-index: 1;
   }
-  .album:hover {
-    transform: translateY(-4px);
+  /* When row is hovered, dim all albums… */
+  .carousel-row:hover .album {
+    filter: brightness(0.90) blur(2px);
+  }
+  /* …except the one being hovered */
+  .carousel-row:hover .album:hover,
+  .album:active {
+    transform: translateY(-4px) scale(1.05);
+    z-index: 10;
+    filter: brightness(1) blur(0px);
   }
 
   /* ── Sleeve ── */
@@ -281,11 +296,11 @@
   /* ── Record portal ── */
   .record-portal {
     position: absolute;
-    left: 50%;
-    top: 0;
+    right: -40px;
+    top: 50%;
     width: 220px;
     height: 220px;
-    margin-left: -110px;
+    margin-top: -110px;
     overflow: visible;
     z-index: 1;
     pointer-events: none;
@@ -295,19 +310,19 @@
   .record {
     width: 220px;
     height: 220px;
-    transform: translateY(0) scale(0.7);
-    opacity: 0;
+    transform: translateX(0) scale(1);
+    opacity: 0.7;
     transition:
       transform 0.38s cubic-bezier(0.2, 0.9, 0.2, 1),
       opacity 0.3s ease;
   }
   .album:not(.is-launching):hover .record {
     opacity: 1;
-    transform: translateY(-61%) scale(1);
+    transform: translateX(80px) translateY(-20px) scale(1);
   }
   .record.launching-hide {
     opacity: 0 !important;
-    transform: translateY(0) scale(0.7) !important;
+    transform: translateX(-20px) scale(0.7) !important;
     transition: none !important;
   }
 
