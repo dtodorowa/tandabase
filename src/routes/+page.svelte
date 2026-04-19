@@ -54,7 +54,7 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 
 <main
-  class="grow bg-surface dark:bg-background text-ink selection:bg-ink selection:text-white dark:selection:bg-white dark:selection:text-black"
+  class="pt-8 sm:pt-0 grow bg-surface dark:bg-background text-ink selection:bg-ink selection:text-white dark:selection:bg-white dark:selection:text-black"
 >
 
   <!-- ═══ Hero / Vinyl Carousel ═══ -->
@@ -76,7 +76,7 @@
       Btw: this is <span class="italic text-surface/50">NOT</span> a DJing app
     </h2>
     <p class="font-light text-xl text-surface/70 max-w-2xl mx-auto leading-relaxed">
-      It's a learning tool. There is no autoplay or cortina gaps (on purpose). Just YouTube embeds for studying.<br><br>
+      It's a learning tool. <br><br>
       If you want to DJ a milonga, buy the music and support the people who are working hard to preserve tango recordings.
     </p>
   </section>
@@ -135,7 +135,7 @@
 
   <!-- ═══ Footer ═══ -->
   <footer class="bg-card border-t border-black/5 dark:border-white/5 pt-20 pb-10 px-6 md:px-16 mt-auto">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-20">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-16 mb-20">
 
       <div class="lg:col-span-1">
         <a href="/" class="font-serif text-3xl italic tracking-tight text-ink block mb-6 no-underline">tandabase.</a>
@@ -165,19 +165,19 @@
         </ul>
       </div>
 
-      <div>
+      <!-- <div>
         <h3 class="font-mono text-xs text-ink uppercase tracking-widest mb-6">Contribute</h3>
         <ul class="space-y-4 text-sm font-light text-ink-muted flex flex-col items-start list-none p-0">
           <button class="hover:text-ink transition-colors cursor-pointer bg-transparent border-none font-sans text-sm font-light text-ink-muted">GitHub Repository</button>
           <button class="hover:text-ink transition-colors cursor-pointer bg-transparent border-none font-sans text-sm font-light text-ink-muted">Report an Issue</button>
           <button class="hover:text-ink transition-colors cursor-pointer bg-transparent border-none font-sans text-sm font-light text-ink-muted">Feature Requests</button>
         </ul>
-      </div>
+      </div> -->
     </div>
 
     <div class="max-w-7xl mx-auto border-t border-black/5 dark:border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
       <p class="text-xs text-ink-faint font-light">&copy; 2026 Tandabase. All rights reserved.</p>
-      <p class="text-[10px] uppercase tracking-[0.2em] font-medium text-ink-muted">Made with &#127851; by Daniela</p>
+      <p class="text-[10px] uppercase tracking-[0.2em] font-medium text-ink-muted">Made with &#127851; by Dandan</p>
     </div>
   </footer>
 </main>
